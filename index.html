@@ -278,6 +278,7 @@
 
     .bank-item {
       backdrop-filter: blur(12px);
+      isolation: isolate;
       display: flex;
       width: 100%;
       align-items: center;
@@ -294,6 +295,7 @@
     }
 
     .bank-item::before {
+      z-index: 1;
       content: "";
       position: absolute;
       inset: 0;
@@ -315,10 +317,15 @@
 
     .bank-info {
       position: relative;
-      z-index: 2;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
     }
 
     .bank-title {
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(255,255,255,0.15);
       font-family: 'Space Grotesk', sans-serif;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -328,12 +335,15 @@
     }
 
     .bank-desc {
+      color: rgba(255,255,255,0.78) !important;
       font-weight: 400;
       color: rgba(255,255,255,0.65);
       font-size: 0.9rem;
     }
 
     .arrow {
+      opacity: 1;
+      color: #00f7ff;
       transition: 0.3s ease;
       position: relative;
       z-index: 2;
@@ -421,14 +431,15 @@
         <div class="bank-list">
 
           <a href="itil_exam.html" class="bank-item">
-            <div class="bank-info">
-              <div class="bank-title">ITIL 4 FOUNDATION</div>
-              <div class="bank-desc">Service management certification practice exam</div>
+            <div class="bank-info" style="position:relative;z-index:5;">
+              <div class="bank-title" style="color:#fff;">ITIL 4 FOUNDATION</div>
+              <div class="bank-desc" style="color:rgba(255,255,255,0.78);">Service management certification practice exam</div>
             </div>
             <div class="arrow">→</div>
           </a>
 
           <a href="#" class="bank-item">
+            
             <div class="bank-info">
               <div class="bank-title">CCNA</div>
               <div class="bank-desc">Coming soon</div>
