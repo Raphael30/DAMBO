@@ -18,6 +18,7 @@
             --warning: #e67e22;
             --flagged: #f1c40f;
             --option-hover: #f0f7ff;
+            --btn-action-bg: #eeeeee;
             --transition-speed: 0.5s;
         }
 
@@ -28,6 +29,7 @@
             --border-color: #333;
             --sidebar-bg: #000000;
             --option-hover: #2c2c2c;
+            --btn-action-bg: #333;
         }
 
         html { scroll-behavior: smooth; }
@@ -85,11 +87,24 @@
         .correct { background-color: rgba(46, 204, 113, 0.15) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
         .wrong { background-color: rgba(231, 76, 60, 0.15) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
 
+        /* Action Buttons */
+        .question-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-action { 
+            padding: 8px 15px; font-size: 13px; font-weight: bold; cursor: pointer; 
+            border: 1px solid var(--border-color); border-radius: 6px; background: var(--btn-action-bg); color: var(--text-color);
+            transition: all 0.2s;
+        }
+        .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-flag.active { background: var(--flagged); color: #000; border-color: var(--flagged); }
+
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
         .nav-item { 
             padding: 10px 0; text-align: center; border: 1px solid var(--border-color); 
             border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; background: var(--container-bg);
-            transition: all 0.2s ease;
+            transition: all 0.2s ease; position: relative;
+        }
+        .nav-item.flagged::after {
+            content: "🚩"; position: absolute; top: -5px; right: -5px; font-size: 10px;
         }
         .nav-answered { border-color: var(--primary); background: rgba(52, 152, 219, 0.1); }
         .nav-correct { background: var(--success) !important; color: white; border: none; }
@@ -99,9 +114,7 @@
             padding: 12px; border-radius: 8px; border: none; cursor: pointer;
             background: #444; color: white; font-weight: bold; transition: all 0.3s;
         }
-        #theme-toggle:hover { filter: brightness(1.2); }
 
-        /* Custom Modal */
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index:2000; 
@@ -141,8 +154,8 @@
 
 <div id="custom-modal">
     <div class="modal-content">
-        <h3 id="modal-title" style="font-size: 1.8rem; margin-bottom: 15px;">Alert</h3>
-        <p id="modal-message" style="font-size: 1.1rem; opacity: 0.9;"></p>
+        <h3 id="modal-title">Alert</h3>
+        <p id="modal-message"></p>
         <div style="margin-top: 25px;">
             <button id="modal-confirm" class="m-btn" style="background:var(--success); color:white;">Confirm</button>
             <button id="modal-cancel" class="m-btn" style="background:var(--danger); color:white;">Cancel</button>
@@ -244,6 +257,7 @@
     const modal = document.getElementById('custom-modal');
     
     let userSelections = new Array(questions.length).fill(null);
+    let flaggedStatus = new Array(questions.length).fill(false);
     let examEnded = false;
     let modalAction = null;
 
@@ -267,10 +281,12 @@
             block.id = `q-block-${qIdx}`;
             block.style.animationDelay = `${qIdx * 0.05}s`;
             block.innerHTML = `<div style="font-size:1.15rem; font-weight:600;"><strong>${qIdx + 1}.</strong> ${item.q}</div>`;
+            
             const ul = document.createElement('ul');
             ul.className = 'options';
             item.a.forEach((opt, aIdx) => {
                 const li = document.createElement('li');
+                li.id = `q${qIdx}-o${aIdx}`;
                 li.textContent = `${String.fromCharCode(65 + aIdx)}. ${opt}`;
                 li.onclick = () => {
                     if (examEnded) return;
@@ -282,7 +298,44 @@
                 ul.appendChild(li);
             });
             block.appendChild(ul);
+
+            // ACTION BUTTONS (Show Answer & Flag)
+            const actions = document.createElement('div');
+            actions.className = 'question-actions';
+            
+            const revealBtn = document.createElement('button');
+            revealBtn.className = 'btn-action';
+            revealBtn.textContent = "Show Answer";
+            revealBtn.onclick = () => {
+                const opts = block.querySelectorAll('li');
+                if (revealBtn.textContent === "Show Answer") {
+                    opts[item.c].classList.add('correct');
+                    if (userSelections[qIdx] !== null && userSelections[qIdx] !== item.c) {
+                        opts[userSelections[qIdx]].classList.add('wrong');
+                    }
+                    revealBtn.textContent = "Hide Answer";
+                } else {
+                    opts.forEach(o => o.classList.remove('correct', 'wrong'));
+                    revealBtn.textContent = "Show Answer";
+                }
+            };
+
+            const flagBtn = document.createElement('button');
+            flagBtn.className = `btn-action btn-flag ${flaggedStatus[qIdx] ? 'active' : ''}`;
+            flagBtn.textContent = flaggedStatus[qIdx] ? "🚩 Flagged" : "🏳️ Flag";
+            flagBtn.onclick = () => {
+                flaggedStatus[qIdx] = !flaggedStatus[qIdx];
+                flagBtn.classList.toggle('active');
+                flagBtn.textContent = flaggedStatus[qIdx] ? "🚩 Flagged" : "🏳️ Flag";
+                document.getElementById(`nav-${qIdx}`).classList.toggle('flagged');
+            };
+
+            actions.appendChild(revealBtn);
+            actions.appendChild(flagBtn);
+            block.appendChild(actions);
+
             container.appendChild(block);
+            
             const navItem = document.createElement('div');
             navItem.className = 'nav-item'; navItem.id = `nav-${qIdx}`;
             navItem.textContent = qIdx + 1;
@@ -303,7 +356,7 @@
     document.getElementById('modal-cancel').onclick = () => { modal.style.display='none'; };
 
     btnEnd.onclick = () => {
-        showModal("End Exam?", "Are you sure? This will reveal all correct answers.", () => {
+        showModal("End Exam?", "Reveal results and stop timer?", () => {
             examEnded = true;
             let score = 0;
             questions.forEach((q, idx) => {
