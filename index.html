@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC_BABY // GEOMETRIC_CORE</title>
+    <title>EDUC_BABY // VOID_RUNNER</title>
     <style>
         :root {
             --primary: #00ff41;
-            --bg: #050505;
+            --bg: #000000;
+            --grid-size: 100px;
         }
 
         body, html {
@@ -25,104 +26,123 @@
             perspective: 1200px;
         }
 
-        /* --- BACKGROUND CANVAS --- */
-        #canvas-bg {
+        /* --- THE VOID PLANE --- */
+        .void-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Sits behind everything */
+            top: 0; left: 0; width: 100%; height: 100%;
+            perspective: 500px;
+            z-index: -1;
+            background: radial-gradient(circle at center, #001a00 0%, #000 70%);
         }
 
-        /* --- DITHER OVERLAY (TOP LAYER) --- */
+        .grid-plane {
+            position: absolute;
+            width: 400%;
+            height: 400%;
+            top: -50%;
+            left: -150%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 255, 65, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 255, 65, 0.2) 1px, transparent 1px);
+            background-size: var(--grid-size) var(--grid-size);
+            transform: rotateX(60deg);
+            animation: flyForward 4s linear infinite;
+        }
+
+        @keyframes flyForward {
+            from { transform: rotateX(60deg) translateY(0); }
+            to { transform: rotateX(60deg) translateY(var(--grid-size)); }
+        }
+
+        /* --- DITHER LAYER --- */
         .dither {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
-            opacity: 0.12;
+            opacity: 0.15;
             pointer-events: none;
             z-index: 1000;
         }
 
-        /* --- 3D INTERFACE CONTAINER --- */
+        /* --- UI INTERFACE --- */
         #scene {
-            width: 85%;
+            width: 80%;
             max-width: 600px;
-            padding: 50px;
+            padding: 40px;
             border: 1px solid var(--primary);
-            background: rgba(0, 0, 0, 0.8); /* Slight darkness to make text pop */
+            background: rgba(0, 0, 0, 0.9);
             transform-style: preserve-3d;
-            transition: transform 0.2s cubic-bezier(0.2, 0.5, 0.3, 1);
+            transition: transform 0.2s ease-out;
             position: relative;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
         }
 
         .floating-hand {
             position: absolute;
-            font-size: 2.5rem;
-            top: -40px;
+            font-size: 3rem;
+            top: -60px;
             right: -20px;
-            animation: handFloat 5s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px var(--primary));
+            animation: handFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px var(--primary));
             user-select: none;
+            pointer-events: none;
         }
 
         @keyframes handFloat {
-            0%, 100% { transform: translateZ(60px) translateY(0) rotate(-5deg); }
-            50% { transform: translateZ(100px) translateY(-30px) rotate(15deg); }
+            0%, 100% { transform: translateZ(80px) translateY(0) rotate(-10deg); }
+            50% { transform: translateZ(120px) translateY(-25px) rotate(10deg); }
         }
 
         header h1 {
-            font-size: 2.2rem;
-            letter-spacing: 10px;
-            margin: 0 0 10px 0;
-            transform: translateZ(50px);
-            text-shadow: 0 0 10px var(--primary);
+            font-size: 2.5rem;
+            letter-spacing: 12px;
+            margin: 0;
+            transform: translateZ(60px);
         }
 
-        .status-line {
-            font-size: 0.8rem;
+        .status {
+            font-size: 0.7rem;
             margin-bottom: 40px;
-            transform: translateZ(30px);
-            opacity: 0.8;
+            transform: translateZ(40px);
+            opacity: 0.7;
         }
 
         .module-list {
             padding: 0;
-            transform: translateZ(20px);
+            transform: translateZ(30px);
         }
 
         .module-item {
             display: flex;
             justify-content: space-between;
-            padding: 18px;
-            margin-bottom: 15px;
+            padding: 20px;
+            margin-bottom: 12px;
             border: 1px solid var(--primary);
             text-decoration: none;
             color: var(--primary);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s;
             background: rgba(0, 255, 65, 0.05);
         }
 
         .module-item:hover {
             background: var(--primary);
-            color: black;
-            transform: translateZ(40px) scale(1.05);
+            color: #000;
+            transform: translateZ(50px);
         }
 
         .locked {
-            opacity: 0.25;
-            border-style: dashed;
+            opacity: 0.2;
+            border-style: dotted;
             cursor: not-allowed;
-            pointer-events: none;
         }
-
     </style>
 </head>
 <body>
 
-<canvas id="canvas-bg"></canvas>
+<div class="void-container">
+    <div class="grid-plane"></div>
+</div>
+
 <div class="dither"></div>
 
 <div id="scene">
@@ -130,109 +150,36 @@
     
     <header>
         <h1>EDUC_BABY</h1>
-        <div class="status-line">> GEOMETRIC_SYNC_STABLE // 60FPS</div>
+        <div class="status">> INITIALIZING_HYPERSPACE_PROJECTION...</div>
     </header>
 
     <div class="module-list">
-        <!-- LIVE EXAM -->
         <a href="itil_exam.html" class="module-item">
             <span>[01] ITIL_4_FOUNDATION</span>
-            <span>INITIALIZE_</span>
+            <span>ENTER_VOID</span>
         </a>
 
-        <!-- UPCOMING -->
         <div class="module-item locked">
             <span>[02] CCNP_ENTERPRISE</span>
-            <span>COMING_SOON</span>
+            <span>DATA_LOCKED</span>
         </div>
     </div>
 </div>
 
 <script>
-    /* --- GEOMETRIC BACKGROUND LOGIC --- */
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const particleCount = 80;
-
-    function initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.radius = Math.random() * 1.5;
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = '#00ff41';
-            ctx.fill();
-        }
-    }
-
-    function createParticles() {
-        particles = [];
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-    }
-
-    function drawLines() {
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 150) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(0, 255, 65, ${1 - dist / 150})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-        drawLines();
-        requestAnimationFrame(animate);
-    }
-
-    /* --- CAMERA MOVEMENT LOGIC --- */
     const scene = document.getElementById('scene');
+    
+    // Smooth 3D Camera Follow
     document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 30;
-        const y = (window.innerHeight / 2 - e.pageY) / 30;
+        const x = (window.innerWidth / 2 - e.pageX) / 35;
+        const y = (window.innerHeight / 2 - e.pageY) / 35;
         scene.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
     });
 
-    window.addEventListener('resize', () => {
-        initCanvas();
-        createParticles();
+    // Reset on exit
+    document.addEventListener('mouseleave', () => {
+        scene.style.transform = `rotateY(0deg) rotateX(0deg)`;
     });
-
-    initCanvas();
-    createParticles();
-    animate();
 </script>
 
 </body>
