@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Randomized</title>
+    <title>ITIL 4 Foundation Simulator - Labelled</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -57,7 +57,7 @@
         .options { list-style: none; padding: 0; margin: 20px 0; }
         .options li { 
             margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
-            border-radius: 10px; cursor: pointer; transition: 0.2s; 
+            border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; gap: 10px;
         }
         .options li:hover { background: rgba(52, 152, 219, 0.1); }
         .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.05); }
@@ -69,7 +69,7 @@
         .btn-show { background: #d4edda !important; } 
         .btn-flag { background: #fff3cd !important; } 
 
-        /* CENTERED NAVIGATION TEXT */
+        /* NAV GRID ALIGNMENT */
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
         .nav-item { 
             height: 42px; display: flex; align-items: center; justify-content: center;
@@ -216,17 +216,11 @@
         return array;
     }
 
-    // RANDOMIZATION ENGINE
-    // 1. Shuffle Question Order
+    // RANDOMIZATION WITH LABELS
     const shuffledQuestions = shuffle([...rawQuestions]);
-
     const questions = shuffledQuestions.map(item => {
-        // 2. Create objects for choices to track the correct one locally
         const localChoices = item.a.map((text, idx) => ({ text, isCorrect: idx === item.c }));
-        
-        // 3. Shuffle ONLY these local choices
         const shuffledChoices = shuffle([...localChoices]);
-        
         return {
             q: item.q,
             options: shuffledChoices.map(c => c.text),
@@ -236,6 +230,7 @@
 
     const container = document.getElementById('exam-content');
     const navGrid = document.getElementById('nav-grid');
+    const labels = ["A", "B", "C", "D"];
     let userAns = new Array(questions.length).fill(null);
     let ended = false;
 
@@ -256,7 +251,9 @@
         const ul = block.querySelector('ul');
         
         item.options.forEach((opt, ai) => {
-            const li = document.createElement('li'); li.textContent = opt;
+            const li = document.createElement('li');
+            // Adding the A, B, C, D labels
+            li.innerHTML = `<span style="font-weight:bold;">${labels[ai]}.</span> <span>${opt}</span>`;
             li.onclick = () => { 
                 if(!ended){ 
                     userAns[i]=ai; 
