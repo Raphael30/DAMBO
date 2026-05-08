@@ -53,7 +53,6 @@
         .btn-end { background-color: var(--success); color: white; }
         .btn-reset { background-color: var(--warning); color: white; margin-top: 5px; }
         
-        /* Modal Styles */
         #custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center; }
         .modal-content { background:white; padding:30px; border-radius:12px; max-width:400px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .modal-btns { display:flex; gap:10px; justify-content:center; margin-top:20px; }
@@ -221,7 +220,7 @@
             actions.className = 'question-actions';
             const revealBtn = document.createElement('button');
             revealBtn.className = 'btn-small btn-reveal-styled';
-            revealBtn.id = `btn-show-${qIdx}`;
+            revealBtn.id = `btn-show-${qIdx}`; // Correct ID for toggle
             revealBtn.textContent = "Show Answer";
             revealBtn.onclick = () => toggleReveal(qIdx);
 
@@ -265,10 +264,11 @@
         }
     }
 
-    function showModal(title, message, action) {
+    function showModal(title, message, action, hideCancel = false) {
         modalTitle.textContent = title;
         modalMsg.textContent = message;
         modalAction = action;
+        modalCancel.style.display = hideCancel ? 'none' : 'block';
         modal.style.display = 'flex';
     }
 
@@ -279,26 +279,33 @@
     };
 
     btnEnd.onclick = () => {
-        showModal("End Exam?", "Are you sure you want to end? All answers will be revealed.", () => {
+        showModal("End Exam?", "Are you sure? All answers will be revealed.", () => {
             examEnded = true;
             let score = 0;
             questions.forEach((q, idx) => {
                 const nav = document.getElementById(`nav-${idx}`);
+                const btn = document.getElementById(`btn-show-${idx}`);
+                
+                // Trigger visual highlight for every question
+                if (btn.textContent === "Show Answer") toggleReveal(idx);
+                
                 if (userSelections[idx] === q.c) {
                     score++;
                     nav.classList.add('nav-correct');
                 } else {
                     nav.classList.add('nav-wrong');
                 }
-                const btn = document.getElementById(`btn-show-${idx}`);
-                if (btn.textContent === "Show Answer") toggleReveal(idx);
             });
-            showModal("Exam Result", `Your Final Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null);
+            
+            // Show result in modal after processing highlights
+            setTimeout(() => {
+                showModal("Exam Result", `Final Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null, true);
+            }, 300);
         });
     };
 
     btnReset.onclick = () => {
-        showModal("Reset Everything?", "WARNING: This will clear all your progress and flags.", () => {
+        showModal("Reset Everything?", "WARNING: This will clear all your progress.", () => {
             userSelections.fill(null);
             flaggedQuestions.fill(false);
             examEnded = false;
