@@ -20,96 +20,54 @@
             --danger: #e74c3c;
             --warning: #e67e22;
             --flagged: #f1c40f;
-            
-            /* User requested custom colors */
             --btn-reveal-bg: #e8f8f1; /* Light green */
             --btn-flag-bg: #fff8e1;   /* Yellow-orange light */
             --action-text: #333333;
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-color); 
-            margin: 0; 
-            display: flex;
-            min-height: 100vh;
-        }
-
-        #sidebar { 
-            position: sticky; top: 0; width: 260px; height: 100vh; 
-            background: var(--sidebar-bg); padding: 20px; box-sizing: border-box;
-            display: flex; flex-direction: column; gap: 15px; z-index: 100;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; display: flex; min-height: 100vh; }
+        #sidebar { position: sticky; top: 0; width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; z-index: 100; }
         main { flex-grow: 1; display: flex; justify-content: center; padding: 20px; }
-
-        .container { 
-            width: 100%; max-width: 850px; background: var(--container-bg); 
-            padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-            box-sizing: border-box;
-        }
-
+        .container { width: 100%; max-width: 850px; background: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); box-sizing: border-box; }
         h1 { text-align: center; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 15px; }
         .question-block { margin-bottom: 30px; padding: 25px; border-bottom: 1px solid var(--block-border); scroll-margin-top: 20px; }
-        
         .question-actions { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
-
-        .btn-small {
-            padding: 6px 12px; font-size: 12px; cursor: pointer;
-            border: 1px solid var(--border-color); border-radius: 4px;
-            font-weight: bold; transition: 0.2s; color: var(--action-text);
-        }
-
+        .btn-small { padding: 6px 12px; font-size: 12px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 4px; font-weight: bold; transition: 0.2s; color: var(--action-text); }
         .btn-reveal-styled { background-color: var(--btn-reveal-bg); }
         .flag-btn-styled { background-color: var(--btn-flag-bg); }
         .flag-btn-styled.active { background-color: var(--flagged); border-color: var(--flagged); }
-
         .options { list-style: none; padding: 0; margin-top: 15px; }
-        .options li { 
-            margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
-            border-radius: 6px; cursor: pointer; transition: 0.2s; background: var(--container-bg); 
-        }
-        .options li:hover { background-color: var(--option-hover); }
+        .options li { margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: 0.2s; background: var(--container-bg); }
         .options li.selected { border-color: var(--primary); border-width: 2px; background-color: #3498db22; }
-        
         .correct { background-color: #2ecc7133 !important; color: var(--success) !important; border-color: var(--success) !important; font-weight: bold; }
         .wrong { background-color: #e74c3c33 !important; color: var(--danger) !important; border-color: var(--danger) !important; }
-
         #nav-panel { background: var(--nav-bg); border-radius: 8px; padding: 12px; overflow-y: auto; flex-grow: 1; }
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 6px; }
-        .nav-item { 
-            padding: 10px 0; text-align: center; border: 1px solid var(--border-color); 
-            border-radius: 4px; cursor: pointer; font-size: 12px; background: var(--container-bg); 
-            color: var(--text-color); font-weight: bold; position: relative;
-        }
-        .nav-item.flagged-nav::after {
-            content: ""; position: absolute; top: 2px; right: 2px;
-            width: 8px; height: 8px; background-color: var(--flagged); border-radius: 50%;
-        }
+        .nav-item { padding: 10px 0; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .nav-item.flagged-nav::after { content: ""; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background-color: var(--flagged); border-radius: 50%; }
         .nav-answered { border-color: var(--primary); background: #3498db22; }
         .nav-correct { background-color: var(--success) !important; color: white !important; }
         .nav-wrong { background-color: var(--danger) !important; color: white !important; }
-
         .action-btn { padding: 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; width: 100%; }
         .btn-end { background-color: var(--success); color: white; }
+        .btn-reset { background-color: #7f8c8d; color: white; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <div style="text-align: center; color: white; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <div id="time-part" style="font-size: 1.6rem; color: #3498db; font-weight: bold; margin-bottom: 5px;"></div>
-        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px; opacity: 0.8;">← Return to Portal</a>
+    <div style="text-align: center; color: white; padding-bottom: 10px;">
+        <div id="time-part" style="font-size: 1.6rem; color: #3498db; font-weight: bold;"></div>
+        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px;">← Portal</a>
     </div>
-    <div id="nav-panel">
-        <div class="nav-grid" id="nav-grid"></div>
-    </div>
+    <div id="nav-panel"><div class="nav-grid" id="nav-grid"></div></div>
     <button id="btn-end-exam" class="action-btn btn-end">End Exam</button>
+    <button id="btn-reset-exam" class="action-btn btn-reset">Reset All</button>
 </aside>
 
 <main>
     <div class="container">
-        <h1 id="exam-title">ITIL 4 Foundation Simulator</h1>
+        <h1>ITIL 4 Foundation Simulator</h1>
         <div id="exam-content"></div>
     </div>
 </main>
@@ -117,7 +75,6 @@
 <script>
 (function() {
     "use strict";
-
     const questions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -142,74 +99,73 @@
         { q: "Which aspect of an ITIL Official Practice Guide describes the roles, competencies, and responsibilities needed for a specific practice?", a: ["Capability assessment and development", "General information", "Organizations and people", "Partners and suppliers"], c: 2 },
         { q: "A company plans an improvement initiative and ensures it is clearly linked to organizational goals and objectives. Which continual improvement step is being performed?", a: ["What is the vision?", "Where are we now?", "Take Action", "Where do we want to be?"], c: 0 },
         { q: "Which of the following is NOT one of the steps in value stream mapping?", a: ["Value stream identification", "Mapping of the ‘as-is’ value stream", "Mapping a ‘to-be’ value stream", "Value stream management"], c: 3 },
-        { q: "What is a digital product?", a: ["A formal description of one or more services designed to address consumer needs", "The access to the service provider’s resources and their use according to the agreed terms and conditions", "A combination of an organization’s resources based on digital technology and designed to offer value to consumers", "Actions performed by a service provider or jointly by a service provider and consumer"], c: 2 },
-        { q: "Which of the following is a key success metric for the ‘acquire’ activity?", a: ["Number and impact of incidents and performance deviations", "Quality of the resources and services outsourced from suppliers", "Service performance against the agreed SLA targets", "Negative impact of changes on service availability and performance"], c: 1 },
-        { q: "Which BEST describes the relationship between digital services and digital products?", a: ["Digital products are always based on digital services", "Digital services are always based on digital products", "Digital services and digital products exist independently", "Digital products are service actions performed by providers"], c: 1 },
-        { q: "Which role takes responsibility for the outcomes of service consumption?", a: ["Organization", "Sponsor", "Customer", "Service provider"], c: 2 },
-        { q: "Which type of service relationship typically focuses on support and efficiency through standardized services?", a: ["Basic relationship", "Cooperative relationship", "Collaborative relationship", "Partner relationship"], c: 0 },
-        { q: "Which statement about the ‘band of visibility’ is CORRECT?", a: ["It includes only the activities visible to the service provider", "It applies exclusively to modern, technology-based digital service models", "It represents all aspects visible between provider and consumer organizations", "It defines the complete path of the customer’s service journey"], c: 2 },
-        { q: "What is the MAIN purpose of the 'discover' activity?", a: ["To develop and test digital products", "To secure and allocate resources efficiently", "To align product capabilities with consumer needs and strategy", "To maintain and monitor digital products"], c: 2 },
-        { q: "Which lifecycle management activity is focused on creating prototypes and specifications?", a: ["Design", "Deliver", "Support", "Transition"], c: 0 },
-        { q: "What is the PRIMARY purpose of the 'acquire' activity?", a: ["Resolve incidents and fulfil recovery procedures", "Secure and allocate necessary resources efficiently", "Provide services and manage user onboarding", "Create functional prototypes for testing"], c: 1 },
-        { q: "Which lifecycle management activity focuses on minimizing the impact of incidents and disasters when they happen?", a: ["Transition", "Operate", "Support", "Design"], c: 2 },
-        { q: "What does a product specification PRIMARILY describe?", a: ["Critical aspects, requirements, and characteristics of a product", "The initial creation used for testing a product’s design", "The ability of a system to remain operational", "The process of merging code into a central repository"], c: 0 },
-        { q: "What is an incident in IT services?", a: ["Any change of state significant for management", "An unplanned interruption to a service or reduction in service quality", "A cause of one or more interruptions", "A flaw or vulnerability in a service"], c: 1 },
-        { q: "How does ITIL collaborate with DevOps practices to support digital product and service management?", a: ["By providing the framework while DevOps supplies practices and techniques", "By replacing DevOps practices with standardized service management processes", "By limiting DevOps usage to software development activities", "By positioning DevOps as a governance framework over ITIL"], c: 0 },
-        { q: "How is the ITIL AI Capability Model intended to be used by organizations?", a: ["To benchmark AI tools against predefined industry standards", "To assess readiness and identify areas for improvement in using AI", "To automate governance decisions across the ITIL Value System", "To prioritize AI investments based on financial return"], c: 1 },
-        { q: "What BEST describes a Service Level Agreement (SLA)?", a: ["A legal contract between two vendors regulating financial penalties", "A documented agreement between a service provider and a customer that identifies services and their agreed levels", "An informal discussion between users and service providers about expectations", "A guideline document for internal IT teams without customer involvement"], c: 1 },
-        { q: "Which ITIL concept includes governance, practices, and continual improvement?", a: ["The ITIL Value System", "The 'deliver' and 'support' value chain activities", "The 'focus on value' ITIL Guiding Principle", "The 'value streams and processes' dimension"], c: 0 },
-        { q: "What is the MAIN purpose of value stream mapping in an organization?", a: ["To automate service monitoring", "To identify and prioritize improvement opportunities", "To enhance and support management practices", "To control external stakeholders directly"], c: 1 },
-        { q: "What is the PRIMARY purpose of a product in ITIL product and service management?", a: ["To offer value to consumers through a defined configuration of resources", "To replace service management practices with product management", "To enable value co-creation by facilitating outcomes that customers want to achieve", "To ensure regulatory compliance across digital services"], c: 0 },
-        { q: "What is the PRIMARY role of a digital service?", a: ["To define processes and workflows for value creation", "To enable value co-creation by facilitating customer outcomes", "To replace product management practices with service management", "To ensure compliance with policies and external regulations"], c: 1 },
-        { q: "Which option is CORRECT in the context of a digital product and a digital service?", a: ["A digital service enables value through the use of digital products", "A digital product replaces the need for services", "A digital service is limited to internal IT systems", "A digital service is independent of a product"], c: 0 },
-        { q: "A printer is delivered to a customer, while ongoing maintenance and support are provided by the supplier. Which combination of service interactions is shown in this situation?", a: ["Access to resources and service actions", "Service offering and service actions", "Transfer of goods and service actions", "Transfer of goods and service journey"], c: 2 },
-        { q: "How does ‘access to resources’ support value co-creation in a service interaction?", a: ["By allowing consumers to use provider resources", "By transferring responsibility for resources to consumers", "By limiting resource use to internal teams", "By replacing service actions with automation"], c: 0 },
-        { q: "Which of the following is TRUE about value co-creation?", a: ["Value is created only by the service provider and delivered to the consumer", "Value is defined and consumed by a service provider", "Value is created independently of service relationships", "Value is created jointly through interactions between service providers and service consumers"], c: 3 },
-        { q: "How do ‘utility’ and ‘warranty’ together support value co-creation?", a: ["Utility focuses on cost control, while warranty focuses on risk avoidance", "Utility and warranty apply only to products, not services", "Utility ensures the service is fit for use, while warranty ensures it is fit for purpose", "Utility ensures the service is fit for purpose, while warranty ensures it is fit for use"], c: 3 },
-        { q: "Why does ITIL consider outcomes, costs, and risks together when explaining value co-creation?", a: ["Because value is created when desired outcomes are achieved while costs and risks are optimized", "Because outcomes eliminate the need to manage costs and risks", "Because costs are more important than outcomes", "Because risks are more important than outcomes"], c: 0 },
-        { q: "What does a service journey describe?", a: ["End-to-end interactions between a service provider and a service consumer", "The internal workflows and processes of a service provider", "The end-to-end lifecycle of a product", "The sequence of value chain activities"], c: 0 },
-        { q: "Which role authorizes budget for a service in a service relationship?", a: ["Customer", "User", "Sponsor", "Product vendor"], c: 2 },
-        { q: "What is service quality MOST concerned with?", a: ["How well a service meets agreed requirements and expectations", "How quickly incidents are resolved", "The speed of service development", "The social responsibility of a service provider"], c: 0 },
-        { q: "Which of the following is typically used to establish a shared understanding of expected and achieved service quality?", a: ["Product specification", "Service Level Agreement", "Product and service roadmaps", "Service level requirements"], c: 1 },
-        { q: "How does the ‘information and technology’ dimension support effective product and service management?", a: ["By enabling the use of data, information, and technology required to deliver services", "By defining organizational roles and responsibilities needed for product development", "By defining workflows and activities required for product development", "By managing relationships with external suppliers"], c: 0 },
-        { q: "Which dimension is concerned with management of relationships with external organizations?", a: ["Partners and suppliers", "Information and technology", "Organizations and people", "Value streams and processes"], c: 0 },
-        { q: "Why are ‘value streams and processes’ important in product and service management?", a: ["They specify the tools used for service monitoring", "They show how activities are coordinated to create and deliver value", "They define organizational hierarchies and reporting lines", "They describe supplier agreements and help manage contracts"], c: 1 },
-        { q: "How does the ‘organizations and people’ dimension contribute to effective product and service management?", a: ["By ensuring skills, culture, and communication support value creation", "By defining the technologies used to deliver services", "By managing relationships with external organizations", "By automating workflows across value streams"], c: 0 },
-        { q: "Which set CORRECTLY lists the components of the ITIL Value System?", a: ["Value streams, projects, releases, incidents, changes", "Guiding principles, governance, discover, deliver", "Products, services, customers, suppliers, partners", "Guiding principles, governance, value chain, management practices, continual improvement"], c: 3 },
-        { q: "A team is developing a new digital service. Instead of delivering all features at once, they release a small set of features, gather user feedback, and adjust the next release based on what they learn. Which ITIL Guiding Principle is the team applying?", a: ["Keep it simple and practical", "Focus on value", "Progress iteratively with feedback", "Collaborate and promote visibility"], c: 2 },
-        { q: "How should the ITIL Guiding Principle ‘optimize and automate’ be applied?", a: ["By replacing people with technology across all functions", "By optimizing processes before automating them", "By automating all activities immediately", "By automating processes before optimizing them"], c: 1 },
-        { q: "What does the ITIL Guiding Principle ‘think and work holistically’ emphasize?", a: ["Considering all components of the value system when making decisions", "Assigning responsibility for improvements to a single team", "Ensuring all activities result in value creation for the stakeholders", "Automating repetitive and manual tasks"], c: 0 },
-        { q: "How should the ITIL Guiding Principle ‘collaborate and promote visibility’ be applied?", a: ["By involving stakeholders and sharing information with them", "By limiting communication to management only", "By reusing existing processes wherever possible", "By capturing feedback after each iteration"], c: 0 },
-        { q: "How does ITIL describe the way the Guiding Principles should be applied together?", a: ["They should be applied one at a time in a fixed sequence", "They replace the need for governance and management practices", "They should be applied independent of each other", "They should be used collectively and balanced based on the situation"], c: 3 },
-        { q: "Which governance activity is focused on ensuring adherence with policies and strategic direction?", a: ["Evaluate", "Direct", "Monitor", "Discover"], c: 2 },
-        { q: "Which of the following is a part of purpose of ‘deliver’ activity?", a: ["Managing user onboarding", "Monitoring support systems", "Designing product prototypes", "Obtaining supplier resources"], c: 0 },
-        { q: "Which activity has the PRIMARY responsibility for maintaining and monitoring digital products and supporting systems?", a: ["Deliver", "Support", "Operate", "Transition"], c: 2 },
-        { q: "Which activity ensures that new or changed products are seamlessly introduced in the live environment?", a: ["Build", "Transition", "Deliver", "Operate"], c: 1 },
-        { q: "What is the purpose of the ‘support’ activity?", a: ["To assist users and maintain service performance", "To design service architectures", "To build solution components", "To discover new business opportunities"], c: 0 },
-        { q: "What distinguishes ‘continuous deployment’ from ‘continuous delivery’?", a: ["Continuous deployment prevents frequent releases", "Continuous delivery requires manual code integration", "Continuous deployment automatically deploys changes to production", "Continuous delivery eliminates testing activities"], c: 2 },
-        { q: "What refers to a detailed document outlining the requirements and characteristics of a product?", a: ["Change request", "Service request", "Product prototype", "Product specification"], c: 3 },
-        { q: "What does observability enable in digital product and service management?", a: ["Understanding system behaviour through outputs such as logs, metrics, and traces", "Ensuring changes are approved before being deployed", "Automatically preventing incidents from occurring", "Improving service reliability through engineering practices"], c: 0 },
-        { q: "What is a problem?", a: ["An unplanned service interruption", "Root cause of one or more incidents", "A service access request from users", "An incident that impacts critical services"], c: 1 },
-        { q: "An organization wants to evaluate how well the ‘transition’ value chain activity is performing. Which metric would BEST support this?", a: ["Success rate of releases deployed into the live environment", "Number of ideas generated for new services", "Average cost per service request", "Percentage of value streams mapped"], c: 0 },
-        { q: "Which metric is MOST appropriate for assessing the success of the ‘build’ value chain activity?", a: ["Number of incidents resolved within agreed targets", "Customer satisfaction score after service delivery", "Percentage of service requests fulfilled on first contact", "Quality of the product solutions"], c: 3 },
-        { q: "How do value chain activities support an organization’s purpose?", a: ["By turning strategic intent into coordinated workflows that enable outcomes for stakeholders", "By defining governance controls and decision-making authority across management levels", "By standardizing operational procedures aligning them to the organization's purpose", "By setting predefined service quality targets to direct what the operational workflows should achieve"], c: 0 },
-        { q: "Why are management practices important for value chain activities?", a: ["They define the organization’s purpose and strategy", "They enable value chain activities by providing the required capabilities", "They ensure activities are performed in a fixed order", "They replace value chain activities with standardized processes"], c: 1 },
-        { q: "Why do ITIL Official Practice Guides follow a standardized structure across all practices?", a: ["To make it easier for organizations to understand and apply different practices", "To ensure all practices are implemented in the same sequence", "To enforce uniform tooling and technology choices", "To limit the flexibility of practice adoption"], c: 0 },
-        { q: "How do ITIL Official Practice Guides benefit organizations managing digital products and services?", a: ["By prescribing mandatory tools and technologies for service management", "By separating product management guidance from service management guidance", "By supporting organizations in developing product and service management capabilities", "By defining a fixed maturity level that organizations must achieve"], c: 2 },
-        { q: "Why does the ITIL Continual Improvement Model begin by defining the vision?", a: ["To document current performance metrics before changes are made", "To ensure improvement efforts are aligned with the organization’s objectives", "To identify improvement actions and assign responsibilities", "To confirm whether previous improvement initiatives were successful"], c: 1 },
-        { q: "How does an enabling value stream contribute to value creation?", a: ["By supporting the effective operation of core value streams", "By replacing the need for core value streams", "By defining customer outcomes and service expectations", "By acting as the primary interface with service consumers"], c: 0 },
-        { q: "What does ITIL emphasize as a key difference between ‘value stream mapping’ and ‘value stream management’?", a: ["Mapping identifies how value flows, while management ensures the value stream performs effectively over time", "Mapping is used only for reporting, while management is used only for auditing", "Mapping applies to services, while management applies to products", "Mapping focuses on cost control, while management focuses on risk avoidance"], c: 0 }
+        { q: "What is a digital product?", a: ["A formal description of one or more services designed to address consumer needs", "The access to the service provider’s resources and their use according to the agreed terms and conditions", "A combination of an organization’s resources based on digital technology and designed to offer value to consumers", "Service actions performed by a provider"], c: 2 },
+        { q: "Which of the following is a key success metric for the ‘acquire’ activity?", a: ["Number and impact of incidents", "Quality of outsourced resources", "Performance against SLAs", "Negative impact of changes"], c: 1 },
+        { q: "Which relationship is TRUE?", a: ["Products based on services", "Services based on products", "They are independent", "Products are service actions"], c: 1 },
+        { q: "Which role takes responsibility for outcomes of consumption?", a: ["Organization", "Sponsor", "Customer", "Provider"], c: 2 },
+        { q: "Which relationship focuses on efficiency?", a: ["Basic", "Cooperative", "Collaborative", "Partner"], c: 0 },
+        { q: "What is the ‘band of visibility’?", a: ["Provider only", "Modern models only", "Visible aspects between provider/consumer", "Customer journey path"], c: 2 },
+        { q: "Purpose of 'discover' activity?", a: ["Develop prototypes", "Secure resources", "Align capabilities with strategy", "Monitor products"], c: 2 },
+        { q: "Which activity creates prototypes?", a: ["Design", "Deliver", "Support", "Transition"], c: 0 },
+        { q: "Purpose of 'acquire' activity?", a: ["Resolve incidents", "Secure resources efficiently", "Onboard users", "Test prototypes"], c: 1 },
+        { q: "Activity that minimizes incident impact?", a: ["Transition", "Operate", "Support", "Design"], c: 2 },
+        { q: "What does a product specification describe?", a: ["Characteristics and requirements", "Initial creation for testing", "System ability to remain operational", "Process of merging code"], c: 0 },
+        { q: "What is an incident?", a: ["Significant change of state", "Unplanned interruption", "Root cause of interruptions", "Flaw or vulnerability"], c: 1 },
+        { q: "ITIL and DevOps?", a: ["ITIL framework, DevOps techniques", "ITIL replaces DevOps", "DevOps limited to software", "DevOps governs ITIL"], c: 0 },
+        { q: "How to use ITIL AI Capability Model?", a: ["Benchmark tools", "Assess readiness", "Automate governance", "Prioritize investments"], c: 1 },
+        { q: "What is an SLA?", a: ["Legal vendor contract", "Agreement between provider and customer", "Informal discussion", "Internal IT guideline"], c: 1 },
+        { q: "ITIL concept including governance?", a: ["ITIL Value System", "Deliver/Support chain", "Focus on value", "Value streams dimension"], c: 0 },
+        { q: "Purpose of value stream mapping?", a: ["Automate monitoring", "Identify improvement opportunities", "Support practices", "Control stakeholders"], c: 1 },
+        { q: "Purpose of a product?", a: ["Offer value through configuration of resources", "Replace practices", "Enable co-creation", "Ensure compliance"], c: 0 },
+        { q: "Role of a digital service?", a: ["Define workflows", "Facilitate customer outcomes", "Replace product management", "Ensure compliance"], c: 1 },
+        { q: "Correct context of product/service?", a: ["Service enables value via products", "Product replaces services", "Service is limited to IT", "Service is independent"], c: 0 },
+        { q: "Situation: Printer delivery + maintenance?", a: ["Access + Actions", "Offering + Actions", "Goods + Actions", "Goods + Journey"], c: 2 },
+        { q: "How 'access' supports co-creation?", a: ["Allow consumers to use resources", "Transfer responsibility", "Limit to internal teams", "Replace actions with automation"], c: 0 },
+        { q: "Value co-creation truth?", a: ["Created only by provider", "Consumed by provider", "Independent of relationship", "Joint interactions"], c: 3 },
+        { q: "Utility and Warranty together?", a: ["Cost vs Risk", "Products only", "Fit for use vs Fit for purpose", "Fit for purpose vs Fit for use"], c: 3 },
+        { q: "Why consider outcomes, costs, risks?", a: ["Value is created when optimized", "Outcomes eliminate management", "Costs > Outcomes", "Risks > Outcomes"], c: 0 },
+        { q: "What is a service journey?", a: ["End-to-end interactions", "Internal workflows", "Product lifecycle", "Value chain sequence"], c: 0 },
+        { q: "Who authorizes budget?", a: ["Customer", "User", "Sponsor", "Vendor"], c: 2 },
+        { q: "Service quality concern?", a: ["Meeting requirements", "Resolution speed", "Development speed", "Social responsibility"], c: 0 },
+        { q: "Established shared understanding?", a: ["Specification", "SLA", "Roadmaps", "Requirements"], c: 1 },
+        { q: "Information and Tech dimension?", a: ["Enable data use", "Define roles", "Define workflows", "Manage suppliers"], c: 0 },
+        { q: "Dimension concerned with external orgs?", a: ["Partners and suppliers", "Info and Tech", "People", "Processes"], c: 0 },
+        { q: "Why 'value streams and processes'?", a: ["Specify tools", "Coordinate activities for value", "Define hierarchies", "Manage contracts"], c: 1 },
+        { q: "Organizations and people dimension?", a: ["Skills, culture, communication", "Define tech", "Manage orgs", "Automate workflows"], c: 0 },
+        { q: "Components of ITIL Value System?", a: ["Streams, projects", "Principles, governance, chain, practices, improvement", "Products, services", "Principles, governance, discover"], c: 1 },
+        { q: "Iterative releases + feedback?", a: ["Simple/Practical", "Focus on value", "Progress iteratively", "Collaborate"], c: 2 },
+        { q: "Optimize and Automate?", a: ["Replace people", "Optimize before automate", "Automate immediately", "Automate before optimize"], c: 1 },
+        { q: "Think/Work Holistically?", a: ["Consider all components", "Single team responsibility", "Result in value", "Automate tasks"], c: 0 },
+        { q: "Collaborate and Promote Visibility?", a: ["Involve stakeholders", "Management only", "Reuse processes", "Capture feedback"], c: 0 },
+        { q: "How to apply principles together?", a: ["One at a time", "Replace governance", "Independent", "Collectively and balanced"], c: 3 },
+        { q: "Activity for policy adherence?", a: ["Evaluate", "Direct", "Monitor", "Discover"], c: 2 },
+        { q: "Purpose of 'deliver' activity?", a: ["Manage onboarding", "Monitor support", "Design prototypes", "Obtain resources"], c: 0 },
+        { q: "Primary for monitoring products?", a: ["Deliver", "Support", "Operate", "Transition"], c: 2 },
+        { q: "Introduce changes to live?", a: ["Build", "Transition", "Deliver", "Operate"], c: 1 },
+        { q: "Purpose of 'support' activity?", a: ["Assist users/performance", "Design architecture", "Build components", "Discover opportunities"], c: 0 },
+        { q: "Deployment vs Delivery?", a: ["Prevent releases", "Manual integration", "Automatic deployment", "Eliminate testing"], c: 2 },
+        { q: "Document for characteristics?", a: ["Change", "Request", "Prototype", "Specification"], c: 3 },
+        { q: "Observability enables?", a: ["Understand behavior via logs", "Approval before deploy", "Prevent incidents", "Improve reliability"], c: 0 },
+        { q: "What is a problem?", a: ["Unplanned interruption", "Root cause of incidents", "Access request", "Critical impact"], c: 1 },
+        { q: "Metric for 'transition'?", a: ["Release success rate", "Generated ideas", "Request cost", "Streams mapped"], c: 0 },
+        { q: "Metric for 'build'?", a: ["Resolved incidents", "CSAT", "First contact resolution", "Quality of solutions"], c: 3 },
+        { q: "How chain activities support purpose?", a: ["Strategic intent to workflows", "Define controls", "Standardize procedures", "Set quality targets"], c: 0 },
+        { q: "Management practices importance?", a: ["Define strategy", "Provide capabilities", "Fixed order", "Replace activities"], c: 1 },
+        { q: "Standardized structure benefits?", a: ["Easy to understand", "Same sequence", "Enforce tech", "Limit flexibility"], c: 0 },
+        { q: "Practice guide benefit?", a: ["Mandatory tools", "Separate guidance", "Develop capabilities", "Fixed maturity"], c: 2 },
+        { q: "Start with vision?", a: ["Document metrics", "Align with objectives", "Assign responsibility", "Confirm success"], c: 1 },
+        { q: "Enabling value stream?", a: ["Support core streams", "Replace core", "Define outcomes", "Primary interface"], c: 0 },
+        { q: "Mapping vs Management?", a: ["Flow vs Performance", "Reporting vs Auditing", "Services vs Products", "Cost vs Risk"], c: 0 }
     ];
 
+    const container = document.getElementById('exam-content');
+    const navGrid = document.getElementById('nav-grid');
     let userSelections = new Array(questions.length).fill(null);
     let flaggedQuestions = new Array(questions.length).fill(false);
     let examEnded = false;
 
-    const container = document.getElementById('exam-content');
-    const navGrid = document.getElementById('nav-grid');
-    const btnEnd = document.getElementById('btn-end-exam');
-
     function init() {
+        container.innerHTML = ""; navGrid.innerHTML = "";
         questions.forEach((item, qIdx) => {
             const block = document.createElement('div');
             block.className = 'question-block';
@@ -220,7 +176,6 @@
             ul.className = 'options';
             item.a.forEach((opt, aIdx) => {
                 const li = document.createElement('li');
-                li.id = `q${qIdx}-o${aIdx}`;
                 li.textContent = `${String.fromCharCode(65 + aIdx)}. ${opt}`;
                 li.onclick = () => {
                     if (examEnded) return;
@@ -235,73 +190,55 @@
 
             const actions = document.createElement('div');
             actions.className = 'question-actions';
-
             const revealBtn = document.createElement('button');
             revealBtn.className = 'btn-small btn-reveal-styled';
-            revealBtn.id = `btn-show-${qIdx}`;
             revealBtn.textContent = "Show Answer";
-            revealBtn.onclick = () => toggleReveal(qIdx);
-
+            revealBtn.onclick = () => {
+                const opts = block.querySelectorAll('li');
+                opts[item.c].classList.add('correct');
+                if(userSelections[qIdx] !== null && userSelections[qIdx] !== item.c) opts[userSelections[qIdx]].classList.add('wrong');
+            };
             const flagBtn = document.createElement('button');
             flagBtn.className = 'btn-small flag-btn-styled';
             flagBtn.textContent = "🏳️ Flag";
             flagBtn.onclick = () => {
                 flaggedQuestions[qIdx] = !flaggedQuestions[qIdx];
                 flagBtn.classList.toggle('active');
-                flagBtn.textContent = flaggedQuestions[qIdx] ? "🚩 Flagged" : "🏳️ Flag";
                 document.getElementById(`nav-${qIdx}`).classList.toggle('flagged-nav');
             };
 
-            actions.appendChild(revealBtn);
-            actions.appendChild(flagBtn);
-            block.appendChild(actions);
-            container.appendChild(block);
+            actions.appendChild(revealBtn); actions.appendChild(flagBtn);
+            block.appendChild(actions); container.appendChild(block);
 
             const navItem = document.createElement('div');
-            navItem.className = 'nav-item';
-            navItem.id = `nav-${qIdx}`;
+            navItem.className = 'nav-item'; navItem.id = `nav-${qIdx}`;
             navItem.textContent = qIdx + 1;
             navItem.onclick = () => block.scrollIntoView({ behavior: 'smooth' });
             navGrid.appendChild(navItem);
         });
     }
 
-    function toggleReveal(idx) {
-        const btn = document.getElementById(`btn-show-${idx}`);
-        const opts = document.querySelectorAll(`#q-block-${idx} li`);
-        if (btn.textContent === "Show Answer") {
-            opts[questions[idx].c].classList.add('correct');
-            if (userSelections[idx] !== null && userSelections[idx] !== questions[idx].c) {
-                opts[userSelections[idx]].classList.add('wrong');
-            }
-            btn.textContent = "Hide Answer";
-        } else {
-            opts.forEach(o => o.classList.remove('correct', 'wrong'));
-            btn.textContent = "Show Answer";
-        }
-    }
-
-    btnEnd.onclick = () => {
+    document.getElementById('btn-end-exam').onclick = () => {
         examEnded = true;
         let score = 0;
         questions.forEach((q, idx) => {
             const nav = document.getElementById(`nav-${idx}`);
-            if (userSelections[idx] === q.c) {
-                score++;
-                nav.classList.add('nav-correct');
-            } else {
-                nav.classList.add('nav-wrong');
-            }
-            const btn = document.getElementById(`btn-show-${idx}`);
-            if (btn.textContent === "Show Answer") toggleReveal(idx);
+            if (userSelections[idx] === q.c) { score++; nav.classList.add('nav-correct'); }
+            else nav.classList.add('nav-wrong');
         });
-        alert(`Exam Complete! Your Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`);
+        alert(`Score: ${score}/${questions.length}`);
+    };
+
+    document.getElementById('btn-reset-exam').onclick = () => {
+        if(confirm("Reset all answers?")) {
+            userSelections.fill(null); flaggedQuestions.fill(false);
+            examEnded = false; init();
+        }
     };
 
     setInterval(() => {
         document.getElementById('time-part').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }, 1000);
-
     init();
 })();
 </script>
