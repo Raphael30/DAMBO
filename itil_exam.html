@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Eye Lock Edition</title>
+    <title>ITIL 4 Foundation Simulator - Locked Review</title>
     <style>
         :root {
             --bg-color: #f0f2f5;
@@ -34,7 +34,6 @@
             transition: background 0.3s ease;
         }
 
-        /* Glassmorphism Sidebar */
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
             background: var(--sidebar-bg); padding: 25px; box-sizing: border-box; 
@@ -50,7 +49,6 @@
 
         main { flex-grow: 1; padding: 25px; display: flex; justify-content: center; }
         
-        /* Premium Glassmorphism Container */
         .container { 
             width: 100%; max-width: 850px; 
             background: var(--container-bg); 
@@ -67,23 +65,23 @@
             transition: all 0.4s ease;
         }
 
-        /* EYE LOCK BLINK ANIMATION */
         @keyframes blink {
             0% { background-color: transparent; }
-            50% { background-color: rgba(52, 152, 219, 0.3); transform: scale(1.02); }
+            50% { background-color: rgba(52, 152, 219, 0.3); transform: scale(1.01); }
             100% { background-color: transparent; }
         }
-        .blink-effect {
-            animation: blink 0.8s ease-out;
-        }
+        .blink-effect { animation: blink 0.8s ease-out; }
 
         .options { list-style: none; padding: 0; margin: 20px 0; }
         .options li { 
             margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
             border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; gap: 10px;
         }
-        .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.1); }
         
+        /* Disable clicks when answer is shown */
+        .options.locked li { cursor: not-allowed; pointer-events: none; opacity: 0.8; }
+
+        .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.1); }
         .correct { background-color: rgba(46, 204, 113, 0.25) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
         .wrong { background-color: rgba(231, 76, 60, 0.25) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
 
@@ -92,13 +90,7 @@
         
         .btn-show { background: #d4edda; min-width: 140px; text-align: center; } 
         .btn-flag { background: #eeeeee; }
-        .btn-flag.active { background: var(--flagged); animation: flagPulse 0.4s ease; }
-        
-        @keyframes flagPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+        .btn-flag.active { background: var(--flagged); }
 
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; overflow-y: auto; }
         .nav-item { 
@@ -151,7 +143,6 @@
 <script>
 (function() {
     "use strict";
-    // Full ITIL Question Bank (Simplified version for space, ensure your copy has all 80)
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -285,7 +276,7 @@
             const li = document.createElement('li');
             li.innerHTML = `<span style="font-weight:bold; min-width:20px;">${labels[ai]}.</span> <span>${opt}</span>`;
             li.onclick = () => { 
-                if(!ended){ 
+                if(!ended && !ul.classList.contains('locked')){ 
                     userAns[i]=ai; 
                     ul.querySelectorAll('li').forEach(l=>l.classList.remove('selected')); 
                     li.classList.add('selected'); 
@@ -304,12 +295,14 @@
             const lis = ul.querySelectorAll('li');
             if (showBtn.textContent === "Hide Answer") {
                 lis.forEach(l => l.classList.remove('correct', 'wrong'));
+                ul.classList.remove('locked'); // UNLOCK options
                 showBtn.textContent = "Show Answer";
             } else {
                 lis[item.correctIndex].classList.add('correct');
                 if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
                 }
+                ul.classList.add('locked'); // LOCK options
                 showBtn.textContent = "Hide Answer";
             }
         };
@@ -330,10 +323,8 @@
         const nav = document.createElement('div');
         nav.className = 'nav-item'; nav.id = `nav-${i}`; nav.textContent = i+1;
         
-        // EYE LOCK NAV LOGIC
         nav.onclick = () => {
             block.scrollIntoView({behavior:'smooth', block: 'center'});
-            // Apply eye-lock blink effect
             block.classList.add('blink-effect');
             setTimeout(() => block.classList.remove('blink-effect'), 1000);
         };
@@ -345,6 +336,8 @@
             ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
+                const ul = document.getElementById(`opts-${i}`);
+                ul.classList.add('locked');
                 lis[q.correctIndex].classList.add('correct');
                 if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
