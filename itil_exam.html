@@ -25,38 +25,80 @@
             --action-text: #333333;
         }
 
+        /* Smooth Scroll Behavior */
+        html { scroll-behavior: smooth; }
+
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; display: flex; min-height: 100vh; }
-        #sidebar { position: sticky; top: 0; width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; z-index: 100; }
+        
+        #sidebar { position: sticky; top: 0; width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; z-index: 100; transition: all 0.3s ease; }
+        
         main { flex-grow: 1; display: flex; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 850px; background: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); box-sizing: border-box; }
+        
+        .container { width: 100%; max-width: 850px; background: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); box-sizing: border-box; }
+        
         h1 { text-align: center; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-top: 0; }
-        .question-block { margin-bottom: 30px; padding: 25px; border-bottom: 1px solid var(--block-border); scroll-margin-top: 20px; }
+
+        /* Entrance Animation for Questions */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-block { 
+            margin-bottom: 30px; padding: 25px; border-bottom: 1px solid var(--block-border); 
+            scroll-margin-top: 40px; 
+            animation: fadeInUp 0.5s ease backwards; 
+        }
+
         .question-actions { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
-        .btn-small { padding: 6px 12px; font-size: 12px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 4px; font-weight: bold; transition: 0.2s; color: var(--action-text); }
+        
+        .btn-small { padding: 8px 14px; font-size: 12px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; font-weight: bold; transition: all 0.2s ease; color: var(--action-text); }
+        .btn-small:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
         .btn-reveal-styled { background-color: var(--btn-reveal-bg); }
         .flag-btn-styled { background-color: var(--btn-flag-bg); }
         .flag-btn-styled.active { background-color: var(--flagged); border-color: var(--flagged); }
+
         .options { list-style: none; padding: 0; margin-top: 15px; }
-        .options li { margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: 0.2s; background: var(--container-bg); }
-        .options li:hover { background-color: var(--option-hover); }
-        .options li.selected { border-color: var(--primary); border-width: 2px; background-color: #3498db22; }
-        .correct { background-color: #2ecc7133 !important; color: var(--success) !important; border-color: var(--success) !important; font-weight: bold; }
-        .wrong { background-color: #e74c3c33 !important; color: var(--danger) !important; border-color: var(--danger) !important; }
-        #nav-panel { background: var(--nav-bg); border-radius: 8px; padding: 12px; overflow-y: auto; flex-grow: 1; }
+        .options li { margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; background: var(--container-bg); }
+        .options li:hover { background-color: var(--option-hover); transform: scale(1.01); }
+        .options li.selected { border-color: var(--primary); border-width: 2px; background-color: #3498db11; }
+        
+        .correct { background-color: #2ecc7122 !important; color: #1b5e20 !important; border-color: var(--success) !important; font-weight: bold; }
+        .wrong { background-color: #e74c3c22 !important; color: #b71c1c !important; border-color: var(--danger) !important; }
+
+        #nav-panel { background: var(--nav-bg); border-radius: 8px; padding: 12px; overflow-y: auto; flex-grow: 1; border: 1px solid rgba(0,0,0,0.1); }
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 6px; }
-        .nav-item { padding: 10px 0; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; position: relative; background: white; }
+        .nav-item { padding: 10px 0; text-align: center; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; position: relative; background: white; transition: all 0.2s; }
+        .nav-item:hover { background: #eee; }
+        
         .nav-item.flagged-nav::after { content: ""; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background-color: var(--flagged); border-radius: 50%; }
         .nav-answered { border-color: var(--primary); background: #3498db22; }
-        .nav-correct { background-color: var(--success) !important; color: white !important; }
-        .nav-wrong { background-color: var(--danger) !important; color: white !important; }
-        .action-btn { padding: 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; width: 100%; }
+        .nav-correct { background-color: var(--success) !important; color: white !important; border: none; }
+        .nav-wrong { background-color: var(--danger) !important; color: white !important; border: none; }
+
+        .action-btn { padding: 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; width: 100%; transition: all 0.2s; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-end { background-color: var(--success); color: white; }
         .btn-reset { background-color: var(--warning); color: white; margin-top: 5px; }
+
+        /* COOL MODAL ANIMATIONS */
+        #custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index:2000; justify-content:center; align-items:center; }
         
-        #custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center; }
-        .modal-content { background:white; padding:30px; border-radius:12px; max-width:400px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .modal-btns { display:flex; gap:10px; justify-content:center; margin-top:20px; }
-        .m-btn { padding:10px 20px; border:none; border-radius:6px; font-weight:bold; cursor:pointer; min-width: 80px; }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-content { 
+            background:white; padding:30px; border-radius:16px; max-width:420px; width: 90%; text-align:center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+
+        .modal-btns { display:flex; gap:12px; justify-content:center; margin-top:25px; }
+        .m-btn { padding:12px 24px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; min-width: 100px; transition: all 0.2s; }
+        .m-btn:hover { filter: brightness(1.1); transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -64,7 +106,7 @@
 <aside id="sidebar">
     <div style="text-align: center; color: white; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
         <div id="time-part" style="font-size: 1.6rem; color: #3498db; font-weight: bold;"></div>
-        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px;">← Return to Portal</a>
+        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px; opacity: 0.7;">← Return to Portal</a>
     </div>
     <div id="nav-panel"><div class="nav-grid" id="nav-grid"></div></div>
     <button id="btn-end-exam" class="action-btn btn-end">End Exam</button>
@@ -80,11 +122,11 @@
 
 <div id="custom-modal">
     <div class="modal-content">
-        <h3 id="modal-title" style="margin-top:0; color:#3498db;">Confirm Action</h3>
-        <p id="modal-message">Are you sure?</p>
+        <h3 id="modal-title" style="margin-top:0; color:#3498db; font-size: 1.5rem;">Confirm Action</h3>
+        <p id="modal-message" style="color: #555; line-height: 1.5;">Are you sure?</p>
         <div class="modal-btns">
-            <button id="modal-confirm" class="m-btn" style="background:#2ecc71; color:white;">OK</button>
-            <button id="modal-cancel" class="m-btn" style="background:#e74c3c; color:white;">Cancel</button>
+            <button id="modal-confirm" class="m-btn" style="background:#2ecc71; color:white;">Confirm</button>
+            <button id="modal-cancel" class="m-btn" style="background:#f1f2f6; color:#333;">Cancel</button>
         </div>
     </div>
 </div>
@@ -92,6 +134,7 @@
 <script>
 (function() {
     "use strict";
+    // Questions array remains the same as your source
     const questions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -127,7 +170,7 @@
         { q: "Purpose of 'acquire' activity?", a: ["Resolve incidents", "Secure resources efficiently", "Onboard users", "Test prototypes"], c: 1 },
         { q: "Activity that minimizes incident impact?", a: ["Transition", "Operate", "Support", "Design"], c: 2 },
         { q: "What does a product specification describe?", a: ["Characteristics and requirements", "Initial creation for testing", "System ability to remain operational", "Process of merging code"], c: 0 },
-        { q: "What is an incident?", a: ["Significant change of state", "Unplanned interruption", "Root cause of interruptions", "Flaw or vulnerability"], c: 1 },
+        { q: "What is an incident?", a: ["Significant change of state", "Unplanned interruption", "Root cause of incidents", "Flaw or vulnerability"], c: 1 },
         { q: "ITIL and DevOps?", a: ["ITIL framework, DevOps techniques", "ITIL replaces DevOps", "DevOps limited to software", "DevOps governs ITIL"], c: 0 },
         { q: "How to use ITIL AI Capability Model?", a: ["Benchmark tools", "Assess readiness", "Automate governance", "Prioritize investments"], c: 1 },
         { q: "What is an SLA?", a: ["Legal vendor contract", "Agreement between provider and customer", "Informal discussion", "Internal IT guideline"], c: 1 },
@@ -196,7 +239,10 @@
             const block = document.createElement('div');
             block.className = 'question-block';
             block.id = `q-block-${qIdx}`;
-            block.innerHTML = `<div><strong>${qIdx + 1}.</strong> ${item.q}</div>`;
+            // Stagger animation timing
+            block.style.animationDelay = `${qIdx * 0.05}s`;
+            
+            block.innerHTML = `<div style="font-size: 1.1rem; font-weight: 600;"><strong>${qIdx + 1}.</strong> ${item.q}</div>`;
 
             const ul = document.createElement('ul');
             ul.className = 'options';
@@ -220,7 +266,7 @@
             actions.className = 'question-actions';
             const revealBtn = document.createElement('button');
             revealBtn.className = 'btn-small btn-reveal-styled';
-            revealBtn.id = `btn-show-${qIdx}`; // Correct ID for toggle
+            revealBtn.id = `btn-show-${qIdx}`;
             revealBtn.textContent = "Show Answer";
             revealBtn.onclick = () => toggleReveal(qIdx);
 
@@ -244,7 +290,9 @@
             if (flaggedQuestions[qIdx]) navItem.classList.add('flagged-nav');
             if (userSelections[qIdx] !== null) navItem.classList.add('nav-answered');
             navItem.textContent = qIdx + 1;
-            navItem.onclick = () => block.scrollIntoView({ behavior: 'smooth' });
+            navItem.onclick = () => {
+                document.getElementById(`q-block-${qIdx}`).scrollIntoView({ behavior: 'smooth' });
+            };
             navGrid.appendChild(navItem);
         });
     }
@@ -279,16 +327,13 @@
     };
 
     btnEnd.onclick = () => {
-        showModal("End Exam?", "Are you sure? All answers will be revealed.", () => {
+        showModal("End Exam?", "Are you sure? This will reveal all results.", () => {
             examEnded = true;
             let score = 0;
             questions.forEach((q, idx) => {
                 const nav = document.getElementById(`nav-${idx}`);
                 const btn = document.getElementById(`btn-show-${idx}`);
-                
-                // Trigger visual highlight for every question
                 if (btn.textContent === "Show Answer") toggleReveal(idx);
-                
                 if (userSelections[idx] === q.c) {
                     score++;
                     nav.classList.add('nav-correct');
@@ -296,21 +341,19 @@
                     nav.classList.add('nav-wrong');
                 }
             });
-            
-            // Show result in modal after processing highlights
             setTimeout(() => {
-                showModal("Exam Result", `Final Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null, true);
-            }, 300);
+                showModal("Exam Result", `Great job! Your score is ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null, true);
+            }, 400);
         });
     };
 
     btnReset.onclick = () => {
-        showModal("Reset Everything?", "WARNING: This will clear all your progress.", () => {
+        showModal("Reset Everything?", "This will clear all progress and restart the simulation.", () => {
             userSelections.fill(null);
             flaggedQuestions.fill(false);
             examEnded = false;
             init();
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     };
 
