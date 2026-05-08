@@ -3,210 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC_BABY // NOKIA_IMPACT_VOID</title>
+    <title>ITIL 4 - Space Impact Edition</title>
     <style>
         :root {
-            --primary: #00ff41;
-            --bg: #000000;
+            --bg-color: #050a0f;
+            --container-bg: rgba(15, 25, 35, 0.85);
+            --text-color: #e0e6ed;
+            --primary: #00d4ff;
+            --success: #39ff14;
+            --danger: #ff3131;
+            --laser-color: #00f2ff;
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            color: var(--primary);
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            perspective: 1200px;
+        body { 
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color); 
+            color: var(--text-color);
+            margin: 0; display: flex; min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        canvas {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
+        /* 3D PERSPECTIVE SIDEBAR */
+        #sidebar { 
+            position: sticky; top: 0; width: 300px; height: 100vh; 
+            background: rgba(0, 0, 0, 0.9); padding: 20px;
+            perspective: 1000px; /* Essential for 3D */
+            border-right: 2px solid var(--primary);
+            z-index: 10;
         }
 
-        .dither {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
-            opacity: 0.12; pointer-events: none; z-index: 1000;
-        }
-
-        #scene {
-            width: 85%; max-width: 500px;
-            padding: 40px;
-            border: 1px solid var(--primary);
-            background: rgba(0, 0, 0, 0.95);
+        /* THE 3D NAV GRID */
+        .nav-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; 
+            transform: rotateY(15deg) rotateX(10deg); /* 3D Slant */
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.1);
-            position: relative;
+            margin-top: 20px;
         }
 
-        .floating-hand {
-            position: absolute; top: -55px; right: -15px;
-            font-size: 3rem; filter: drop-shadow(0 0 10px var(--primary));
-            animation: handFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes handFloat {
-            0%, 100% { transform: translateZ(120px) translateY(0); }
-            50% { transform: translateZ(180px) translateY(-30px); }
-        }
-
-        h1 { letter-spacing: 12px; margin: 0; transform: translateZ(70px); }
-        
-        .module-item {
-            display: flex; justify-content: space-between;
-            padding: 20px; margin-top: 20px;
+        .nav-item { 
+            height: 50px; display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 212, 255, 0.1); 
             border: 1px solid var(--primary);
-            text-decoration: none; color: var(--primary);
-            background: rgba(0, 255, 65, 0.05);
-            transition: 0.3s;
-            transform: translateZ(40px);
+            color: var(--primary); font-weight: bold; cursor: pointer;
+            transition: all 0.3s;
+            transform: translateZ(0px);
         }
 
-        .module-item:hover {
-            background: var(--primary); color: black;
-            transform: translateZ(80px);
+        .nav-item:hover {
+            background: var(--primary);
+            color: black;
+            transform: translateZ(20px); /* Pops out toward user */
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        .locked { opacity: 0.2; pointer-events: none; border-style: dotted; }
+        /* LASER PROJECTILE */
+        .laser-bolt {
+            position: fixed;
+            width: 30px; height: 4px;
+            background: var(--laser-color);
+            box-shadow: 0 0 10px var(--laser-color), 0 0 20px var(--laser-color);
+            border-radius: 2px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* EXPLOSION EFFECT */
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0px yellow; }
+            50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 40px orange; background: white; }
+            100% { transform: scale(2); opacity: 0; box-shadow: 0 0 80px red; }
+        }
+
+        .explosion {
+            position: absolute; width: 100%; height: 100%;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .exploding { animation: explode 0.5s ease-out forwards; }
+
+        /* CONTENT STYLING */
+        main { flex-grow: 1; padding: 40px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; }
+        
+        .question-block { 
+            position: relative;
+            background: var(--container-bg); 
+            margin-bottom: 50px; padding: 30px; 
+            border-radius: 15px; border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .options li { 
+            background: rgba(255,255,255,0.05); margin: 10px 0; padding: 15px; 
+            border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+        }
+        .options.locked li { pointer-events: none; opacity: 0.6; }
+        .selected { border-color: var(--primary) !important; background: rgba(0, 212, 255, 0.1) !important; }
+        .correct { border-color: var(--success) !important; color: var(--success); }
+        .wrong { border-color: var(--danger) !important; color: var(--danger); }
+
+        .btn-show { background: var(--primary); color: black; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<canvas id="voidCanvas"></canvas>
-<div class="dither"></div>
+<aside id="sidebar">
+    <h2 style="color: var(--primary); text-align: center;">CMD CENTER</h2>
+    <div id="nav-grid" class="nav-grid"></div>
+</aside>
 
-<div id="scene">
-    <div class="floating-hand">☝️</div>
-    <header>
-        <h1>EDUC_BABY</h1>
-        <p style="font-size: 0.7rem; opacity: 0.6;">> BATTLE_PROTOCOL_ACTIVE // STARFIELD_LOADED</p>
-    </header>
-
-    <div class="module-list">
-        <a href="itil_exam.html" class="module-item">
-            <span>[01] ITIL_4_FOUNDATION</span>
-            <span>ENGAGE_</span>
-        </a>
-        <div class="module-item locked">
-            <span>[02] CCNP_ENTERPRISE</span>
-            <span>OFFLINE</span>
-        </div>
-    </div>
-</div>
+<main>
+    <div class="container" id="exam-content"></div>
+</main>
 
 <script>
-    const canvas = document.getElementById('voidCanvas');
-    const ctx = canvas.getContext('2d');
-    let ships = [], stars = [];
-    let gridOffset = 0;
+    const questions = [
+        { q: "What is the purpose of the 'Service Desk' practice?", a: ["To capture demand for incident resolution", "To set service levels", "To manage physical assets", "To design new services"], c: 0 },
+        { q: "Which dimension includes 'Workflows'?", a: ["Organizations and People", "Information and Tech", "Partners and Suppliers", "Value Streams and Processes"], c: 3 }
+    ];
 
-    const neonColors = ['#00ff41', '#ff00ff', '#00ffff', '#ffff00', '#ff0000'];
+    const content = document.getElementById('exam-content');
+    const navGrid = document.getElementById('nav-grid');
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        initStars();
-    }
+    questions.forEach((item, i) => {
+        // Create Question Block
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.id = `q-${i}`;
+        block.innerHTML = `
+            <h3>${i+1}. ${item.q}</h3>
+            <ul class="options" id="opts-${i}">
+                ${item.options ? "" : item.a.map((opt, idx) => `<li onclick="select(${i}, ${idx})">${opt}</li>`).join('')}
+            </ul>
+            <button class="btn-show" id="btn-${i}" onclick="toggleAnswer(${i})">Show Answer</button>
+            <div class="explosion" id="exp-${i}"></div>
+        `;
+        content.appendChild(block);
 
-    function initStars() {
-        stars = [];
-        for(let i=0; i<150; i++) {
-            stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2 });
-        }
-    }
-
-    class BattleShip {
-        constructor() {
-            this.reset();
-        }
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 5;
-            this.vy = (Math.random() - 0.5) * 2;
-            this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
-            this.timer = 0;
-        }
-        drawShip(x, y, color) {
-            ctx.fillStyle = color;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = color;
-            // Space Impact "Nokia" Pixel Shape (Simplified)
-            const p = 3; 
-            ctx.fillRect(x, y, p*4, p); // tail
-            ctx.fillRect(x+p*2, y-p, p*3, p*3); // body
-            ctx.fillRect(x+p*5, y, p*2, p); // nose
-            ctx.shadowBlur = 0;
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if(this.timer++ % 40 === 0) { // Laser fire
-                ctx.strokeStyle = this.color;
-                ctx.beginPath();
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x + this.vx*15, this.y + this.vy*15);
-                ctx.stroke();
-            }
-            if(this.x < -50 || this.x > canvas.width + 50) this.reset();
-        }
-    }
-
-    for(let i=0; i<20; i++) ships.push(new BattleShip());
-
-    function drawGrid() {
-        ctx.strokeStyle = 'rgba(0, 255, 65, 0.15)';
-        ctx.lineWidth = 1;
-        const spacing = 60;
-        gridOffset = (gridOffset + 2) % spacing;
-
-        // Draw horizontal lines (perspective feel)
-        for(let i = -spacing; i < canvas.height; i += spacing) {
-            ctx.beginPath();
-            ctx.moveTo(0, i + gridOffset);
-            ctx.lineTo(canvas.width, i + gridOffset);
-            ctx.stroke();
-        }
-        // Vertical lines
-        for(let i = 0; i < canvas.width; i += spacing) {
-            ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i, canvas.height);
-            ctx.stroke();
-        }
-    }
-
-    function animate() {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0,0,canvas.width, canvas.height);
-        
-        // Stars
-        ctx.fillStyle = 'white';
-        stars.forEach(s => { ctx.fillRect(s.x, s.y, s.s, s.s); });
-
-        drawGrid();
-        ships.forEach(s => { s.update(); s.drawShip(s.x, s.y, s.color); });
-
-        requestAnimationFrame(animate);
-    }
-
-    // Camera move
-    const scene = document.getElementById('scene');
-    document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 40;
-        const y = (window.innerHeight / 2 - e.pageY) / 40;
-        scene.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        // Create 3D Nav Item
+        const nav = document.createElement('div');
+        nav.className = 'nav-item';
+        nav.textContent = i + 1;
+        nav.onclick = (e) => fireLaser(e, block, i);
+        navGrid.appendChild(nav);
     });
 
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
-</script>
+    function select(qIdx, aIdx) {
+        const ul = document.getElementById(`opts-${qIdx}`);
+        if (ul.classList.contains('locked')) return;
+        Array.from(ul.children).forEach(li => li.classList.remove('selected'));
+        ul.children[aIdx].classList.add('selected');
+    }
 
+    function toggleAnswer(i) {
+        const ul = document.getElementById(`opts-${i}`);
+        const btn = document.getElementById(`btn-${i}`);
+        const correctIdx = questions[i].c;
+
+        if (ul.classList.contains('locked')) {
+            ul.classList.remove('locked');
+            Array.from(ul.children).forEach(li => li.classList.remove('correct', 'wrong'));
+            btn.textContent = "Show Answer";
+        } else {
+            ul.classList.add('locked');
+            ul.children[correctIdx].classList.add('correct');
+            btn.textContent = "Hide Answer";
+        }
+    }
+
+    function fireLaser(e, targetBlock, i) {
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const rect = targetBlock.getBoundingClientRect();
+        const endX = rect.left + (rect.width / 2);
+        const endY = rect.top + (rect.height / 2);
+
+        // Create Projectile
+        const laser = document.createElement('div');
+        laser.className = 'laser-bolt';
+        document.body.appendChild(laser);
+
+        const angle = Math.atan2(endY - startY, endX - startX);
+        laser.style.left = `${startX}px`;
+        laser.style.top = `${startY}px`;
+        laser.style.transform = `rotate(${angle}rad)`;
+
+        // Animate Laser
+        const animation = laser.animate([
+            { left: `${startX}px`, top: `${startY}px`, opacity: 1 },
+            { left: `${endX}px`, top: `${endY}px`, opacity: 1 }
+        ], { duration: 400, easing: 'linear' });
+
+        animation.onfinish = () => {
+            laser.remove();
+            targetBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Trigger Explosion
+            const exp = document.getElementById(`exp-${i}`);
+            exp.classList.add('exploding');
+            setTimeout(() => exp.classList.remove('exploding'), 500);
+        };
+    }
+</script>
 </body>
 </html>
