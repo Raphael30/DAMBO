@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Full Logic</title>
+    <title>ITIL 4 Foundation Simulator - Toggle Verified</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -61,7 +61,6 @@
         .options li:hover { background: rgba(52, 152, 219, 0.1); }
         .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.05); }
         
-        /* Correct (Green) and Wrong (Red) Styles */
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
 
@@ -122,7 +121,6 @@
 <script>
 (function() {
     "use strict";
-    // Full verified question bank
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -263,14 +261,25 @@
 
         const actions = document.createElement('div');
         const showBtn = document.createElement('button');
-        showBtn.className = 'btn-action btn-show'; showBtn.textContent = "Show Answer";
+        showBtn.className = 'btn-action btn-show'; 
+        showBtn.textContent = "Show Answer";
         
-        // Logical update for individual "Show Answer" clicks
+        // Toggle Logic for Show/Hide Answer
         showBtn.onclick = () => {
             const lis = ul.querySelectorAll('li');
-            lis[item.correctIndex].classList.add('correct');
-            if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
-                lis[userAns[i]].classList.add('wrong');
+            const isShowing = showBtn.textContent === "Hide Answer";
+
+            if (isShowing) {
+                // Remove highlights
+                lis.forEach(li => li.classList.remove('correct', 'wrong'));
+                showBtn.textContent = "Show Answer";
+            } else {
+                // Apply highlights
+                lis[item.correctIndex].classList.add('correct');
+                if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
+                    lis[userAns[i]].classList.add('wrong');
+                }
+                showBtn.textContent = "Hide Answer";
             }
         };
 
@@ -288,17 +297,14 @@
         navGrid.appendChild(nav);
     });
 
-    // Logical update for "End Exam"
     document.getElementById('btn-end').onclick = () => {
         showModal("End Exam?", "Finish and see your score?", () => {
             ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
                 
-                // Highlight the correct answer in green
+                // Final reveal: Highlight correct in green, wrong selections in red
                 lis[q.correctIndex].classList.add('correct');
-                
-                // Highlight the user's wrong selection in red
                 if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
                 }
