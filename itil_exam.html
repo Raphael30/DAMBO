@@ -3,366 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Locked Review</title>
+    <title>EDUC_BABY // DITHER_LINK_SYSTEM</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --container-bg: rgba(255, 255, 255, 0.75);
-            --text-color: #333333;
-            --border-color: rgba(0, 0, 0, 0.08);
-            --sidebar-bg: rgba(44, 62, 80, 0.85);
-            --primary: #3498db;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #e67e22;
-            --flagged: #f1c40f;
+            --primary: #00ff41; 
+            --bg: #050505;
+            --dither-opacity: 0.12;
         }
 
-        body.dark-mode {
-            --bg-color: #0d0d0d;
-            --container-bg: rgba(30, 30, 30, 0.7);
-            --text-color: #e0e0e0;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --sidebar-bg: rgba(0, 0, 0, 0.8);
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color); 
-            color: var(--text-color);
-            margin: 0; display: flex; min-height: 100vh; 
-            transition: background 0.3s ease;
+        /* --- THE DITHER & CRT OVERLAY --- */
+        .dither-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
+            opacity: var(--dither-opacity);
+            pointer-events: none;
+            z-index: 100;
         }
 
-        #sidebar { 
-            position: sticky; top: 0; width: 280px; height: 100vh; 
-            background: var(--sidebar-bg); padding: 25px; box-sizing: border-box; 
-            display: flex; flex-direction: column; gap: 15px; color: white;
-            backdrop-filter: blur(20px); border-right: 1px solid var(--border-color);
+        header {
+            margin-top: 60px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            padding: 25px;
+            width: 85%;
+            max-width: 650px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
         }
 
-        .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
-        .flip-card {
-            background: rgba(34, 34, 34, 0.9); color: #fff; padding: 12px; border-radius: 8px;
-            font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
+        .status-header {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
         }
 
-        main { flex-grow: 1; padding: 25px; display: flex; justify-content: center; }
-        
-        .container { 
-            width: 100%; max-width: 850px; 
-            background: var(--container-bg); 
-            padding: 40px; border-radius: 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        /* --- QUESTION BANK LIST --- */
+        .module-list {
+            width: 85%;
+            max-width: 650px;
+            margin-top: 40px;
         }
 
-        .question-block { 
-            margin-bottom: 40px; padding: 20px; 
-            border-radius: 12px;
-            border-bottom: 1px solid var(--border-color); 
-            transition: all 0.4s ease;
+        .module-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid transparent;
+            text-decoration: none;
+            color: var(--primary);
+            margin-bottom: 10px;
+            transition: 0.2s;
+            background: rgba(0, 255, 65, 0.03);
         }
 
-        @keyframes blink {
-            0% { background-color: transparent; }
-            50% { background-color: rgba(52, 152, 219, 0.3); transform: scale(1.01); }
-            100% { background-color: transparent; }
+        /* Active Link Styling */
+        .module-item.active:hover {
+            background: var(--primary);
+            color: black;
+            border: 1px solid var(--primary);
         }
-        .blink-effect { animation: blink 0.8s ease-out; }
 
-        .options { list-style: none; padding: 0; margin: 20px 0; }
-        .options li { 
-            margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
-            border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; gap: 10px;
+        /* Coming Soon Styling */
+        .module-item.pending {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border: 1px dashed var(--primary);
         }
-        
-        /* Disable clicks when answer is shown */
-        .options.locked li { cursor: not-allowed; pointer-events: none; opacity: 0.8; }
 
-        .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.1); }
-        .correct { background-color: rgba(46, 204, 113, 0.25) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
-        .wrong { background-color: rgba(231, 76, 60, 0.25) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
+        .tag { font-weight: bold; }
 
-        .question-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; transition: all 0.2s ease; }
-        
-        .btn-show { background: #d4edda; min-width: 140px; text-align: center; } 
-        .btn-flag { background: #eeeeee; }
-        .btn-flag.active { background: var(--flagged); }
-
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; overflow-y: auto; }
-        .nav-item { 
-            height: 42px; display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; 
-            background: rgba(0,0,0,0.3); color: white; position: relative;
+        footer {
+            margin-top: auto;
+            padding: 30px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
         }
-        .nav-item.flagged::after { content: ""; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: var(--flagged); border-radius: 50%; }
-        .nav-correct { background: var(--success) !important; }
-        .nav-wrong { background: var(--danger) !important; }
-
-        #custom-modal { 
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.7); backdrop-filter: blur(10px); z-index:9999; 
-            justify-content:center; align-items:center; 
-        }
-        .modal-content { background: var(--container-bg); padding: 35px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; }
     </style>
 </head>
 <body>
 
-<aside id="sidebar">
-    <button onclick="location.href='index.html'" style="width:100%; background:rgba(75, 85, 99, 0.8); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
-    <div class="fliqlo-container">
-        <div class="flip-card" id="h-card">00</div>
-        <div class="flip-card" id="m-card">00</div>
-    </div>
-    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:rgba(255,255,255,0.1); color:white; border:none;">🌙 Change Theme</button>
-    <div id="nav-grid" class="nav-grid"></div>
-    <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
-    <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset & Shuffle</button>
-</aside>
+<div class="dither-overlay"></div>
 
-<main>
-    <div class="container" id="exam-content">
-        <h1 style="text-align:center; color:var(--primary);">ITIL 4 Foundation Simulator</h1>
-    </div>
-</main>
+<header>
+    <div class="status-header">SYSTEM_STATUS: ONLINE</div>
+    <h1 style="margin:0; letter-spacing: 5px;">EDUC_BABY.CORE</h1>
+    <p>> SELECT_MODULE_TO_INITIALIZE...</p>
+</header>
 
-<div id="custom-modal">
-    <div class="modal-content">
-        <h2 id="m-title"></h2><p id="m-msg"></p>
-        <div style="margin-top:20px; display: flex; gap: 10px; justify-content: center;">
-            <button id="m-ok" style="background:var(--success); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">OK</button>
-            <button id="m-cancel" style="background:var(--danger); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Cancel</button>
-        </div>
+<div class="module-list">
+    <!-- Active Bank -->
+    <a href="itil_exam.html" class="module-item active">
+        <span>01. ITIL_4_FOUNDATION_EXAM</span>
+        <span class="tag">[ ACCESS_GRANTED ]</span>
+    </a>
+
+    <!-- Coming Soon Bank -->
+    <div class="module-item pending">
+        <span>02. CCNP_ENTERPRISE_ENCOR</span>
+        <span class="tag">[ COMING_SOON ]</span>
     </div>
 </div>
 
-<script>
-(function() {
-    "use strict";
-    const rawQuestions = [
-        { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
-        { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
-        { q: "What influences whether a service is perceived as valuable by a consumer?", a: ["The service provider’s ability to minimize their operational costs", "The number of providers delivering the service to the consumer", "The extent to which the positive effects of the service outweigh the negative ones", "The amount of money the service provider invests in resources"], c: 2 },
-        { q: "Which of the following is TRUE regarding services and desired outcomes?", a: ["Services guarantee that all intended outcomes will be achieved", "Services completely eliminate risks associated with achieving outcomes", "Services always result in positive effects without exceptions", "Services may have unintended and surprising outcomes, both positive and negative"], c: 3 },
-        { q: "A service provider commits to using recyclable components, reducing carbon emissions, and maintaining transparent supply chains. Which concept does this commitment represent?", a: ["Utility", "Warranty", "User experience", "Sustainability"], c: 3 },
-        { q: "Which dimension of product and service management is directly influenced by leadership commitment to psychological safety and continual learning?", a: ["Partners and suppliers", "Value streams and processes", "Information and technology", "Organizations and people"], c: 3 },
-        { q: "Which of the following dimension of product and service management addresses organizational and cross-organizational workflows?", a: ["Partners and suppliers", "Information and technology", "Organizations and people", "Value streams and processes"], c: 3 },
-        { q: "Which dimension of product and service management addresses data and technologies used in digital product and services?", a: ["Partners and suppliers", "Value streams and processes", "Organizations and people", "Information and technology"], c: 3 },
-        { q: "Which dimension of product and service management is concerned with relationships with other organizations that are involved in discovery, design and continual improvement of product?", a: ["Value streams and processes", "Information and technology", "Partners and suppliers", "Organizations and people"], c: 2 },
-        { q: "According to the ‘focus on value’ ITIL Guiding Principle, all organizational activities should link back to what?", a: ["Benefits for organization, its customers, and stakeholders", "Increased revenue only", "Employee satisfaction", "Market share dominance"], c: 0 },
-        { q: "According to the ITIL Guiding Principle ‘start where you are’, what is the MAIN risk of starting over without considering what is already available when improving a service?", a: ["Losing opportunities for collaboration and shared understanding across teams", "Overcomplicating solutions by ignoring practical, simple approaches", "Failing to gather feedback needed to guide gradual improvement", "Wasting time and losing valuable existing capabilities and resources"], c: 3 },
-        { q: "What is the MAIN purpose of using feedback throughout improvement iterations?", a: ["To confirm that all stakeholder opinions are in agreement", "To ensure that improvement actions remain relevant and effective in changing circumstances", "To prevent the need for further adjustments once work has started", "To avoid changes in project priorities during implementation"], c: 1 },
-        { q: "A design team is creating a new workflow and tries to account for every possible exception. What is the risk of designing the workflow in this way?", a: ["Achieving stronger overall risk control", "Creating unnecessary complexity", "Delivering outcomes more quickly and consistently", "Ensuring employees always follow processes without question"], c: 1 },
-        { q: "Why should organizations consider the interaction of ITIL Guiding Principles?", a: ["Because principles are interdependent and complement each other", "Because one principle is always superior to the rest", "Because principles must be applied in a strict order", "Because one principle is usually sufficient for any situation"], c: 0 },
-        { q: "What is the role of a governing body in an organization?", a: ["It is accountable for performance and compliance at the highest level", "It is responsible for day-to-day operations", "It manages the technical details of digital products directly", "It focuses exclusively on financial reporting"], c: 0 },
-        { q: "Which of the following is NOT a success metric of the ‘discover’ activity?", a: ["Strategic fit of the organization’s products and service offerings", "Market relevance of the products and service offerings", "Service performance against the agreed SLA targets", "Stakeholder satisfaction with products and service offerings"], c: 2 },
-        { q: "What is a digital service?", a: ["A service that fully or largely relies on digital products", "A combination of technology resources designed for consumers", "The transfer of goods from provider to consumer", "A catalogue of services for consumers"], c: 0 },
-        { q: "Which term describes 'what an organization does for its consumers and other stakeholders and why'?", a: ["Value stream", "Value chain", "Operating model", "Organization’s purpose"], c: 3 },
-        { q: "Which statement BEST explains the relationship between an organization’s purpose and its operating model?", a: ["The operating model defines the organization’s financial strategy to achieve its purpose", "The organization’s purpose determines why it exists, while the operating model shows how it fulfills that purpose", "The operating model replaces the organization’s purpose once the value chain is defined", "The purpose and operating model are unrelated because one focuses on customers and the other on internal processes"], c: 1 },
-        { q: "Which of the following describes a management practice?", a: ["A series of steps that an organization uses to create and deliver products", "A set of organizational resources and capabilities designed to perform work or accomplish an objective", "A visual representation of how an organization co-creates value with stakeholders", "A set of interconnected activities that an organization performs to create and deliver products"], c: 1 },
-        { q: "Which aspect of an ITIL Official Practice Guide describes the roles, competencies, and responsibilities needed for a specific practice?", a: ["Capability assessment and development", "General information", "Organizations and people", "Partners and suppliers"], c: 2 },
-        { q: "A company plans an improvement initiative and ensures it is clearly linked to organizational goals and objectives. Which continual improvement step is being performed?", a: ["What is the vision?", "Where are we now?", "Take Action", "Where do we want to be?"], c: 0 },
-        { q: "Which of the following is NOT one of the steps in value stream mapping?", a: ["Value stream identification", "Mapping of the ‘as-is’ value stream", "Mapping a ‘to-be’ value stream", "Value stream management"], c: 3 },
-        { q: "What is a digital product?", a: ["A formal description of one or more services designed to address consumer needs", "The access to the service provider’s resources and their use according to the agreed terms and conditions", "A combination of an organization’s resources based on digital technology and designed to offer value to consumers", "Service actions performed by a provider"], c: 2 },
-        { q: "Which of the following is a key success metric for the ‘acquire’ activity?", a: ["Number and impact of incidents", "Quality of outsourced resources", "Performance against SLAs", "Negative impact of changes"], c: 1 },
-        { q: "Which relationship is TRUE?", a: ["Products based on services", "Services based on products", "They are independent", "Products are service actions"], c: 1 },
-        { q: "Which role takes responsibility for outcomes of consumption?", a: ["Organization", "Sponsor", "Customer", "Provider"], c: 2 },
-        { q: "Which relationship focuses on efficiency?", a: ["Basic", "Cooperative", "Collaborative", "Partner"], c: 0 },
-        { q: "What is the ‘band of visibility’?", a: ["Provider only", "Modern models only", "Visible aspects between provider/consumer", "Customer journey path"], c: 2 },
-        { q: "Purpose of 'discover' activity?", a: ["Develop prototypes", "Secure resources", "Align capabilities with strategy", "Monitor products"], c: 2 },
-        { q: "Which activity creates prototypes?", a: ["Design", "Deliver", "Support", "Transition"], c: 0 },
-        { q: "Purpose of 'acquire' activity?", a: ["Resolve incidents", "Secure resources efficiently", "Onboard users", "Test prototypes"], c: 1 },
-        { q: "Activity that minimizes incident impact?", a: ["Transition", "Operate", "Support", "Design"], c: 2 },
-        { q: "What does a product specification describe?", a: ["Characteristics and requirements", "Initial creation for testing", "System ability to remain operational", "Process of merging code"], c: 0 },
-        { q: "What is an incident?", a: ["Significant change of state", "Unplanned interruption", "Root cause of interruptions", "Flaw or vulnerability"], c: 1 },
-        { q: "ITIL and DevOps?", a: ["ITIL framework, DevOps techniques", "ITIL replaces DevOps", "DevOps limited to software", "DevOps governs ITIL"], c: 0 },
-        { q: "How to use ITIL AI Capability Model?", a: ["Benchmark tools", "Assess readiness", "Automate governance", "Prioritize investments"], c: 1 },
-        { q: "What is an SLA?", a: ["Legal vendor contract", "Agreement between provider and customer", "Informal discussion", "Internal IT guideline"], c: 1 },
-        { q: "ITIL concept including governance?", a: ["ITIL Value System", "Deliver/Support chain", "Focus on value", "Value streams dimension"], c: 0 },
-        { q: "Purpose of value stream mapping?", a: ["Automate monitoring", "Identify improvement opportunities", "Support practices", "Control stakeholders"], c: 1 },
-        { q: "Purpose of a product?", a: ["Offer value through configuration of resources", "Replace practices", "Enable co-creation", "Ensure compliance"], c: 0 },
-        { q: "Role of a digital service?", a: ["Define workflows", "Facilitate customer outcomes", "Replace product management", "Ensure compliance"], c: 1 },
-        { q: "Correct context of product/service?", a: ["Service enables value via products", "Product replaces services", "Service is limited to IT", "Service is independent"], c: 0 },
-        { q: "Situation: Printer delivery + maintenance?", a: ["Access + Actions", "Offering + Actions", "Goods + Actions", "Goods + Journey"], c: 2 },
-        { q: "How 'access' supports co-creation?", a: ["Allow consumers to use resources", "Transfer responsibility", "Limit to internal teams", "Replace actions with automation"], c: 0 },
-        { q: "Value co-creation truth?", a: ["Created only by provider", "Consumed by provider", "Independent of relationship", "Joint interactions"], c: 3 },
-        { q: "Utility and Warranty together?", a: ["Fit for purpose AND Fit for use", "Products only", "Fit for use vs Fit for purpose", "Warranty is utility"], c: 0 },
-        { q: "Why consider outcomes, costs, risks?", a: ["Value is created when optimized", "Outcomes eliminate management", "Costs > Outcomes", "Risks > Outcomes"], c: 0 },
-        { q: "What is a service journey?", a: ["End-to-end interactions", "Internal workflows", "Product lifecycle", "Value chain sequence"], c: 0 },
-        { q: "Who authorizes budget?", a: ["Customer", "User", "Sponsor", "Vendor"], c: 2 },
-        { q: "Service quality concern?", a: ["Meeting requirements", "Resolution speed", "Development speed", "Social responsibility"], c: 0 },
-        { q: "Established shared understanding?", a: ["Specification", "SLA", "Roadmaps", "Requirements"], c: 1 },
-        { q: "Information and Tech dimension?", a: ["Enable data use", "Define roles", "Define workflows", "Manage suppliers"], c: 0 },
-        { q: "Dimension concerned with external orgs?", a: ["Partners and suppliers", "Info and Tech", "People", "Processes"], c: 0 },
-        { q: "Why 'value streams and processes'?", a: ["Specify tools", "Coordinate activities for value", "Define hierarchies", "Manage contracts"], c: 1 },
-        { q: "Organizations and people dimension?", a: ["Skills, culture, communication", "Define tech", "Manage orgs", "Automate workflows"], c: 0 },
-        { q: "Components of ITIL Value System?", a: ["Streams, projects", "Principles, governance, chain, practices, improvement", "Products, services", "Principles, governance, discover"], c: 1 },
-        { q: "Iterative releases + feedback?", a: ["Simple/Practical", "Focus on value", "Progress iteratively", "Collaborate"], c: 2 },
-        { q: "Optimize and Automate?", a: ["Replace people", "Optimize before automate", "Automate immediately", "Automate before optimize"], c: 1 },
-        { q: "Think/Work Holistically?", a: ["Consider all components", "Single team responsibility", "Result in value", "Automate tasks"], c: 0 },
-        { q: "Collaborate and Promote Visibility?", a: ["Involve stakeholders", "Management only", "Reuse processes", "Capture feedback"], c: 0 },
-        { q: "How to apply principles together?", a: ["One at a time", "Replace governance", "Independent", "Collectively and balanced"], c: 3 },
-        { q: "Activity for policy adherence?", a: ["Evaluate", "Direct", "Monitor", "Discover"], c: 2 },
-        { q: "Purpose of 'deliver' activity?", a: ["Manage onboarding", "Monitor support", "Design prototypes", "Obtain resources"], c: 0 },
-        { q: "Primary for monitoring products?", a: ["Deliver", "Support", "Operate", "Transition"], c: 2 },
-        { q: "Introduce changes to live?", a: ["Build", "Transition", "Deliver", "Operate"], c: 1 },
-        { q: "Purpose of 'support' activity?", a: ["Assist users/performance", "Design architecture", "Build components", "Discover opportunities"], c: 0 },
-        { q: "Deployment vs Delivery?", a: ["Prevent releases", "Manual integration", "Automatic deployment", "Eliminate testing"], c: 2 },
-        { q: "Document for characteristics?", a: ["Change", "Request", "Prototype", "Specification"], c: 3 },
-        { q: "Observability enables?", a: ["Understand behavior via logs", "Approval before deploy", "Prevent incidents", "Improve reliability"], c: 0 },
-        { q: "What is a problem?", a: ["Unplanned interruption", "Root cause of incidents", "Access request", "Critical impact"], c: 1 },
-        { q: "Metric for 'transition'?", a: ["Release success rate", "Generated ideas", "Request cost", "Streams mapped"], c: 0 },
-        { q: "Metric for 'build'?", a: ["Resolved incidents", "CSAT", "First contact resolution", "Quality of solutions"], c: 3 },
-        { q: "How chain activities support purpose?", a: ["Strategic intent to workflows", "Define controls", "Standardize procedures", "Set quality targets"], c: 0 },
-        { q: "Management practices importance?", a: ["Define strategy", "Provide capabilities", "Fixed order", "Replace activities"], c: 1 },
-        { q: "Standardized structure benefits?", a: ["Easy to understand", "Same sequence", "Enforce tech", "Limit flexibility"], c: 0 },
-        { q: "Practice guide benefit?", a: ["Mandatory tools", "Separate guidance", "Develop capabilities", "Fixed maturity"], c: 2 },
-        { q: "Start with vision?", a: ["Document metrics", "Align with objectives", "Assign responsibility", "Confirm success"], c: 1 },
-        { q: "Enabling value stream?", a: ["Support core streams", "Replace core", "Define outcomes", "Primary interface"], c: 0 },
-        { q: "Mapping vs Management?", a: ["Flow vs Performance", "Reporting vs Auditing", "Services vs Products", "Cost vs Risk"], c: 0 }
-    ];
+<footer>
+    ESTABLISHED_2024 // NO_AUDIO_DETECTED // DATA_STREAM_STABLE
+</footer>
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    const shuffledQuestions = shuffle([...rawQuestions]);
-    const questions = shuffledQuestions.map(item => {
-        const localChoices = item.a.map((text, idx) => ({ text, isCorrect: idx === item.c }));
-        const shuffledChoices = shuffle([...localChoices]);
-        return {
-            q: item.q,
-            options: shuffledChoices.map(c => c.text),
-            correctIndex: shuffledChoices.findIndex(c => c.isCorrect)
-        };
-    });
-
-    const container = document.getElementById('exam-content');
-    const navGrid = document.getElementById('nav-grid');
-    const labels = ["A", "B", "C", "D"];
-    let userAns = new Array(questions.length).fill(null);
-    let ended = false;
-    let currentModalAction = null;
-
-    function showModal(t, m, action, hideCancel = false) {
-        document.getElementById('m-title').textContent = t;
-        document.getElementById('m-msg').textContent = m;
-        currentModalAction = action; 
-        document.getElementById('m-cancel').style.display = hideCancel ? 'none' : 'inline-block';
-        document.getElementById('custom-modal').style.display = 'flex';
-    }
-
-    document.getElementById('m-ok').onclick = () => { 
-        document.getElementById('custom-modal').style.display='none'; 
-        if(currentModalAction) currentModalAction(); 
-    };
-    document.getElementById('m-cancel').onclick = () => document.getElementById('custom-modal').style.display='none';
-
-    questions.forEach((item, i) => {
-        const block = document.createElement('div');
-        block.className = 'question-block'; block.id = `q-${i}`;
-        block.innerHTML = `<h3>${i+1}. ${item.q}</h3><ul class="options" id="opts-${i}"></ul>`;
-        const ul = block.querySelector('ul');
-        
-        item.options.forEach((opt, ai) => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span style="font-weight:bold; min-width:20px;">${labels[ai]}.</span> <span>${opt}</span>`;
-            li.onclick = () => { 
-                if(!ended && !ul.classList.contains('locked')){ 
-                    userAns[i]=ai; 
-                    ul.querySelectorAll('li').forEach(l=>l.classList.remove('selected')); 
-                    li.classList.add('selected'); 
-                }
-            };
-            ul.appendChild(li);
-        });
-
-        const actions = document.createElement('div');
-        actions.className = 'question-actions';
-        const showBtn = document.createElement('button');
-        showBtn.className = 'btn-action btn-show'; 
-        showBtn.textContent = "Show Answer";
-        
-        showBtn.onclick = () => {
-            const lis = ul.querySelectorAll('li');
-            if (showBtn.textContent === "Hide Answer") {
-                lis.forEach(l => l.classList.remove('correct', 'wrong'));
-                ul.classList.remove('locked'); // UNLOCK options
-                showBtn.textContent = "Show Answer";
-            } else {
-                lis[item.correctIndex].classList.add('correct');
-                if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
-                    lis[userAns[i]].classList.add('wrong');
-                }
-                ul.classList.add('locked'); // LOCK options
-                showBtn.textContent = "Hide Answer";
-            }
-        };
-
-        const flagBtn = document.createElement('button');
-        flagBtn.className = 'btn-action btn-flag'; 
-        flagBtn.textContent = "🏳️ Flag";
-        flagBtn.onclick = () => { 
-            flagBtn.classList.toggle('active');
-            flagBtn.textContent = flagBtn.classList.contains('active') ? "🚩 Flagged" : "🏳️ Flag";
-            document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
-        };
-
-        actions.append(showBtn, flagBtn);
-        block.appendChild(actions);
-        container.appendChild(block);
-
-        const nav = document.createElement('div');
-        nav.className = 'nav-item'; nav.id = `nav-${i}`; nav.textContent = i+1;
-        
-        nav.onclick = () => {
-            block.scrollIntoView({behavior:'smooth', block: 'center'});
-            block.classList.add('blink-effect');
-            setTimeout(() => block.classList.remove('blink-effect'), 1000);
-        };
-        navGrid.appendChild(nav);
-    });
-
-    document.getElementById('btn-end').onclick = () => {
-        showModal("End Exam?", "Are you sure you want to finish?", () => {
-            ended = true; let score = 0;
-            questions.forEach((q, i) => {
-                const lis = document.querySelectorAll(`#opts-${i} li`);
-                const ul = document.getElementById(`opts-${i}`);
-                ul.classList.add('locked');
-                lis[q.correctIndex].classList.add('correct');
-                if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
-                    lis[userAns[i]].classList.add('wrong');
-                }
-                if(userAns[i] === q.correctIndex) score++;
-                document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.correctIndex ? 'nav-correct' : 'nav-wrong');
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showModal("Exam Result", `Your final score is: ${score} / ${questions.length}`, null, true);
-        });
-    };
-
-    document.getElementById('btn-reset').onclick = () => {
-        showModal("Reset & Shuffle?", "This will reload the exam with a new random order.", () => location.reload());
-    };
-
-    document.getElementById('theme-toggle').onclick = () => document.body.classList.toggle('dark-mode');
-    
-    function updateClock() {
-        const d = new Date();
-        document.getElementById('h-card').textContent = String(d.getHours()).padStart(2,'0');
-        document.getElementById('m-card').textContent = String(d.getMinutes()).padStart(2,'0');
-    }
-    setInterval(updateClock, 1000); updateClock();
-})();
-</script>
 </body>
 </html>
