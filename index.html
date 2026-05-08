@@ -1,311 +1,715 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC BABY - Road to Knowledge Adventure!</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDUC BUS</title>
 
-        body {
-            font-family: 'Arial Black', Arial, sans-serif;
-            overflow-x: hidden;
-            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffd23f, #ff6b35);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
-            min-height: 100vh;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-        .road-container {
-            position: relative;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .road {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 200px;
-            background: repeating-linear-gradient(
-                0deg,
-                #333 0px,
-                #333 40px,
-                #fff 40px,
-                #fff 80px
-            );
-            animation: roadMove 20s linear infinite;
-        }
+    :root {
+      --bg: #050505;
+      --pink: #ff008c;
+      --purple: #7a00ff;
+      --cyan: #00f7ff;
+      --yellow: #ffe600;
+      --white: #f5f5f5;
+      --glass: rgba(255,255,255,0.05);
+    }
 
-        @keyframes roadMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-200px); }
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        .van {
-            position: absolute;
-            bottom: 220px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            height: 180px;
-            background: linear-gradient(45deg, #00aaff, #0088cc);
-            border-radius: 20px;
-            animation: vanBounce 3s ease-in-out infinite, vanDrive 60s linear infinite;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
+    body {
+      background: var(--bg);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-        @keyframes vanBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0px) rotate(-1deg); }
-            50% { transform: translateX(-50%) translateY(-10px) rotate(1deg); }
-        }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 999;
+    }
 
-        @keyframes vanDrive {
-            0% { left: -20%; }
-            100% { left: 120%; }
-        }
+    .noise {
+      position: fixed;
+      inset: 0;
+      background: repeating-radial-gradient(circle at center, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 100px);
+      mix-blend-mode: overlay;
+      opacity: 0.3;
+      animation: flicker 0.2s infinite;
+      pointer-events: none;
+      z-index: 999;
+    }
 
-        .van::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 60px;
-            height: 40px;
-            background: #333;
-            border-radius: 10px 10px 0 0;
-        }
+    @keyframes flicker {
+      0% { opacity: 0.25; }
+      50% { opacity: 0.35; }
+      100% { opacity: 0.25; }
+    }
 
-        .van::after {
-            content: 'EDUC';
-            position: absolute;
-            top: 50px;
-            left: 90px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2rem;
+      background:
+        radial-gradient(circle at top left, rgba(255,0,140,0.25), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(0,247,255,0.2), transparent 40%),
+        radial-gradient(circle at center, rgba(122,0,255,0.2), transparent 50%),
+        #050505;
+    }
 
-        .headlights {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 40px;
-        }
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+      transform: perspective(1000px) rotateX(75deg);
+      transform-origin: center;
+      opacity: 0.3;
+      animation: gridMove 15s linear infinite;
+    }
 
-        .headlight {
-            width: 30px;
-            height: 30px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 30px #fff, 0 0 60px #fff;
-            animation: headlightGlow 2s ease-in-out infinite alternate;
-        }
+    @keyframes gridMove {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: 0 80px;
+      }
+    }
 
-        @keyframes headlightGlow {
-            0% { opacity: 0.7; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.6;
+      animation: float 10s ease-in-out infinite;
+    }
 
-        .content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            z-index: 100;
-            animation: slideInUp 1.5s ease-out;
-        }
+    .blob1 {
+      width: 350px;
+      height: 350px;
+      background: var(--pink);
+      top: 10%;
+      left: 10%;
+    }
 
-        @keyframes slideInUp {
-            0% { opacity: 0; transform: translate(-50%, 100px); }
-            100% { opacity: 1; transform: translate(-50%, -50%); }
-        }
+    .blob2 {
+      width: 300px;
+      height: 300px;
+      background: var(--cyan);
+      bottom: 5%;
+      right: 10%;
+      animation-delay: -3s;
+    }
 
-        h1 {
-            font-size: 4rem;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            animation: titlePulse 2s ease-in-out infinite;
-            letter-spacing: 5px;
-        }
+    .blob3 {
+      width: 280px;
+      height: 280px;
+      background: var(--purple);
+      top: 50%;
+      left: 50%;
+      animation-delay: -6s;
+    }
 
-        @keyframes titlePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+    @keyframes float {
+      0%,100% {
+        transform: translateY(0px) translateX(0px);
+      }
+      50% {
+        transform: translateY(-40px) translateX(20px);
+      }
+    }
 
-        .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-            animation: fadeIn 2s ease-in 0.5s both;
-        }
+    .camera-ui {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 50;
+      font-size: 14px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      color: white;
+      text-transform: uppercase;
+    }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 0.9; transform: translateY(0); }
-        }
+    .rec {
+      color: red;
+      animation: blink 1s infinite;
+    }
 
-        .cta-button {
-            display: inline-block;
-            padding: 20px 50px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff4757, #ff3838);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(255,71,87,0.4);
-            animation: buttonBounce 2s infinite, glow 2s infinite alternate;
-            transition: all 0.3s ease;
-        }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
 
-        .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255,71,87,0.6);
-        }
+    .online-counter {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 12px 18px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      z-index: 50;
+    }
 
-        @keyframes buttonBounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 1200px;
+    }
 
-        @keyframes glow {
-            0% { box-shadow: 0 10px 30px rgba(255,71,87,0.4); }
-            100% { box-shadow: 0 10px 30px rgba(255,71,87,0.7); }
-        }
+    .tag {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 25px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
 
-        .features {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 30px;
-        }
+    h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(5rem, 15vw, 12rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.2),
+        0 0 30px rgba(255,0,140,0.4),
+        0 0 60px rgba(255,0,140,0.2);
+    }
 
-        .feature {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 25px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            animation: float 3s ease-in-out infinite;
-        }
+    .gradient {
+      background: linear-gradient(90deg, var(--pink), var(--yellow), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .feature:nth-child(2) { animation-delay: 1s; }
-        .feature:nth-child(3) { animation-delay: 2s; }
+    .subtitle {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.8);
+    }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .van { width: 250px; height: 150px; }
-            .features { flex-direction: column; align-items: center; gap: 15px; }
-        }
+    .btn {
+      padding: 18px 34px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .stars {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      color: white;
+      box-shadow: 0 0 30px rgba(255,0,140,0.4);
+    }
 
-        .star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
-        }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      backdrop-filter: blur(10px);
+    }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-    </style>
+    .btn:hover {
+      transform: translateY(-5px) scale(1.03);
+    }
+
+    .visualizer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      margin-top: 60px;
+      height: 70px;
+    }
+
+    .bar {
+      width: 10px;
+      background: linear-gradient(to top, var(--pink), var(--cyan));
+      border-radius: 20px;
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .bar:nth-child(2) { animation-delay: 0.1s; }
+    .bar:nth-child(3) { animation-delay: 0.2s; }
+    .bar:nth-child(4) { animation-delay: 0.3s; }
+    .bar:nth-child(5) { animation-delay: 0.4s; }
+    .bar:nth-child(6) { animation-delay: 0.5s; }
+    .bar:nth-child(7) { animation-delay: 0.6s; }
+
+    @keyframes bounce {
+      0%,100% { height: 15px; }
+      50% { height: 70px; }
+    }
+
+    section {
+      padding: 120px 10%;
+      position: relative;
+    }
+
+    .section-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      color: rgba(255,255,255,0.7);
+      max-width: 700px;
+      line-height: 1.8;
+      margin-bottom: 60px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 35px;
+      backdrop-filter: blur(10px);
+      transition: 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,0,140,0.15), transparent 60%);
+      opacity: 0;
+      transition: 0.4s ease;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) rotate(-1deg);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 0 40px rgba(255,0,140,0.2);
+    }
+
+    .card h3 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+
+    .route {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 40px;
+      align-items: center;
+    }
+
+    .route-step {
+      padding: 18px 24px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .arrow {
+      font-size: 2rem;
+      color: var(--pink);
+    }
+
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 20px 0;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+      font-size: 3rem;
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    footer {
+      padding: 100px 10%;
+      text-align: center;
+    }
+
+    .footer-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(4rem, 10vw, 10rem);
+      line-height: 0.9;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .footer-btn {
+      margin-top: 30px;
+    }
+
+    @media(max-width: 768px) {
+      .hero {
+        padding-top: 120px;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .camera-ui,
+      .online-counter {
+        font-size: 11px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="road-container">
-        <div class="stars" id="stars"></div>
-        
-        <div class="road"></div>
-        
-        <div class="van">
-            <div class="headlights">
-                <div class="headlight"></div>
-                <div class="headlight"></div>
-            </div>
-        </div>
 
-        <div class="content">
-            <h1>🚍 EDUC BABY</h1>
-            <p class="subtitle">Hop on board for your KNOWLEDGE adventure!</p>
-            <a href="#start-learning" class="cta-button">START YOUR JOURNEY ➡️</a>
-        </div>
+  <div class="noise"></div>
 
-        <div class="features">
-            <div class="feature">📚 Interactive Lessons</div>
-            <div class="feature">🎮 Gamified Learning</div>
-            <div class="feature">🚀 Progress Tracking</div>
-        </div>
+  <section class="hero">
+
+    <div class="grid"></div>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+    <div class="camera-ui">
+      <span class="rec">REC ●</span>
+      <span>LIVE TOUR</span>
+      <span id="timer">00:00:00</span>
     </div>
 
-    <script>
-        // Create twinkling stars
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 50 + '%';
-                star.style.animationDelay = Math.random() * 2 + 's';
-                star.style.animationDuration = (Math.random() * 3 + 1) + 's';
-                starsContainer.appendChild(star);
-            }
-        }
+    <div class="online-counter">
+      🔥 <span id="counter">2487</span> RIDERS ONLINE
+    </div>
 
-        // Restart van animation when it goes off screen
-        const van = document.querySelector('.van');
-        van.addEventListener('animationiteration', function(e) {
-            if (e.animationName === 'vanDrive') {
-                van.style.animation = 'none';
-                van.offsetHeight; // trigger reflow
-                van.style.animation = 'vanBounce 3s ease-in-out infinite, vanDrive 60s linear infinite';
-            }
-        });
+    <div class="hero-content">
 
-        // Initialize
-        createStars();
+      <div class="tag">
+        THE INTERNET'S WILDEST LEARNING EXPERIENCE
+      </div>
 
-        // Smooth scroll for CTA
-        document.querySelector('.cta-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('.cta-button').style.animation = 'none';
-            setTimeout(() => {
-                document.querySelector('.cta-button').style.animation = 'buttonBounce 2s infinite, glow 2s infinite alternate';
-            }, 100);
-        });
-    </script>
+      <h1>
+        EDUC <span class="gradient">BUS</span>
+      </h1>
+
+      <p class="subtitle">
+        The chaotic late-night education ride powered by quizzes, memes,
+        neon energy, and nonstop learning.
+      </p>
+
+      <div class="buttons">
+        <button class="btn btn-primary">ENTER THE BUS</button>
+        <button class="btn btn-secondary">WATCH TOUR</button>
+      </div>
+
+      <div class="visualizer">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-content">
+      EDUC BUS • NIGHT SCHOOL ENERGY • QUIZZES • CHAOS • LEVEL UP • EDUC BUS • NIGHT SCHOOL ENERGY • QUIZZES • CHAOS • LEVEL UP •
+    </div>
+  </div>
+
+  <section>
+
+    <h2 class="section-title">
+      WHO'S RIDING?
+    </h2>
+
+    <p class="section-subtitle">
+      Whether you're grinding certifications, leveling up your tech skills,
+      or just trying to survive exams — this ride is for you.
+    </p>
+
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>🎓 Students</h3>
+        <p>
+          Fast-paced quizzes, challenge modes, and review sessions that don't feel boring.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>💻 Tech Kids</h3>
+        <p>
+          Networking, cybersecurity, cloud, and IT concepts turned into engaging experiences.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🎮 Gamers</h3>
+        <p>
+          XP systems, leaderboard vibes, and progression-focused learning.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🌙 Night Owls</h3>
+        <p>
+          Built for the 2AM productivity grind with a neon late-night aesthetic.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2 class="section-title">
+      PICK YOUR SEAT
+    </h2>
+
+    <p class="section-subtitle">
+      Choose your mode and start the ride.
+    </p>
+
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>🚌 FRONT ROW</h3>
+        <p>
+          Beginner-friendly learning mode with guided explanations.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>💎 VIP LOUNGE</h3>
+        <p>
+          Advanced quizzes, deeper concepts, and expert-level content.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>⚡ TURBO MODE</h3>
+        <p>
+          Rapid-fire challenge sessions for hardcore learners.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="route">
+      <div class="route-step">START</div>
+      <div class="arrow">→</div>
+      <div class="route-step">LEARN</div>
+      <div class="arrow">→</div>
+      <div class="route-step">QUIZ</div>
+      <div class="arrow">→</div>
+      <div class="route-step">LEVEL UP</div>
+    </div>
+
+  </section>
+
+  <footer>
+
+    <h2 class="footer-title">
+      GET ON<br>
+      THE BUS.
+    </h2>
+
+    <p class="subtitle">
+      Learning has never looked this chaotic.
+    </p>
+
+    <button class="btn btn-primary footer-btn">
+      START THE RIDE
+    </button>
+
+  </footer>
+
+  <script>
+
+    gsap.from("h1", {
+      y: 100,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power4.out"
+    });
+
+    gsap.from(".subtitle", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      delay: 0.3
+    });
+
+    gsap.from(".btn", {
+      y: 40,
+      opacity: 0,
+      stagger: 0.2,
+      duration: 1,
+      delay: 0.5
+    });
+
+    gsap.to(".hero-content", {
+      y: 15,
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+
+    let seconds = 0;
+
+    setInterval(() => {
+      seconds++;
+
+      const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+
+      document.getElementById('timer').innerText = `${hrs}:${mins}:${secs}`;
+    }, 1000);
+
+    let online = 2487;
+
+    setInterval(() => {
+      online += Math.floor(Math.random() * 8);
+      document.getElementById('counter').innerText = online.toLocaleString();
+    }, 3000);
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const rotateY = ((x / rect.width) - 0.5) * 10;
+        const rotateX = ((y / rect.height) - 0.5) * -10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+
+      gsap.to('.blob1', {
+        x: x * 50,
+        y: y * 50,
+        duration: 3
+      });
+
+      gsap.to('.blob2', {
+        x: -x * 50,
+        y: -y * 50,
+        duration: 3
+      });
+
+    });
+
+  </script>
+
 </body>
 </html>
