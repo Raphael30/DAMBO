@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator</title>
+    <title>ITIL 4 Foundation Simulator - Randomized</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -15,8 +15,6 @@
             --success: #2ecc71;
             --danger: #e74c3c;
             --warning: #e67e22;
-            --flagged: #f1c40f;
-            --transition-speed: 0.5s;
         }
 
         body.dark-mode {
@@ -32,7 +30,7 @@
             background-color: var(--bg-color); 
             color: var(--text-color);
             margin: 0; display: flex; min-height: 100vh; 
-            transition: all var(--transition-speed);
+            transition: all 0.4s;
         }
 
         /* Fliqlo Clock */
@@ -42,7 +40,6 @@
             font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
             position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .flip-card::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: rgba(0,0,0,0.6); }
 
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
@@ -68,36 +65,35 @@
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
 
-        /* FIXED COLOR ACTION BUTTONS */
-        .question-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: black; font-weight: bold; transition: opacity 0.3s, transform 0.1s; }
-        .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
+        /* BUTTON COLORS */
+        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; }
+        .btn-show { background: #d4edda !important; } /* Light Green */
+        .btn-flag { background: #fff3cd !important; } /* Yellow Orange */
+
+        /* NAV ALIGNMENT FIX */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
+        .nav-item { 
+            height: 42px; display: flex; align-items: center; justify-content: center;
+            border: 1px solid #444; border-radius: 8px; cursor: pointer; 
+            font-size: 13px; background: #333; color: white; position: relative;
+        }
+        .nav-item.flagged::after { content: "🚩"; font-size: 9px; position: absolute; top: 2px; right: 2px; }
+        .nav-correct { background: var(--success) !important; }
+        .nav-wrong { background: var(--danger) !important; }
 
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index:9999; 
             justify-content:center; align-items:center; 
         }
-        .modal-content { 
-            background: var(--container-bg); padding: 35px; border-radius: 20px; 
-            text-align: center; max-width: 400px; width: 90%; color: var(--text-color);
-        }
-
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
-        .nav-item { 
-            padding: 10px 0; text-align: center; border: 1px solid #444; 
-            border-radius: 8px; cursor: pointer; font-size: 13px; background: #333; color: white;
-        }
-        .nav-item.flagged::after { content: "🚩"; font-size: 10px; margin-left: 2px; }
-        .nav-correct { background: var(--success) !important; }
-        .nav-wrong { background: var(--danger) !important; }
+        .modal-content { background: var(--container-bg); padding: 35px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; color: var(--text-color); }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
     <a href="index.html" style="text-decoration:none;">
-        <button style="width:100%; background:#7f8c8d; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:5px;">⬅ Return to Portal</button>
+        <button style="width:100%; background:#4b5563; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
     </a>
 
     <div class="fliqlo-container">
@@ -105,15 +101,18 @@
         <div class="flip-card" id="m-card">00</div>
     </div>
     
-    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; border:none; background:#444; color:white;">🌙 Theme</button>
-    
+    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:#444; color:white; border:none;">🌙 Change Theme</button>
     <div id="nav-grid" class="nav-grid" style="overflow-y:auto; flex-grow:1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;"></div>
-    
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
-    <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset All</button>
+    <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset & Shuffle</button>
 </aside>
 
-<main><div class="container" id="exam-content"><h1 style="text-align:center; color:var(--primary);">ITIL 4 Foundation Simulator</h1></div></main>
+<main>
+    <div class="container" id="exam-content">
+        <h1 style="text-align:center; color:var(--primary);">ITIL 4 Foundation Simulator</h1>
+        <p style="text-align:center; opacity:0.7;">Questions and choices are randomized.</p>
+    </div>
+</main>
 
 <div id="custom-modal">
     <div class="modal-content">
@@ -128,8 +127,7 @@
 <script>
 (function() {
     "use strict";
-    // Questions bank remains the same
-    const questions = [
+    const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
         { q: "What influences whether a service is perceived as valuable by a consumer?", a: ["The service provider’s ability to minimize their operational costs", "The number of providers delivering the service to the consumer", "The extent to which the positive effects of the service outweigh the negative ones", "The amount of money the service provider invests in resources"], c: 2 },
@@ -212,35 +210,48 @@
         { q: "Mapping vs Management?", a: ["Flow vs Performance", "Reporting vs Auditing", "Services vs Products", "Cost vs Risk"], c: 0 }
     ];
 
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[array[j]]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Process questions: Shuffle order and then shuffle options
+    const questions = shuffle([...rawQuestions]).map(item => {
+        const originalChoices = item.a.map((text, index) => ({ text, isCorrect: index === item.c }));
+        const shuffledChoices = shuffle([...originalChoices]);
+        return {
+            q: item.q,
+            options: shuffledChoices.map(c => c.text),
+            correctIndex: shuffledChoices.findIndex(c => c.isCorrect)
+        };
+    });
+
     const container = document.getElementById('exam-content');
     const navGrid = document.getElementById('nav-grid');
     let userAns = new Array(questions.length).fill(null);
-    let flags = new Array(questions.length).fill(false);
     let ended = false;
-    let mAction = null;
 
     function showModal(t, m, action, hideCancel = false) {
         document.getElementById('m-title').textContent = t;
         document.getElementById('m-msg').textContent = m;
-        mAction = action;
         document.getElementById('m-cancel').style.display = hideCancel ? 'none' : 'inline-block';
         document.getElementById('custom-modal').style.display = 'flex';
+        document.getElementById('m-ok').onclick = () => { document.getElementById('custom-modal').style.display='none'; if(action) action(); };
     }
 
-    document.getElementById('m-ok').onclick = () => { document.getElementById('custom-modal').style.display='none'; if(mAction) mAction(); };
-    document.getElementById('m-cancel').onclick = () => { document.getElementById('custom-modal').style.display='none'; };
+    document.getElementById('m-cancel').onclick = () => document.getElementById('custom-modal').style.display='none';
 
-    // Build UI
     questions.forEach((item, i) => {
         const block = document.createElement('div');
-        block.className = 'question-block';
-        block.id = `q-${i}`;
+        block.className = 'question-block'; block.id = `q-${i}`;
         block.innerHTML = `<h3>${i+1}. ${item.q}</h3><ul class="options" id="opts-${i}"></ul>`;
         const ul = block.querySelector('ul');
         
-        item.a.forEach((opt, ai) => {
-            const li = document.createElement('li');
-            li.textContent = opt;
+        item.options.forEach((opt, ai) => {
+            const li = document.createElement('li'); li.textContent = opt;
             li.onclick = () => { 
                 if(!ended){ 
                     userAns[i]=ai; 
@@ -252,29 +263,16 @@
             ul.appendChild(li);
         });
 
-        // ACTION BUTTONS with FIXED COLORS
         const actions = document.createElement('div');
         actions.className = 'question-actions';
-        
         const showBtn = document.createElement('button');
-        showBtn.className = 'btn-action'; showBtn.textContent = "Show Answer";
-        // Light Green Locked
-        showBtn.style.background = "#d4edda";
-        showBtn.onclick = () => {
-            const lis = ul.querySelectorAll('li');
-            lis[item.c].classList.toggle('correct');
-        };
+        showBtn.className = 'btn-action btn-show'; showBtn.textContent = "Show Answer";
+        showBtn.onclick = () => ul.querySelectorAll('li')[item.correctIndex].classList.toggle('correct');
 
         const flagBtn = document.createElement('button');
         flagBtn.className = 'btn-action btn-flag'; flagBtn.textContent = "Flag";
-        // Yellow Orange Locked
-        flagBtn.style.background = "#fff3cd";
-        flagBtn.onclick = () => { 
-            flags[i]=!flags[i]; 
-            flagBtn.classList.toggle('active'); 
-            document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
-        };
-        
+        flagBtn.onclick = () => document.getElementById(`nav-${i}`).classList.toggle('flagged');
+
         actions.append(showBtn, flagBtn);
         block.appendChild(actions);
         container.appendChild(block);
@@ -286,25 +284,20 @@
     });
 
     document.getElementById('btn-end').onclick = () => {
-        showModal("End Exam?", "Are you sure you want to see your results?", () => {
-            ended = true;
-            let score = 0;
+        showModal("End Exam?", "Finish and see your score?", () => {
+            ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
-                lis[q.c].classList.add('correct');
-                if(userAns[i] === q.c) score++;
-                document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.c ? 'nav-correct' : 'nav-wrong');
+                lis[q.correctIndex].classList.add('correct');
+                if(userAns[i] === q.correctIndex) score++;
+                document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.correctIndex ? 'nav-correct' : 'nav-wrong');
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
             showModal("Result", `Score: ${score}/${questions.length}`, null, true);
         });
     };
 
-    document.getElementById('btn-reset').onclick = () => showModal("Reset?", "Clear all progress?", () => {
-        window.scrollTo(0,0);
-        location.reload();
-    });
-
+    document.getElementById('btn-reset').onclick = () => showModal("Reset & Shuffle?", "This will reshuffle everything.", () => location.reload());
     document.getElementById('theme-toggle').onclick = () => document.body.classList.toggle('dark-mode');
     
     function updateClock() {
