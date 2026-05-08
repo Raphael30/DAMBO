@@ -18,89 +18,56 @@
             --primary: #3498db;
             --success: #2ecc71;
             --danger: #e74c3c;
-            --warning: #e67e22; /* High-contrast Reset Color */
+            --warning: #e67e22;
             --flagged: #f1c40f;
-            
-            /* Custom Action Colors */
-            --btn-reveal-bg: #e8f8f1; /* Light green */
-            --btn-flag-bg: #fff8e1;   /* Yellow-orange light */
+            --btn-reveal-bg: #e8f8f1;
+            --btn-flag-bg: #fff8e1;
             --action-text: #333333;
         }
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; display: flex; min-height: 100vh; }
-        
-        #sidebar { 
-            position: sticky; top: 0; width: 260px; height: 100vh; 
-            background: var(--sidebar-bg); padding: 20px; box-sizing: border-box; 
-            display: flex; flex-direction: column; gap: 15px; z-index: 100; 
-        }
-
+        #sidebar { position: sticky; top: 0; width: 260px; height: 100vh; background: var(--sidebar-bg); padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; z-index: 100; }
         main { flex-grow: 1; display: flex; justify-content: center; padding: 20px; }
-
-        .container { 
-            width: 100%; max-width: 850px; background: var(--container-bg); 
-            padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-            box-sizing: border-box; 
-        }
-
+        .container { width: 100%; max-width: 850px; background: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); box-sizing: border-box; }
         h1 { text-align: center; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-top: 0; }
-        
         .question-block { margin-bottom: 30px; padding: 25px; border-bottom: 1px solid var(--block-border); scroll-margin-top: 20px; }
-        
         .question-actions { display: flex; gap: 10px; margin-top: 20px; align-items: center; }
-
-        .btn-small { 
-            padding: 6px 12px; font-size: 12px; cursor: pointer; 
-            border: 1px solid var(--border-color); border-radius: 4px; 
-            font-weight: bold; transition: 0.2s; color: var(--action-text); 
-        }
-
+        .btn-small { padding: 6px 12px; font-size: 12px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 4px; font-weight: bold; transition: 0.2s; color: var(--action-text); }
         .btn-reveal-styled { background-color: var(--btn-reveal-bg); }
         .flag-btn-styled { background-color: var(--btn-flag-bg); }
         .flag-btn-styled.active { background-color: var(--flagged); border-color: var(--flagged); }
-
         .options { list-style: none; padding: 0; margin-top: 15px; }
-        .options li { 
-            margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
-            border-radius: 6px; cursor: pointer; transition: 0.2s; background: var(--container-bg); 
-        }
+        .options li { margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: 0.2s; background: var(--container-bg); }
         .options li:hover { background-color: var(--option-hover); }
         .options li.selected { border-color: var(--primary); border-width: 2px; background-color: #3498db22; }
-        
         .correct { background-color: #2ecc7133 !important; color: var(--success) !important; border-color: var(--success) !important; font-weight: bold; }
         .wrong { background-color: #e74c3c33 !important; color: var(--danger) !important; border-color: var(--danger) !important; }
-
         #nav-panel { background: var(--nav-bg); border-radius: 8px; padding: 12px; overflow-y: auto; flex-grow: 1; }
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 6px; }
-        .nav-item { 
-            padding: 10px 0; text-align: center; border: 1px solid var(--border-color); 
-            border-radius: 4px; cursor: pointer; font-size: 12px; background: var(--container-bg); 
-            color: var(--text-color); font-weight: bold; position: relative;
-        }
-        .nav-item.flagged-nav::after {
-            content: ""; position: absolute; top: 2px; right: 2px;
-            width: 8px; height: 8px; background-color: var(--flagged); border-radius: 50%;
-        }
+        .nav-item { padding: 10px 0; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; position: relative; background: white; }
+        .nav-item.flagged-nav::after { content: ""; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background-color: var(--flagged); border-radius: 50%; }
         .nav-answered { border-color: var(--primary); background: #3498db22; }
         .nav-correct { background-color: var(--success) !important; color: white !important; }
         .nav-wrong { background-color: var(--danger) !important; color: white !important; }
-
-        .action-btn { padding: 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; width: 100%; transition: opacity 0.2s; }
+        .action-btn { padding: 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; width: 100%; }
         .btn-end { background-color: var(--success); color: white; }
         .btn-reset { background-color: var(--warning); color: white; margin-top: 5px; }
-        .action-btn:hover { opacity: 0.9; }
+        
+        /* Modal Styles */
+        #custom-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center; }
+        .modal-content { background:white; padding:30px; border-radius:12px; max-width:400px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .modal-btns { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+        .m-btn { padding:10px 20px; border:none; border-radius:6px; font-weight:bold; cursor:pointer; min-width: 80px; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
     <div style="text-align: center; color: white; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <div id="time-part" style="font-size: 1.6rem; color: #3498db; font-weight: bold; margin-bottom: 5px;"></div>
-        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px; opacity: 0.8;">← Return to Portal</a>
+        <div id="time-part" style="font-size: 1.6rem; color: #3498db; font-weight: bold;"></div>
+        <a href="index.html" style="color: #ecf0f1; text-decoration: none; font-size: 11px;">← Return to Portal</a>
     </div>
-    <div id="nav-panel">
-        <div class="nav-grid" id="nav-grid"></div>
-    </div>
+    <div id="nav-panel"><div class="nav-grid" id="nav-grid"></div></div>
     <button id="btn-end-exam" class="action-btn btn-end">End Exam</button>
     <button id="btn-reset-exam" class="action-btn btn-reset">Reset All</button>
 </aside>
@@ -112,10 +79,20 @@
     </div>
 </main>
 
+<div id="custom-modal">
+    <div class="modal-content">
+        <h3 id="modal-title" style="margin-top:0; color:#3498db;">Confirm Action</h3>
+        <p id="modal-message">Are you sure?</p>
+        <div class="modal-btns">
+            <button id="modal-confirm" class="m-btn" style="background:#2ecc71; color:white;">OK</button>
+            <button id="modal-cancel" class="m-btn" style="background:#e74c3c; color:white;">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <script>
 (function() {
     "use strict";
-
     const questions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -203,10 +180,16 @@
     const navGrid = document.getElementById('nav-grid');
     const btnEnd = document.getElementById('btn-end-exam');
     const btnReset = document.getElementById('btn-reset-exam');
+    const modal = document.getElementById('custom-modal');
+    const modalMsg = document.getElementById('modal-message');
+    const modalTitle = document.getElementById('modal-title');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
     
     let userSelections = new Array(questions.length).fill(null);
     let flaggedQuestions = new Array(questions.length).fill(false);
     let examEnded = false;
+    let modalAction = null;
 
     function init() {
         container.innerHTML = ""; navGrid.innerHTML = "";
@@ -221,7 +204,7 @@
             item.a.forEach((opt, aIdx) => {
                 const li = document.createElement('li');
                 li.id = `q${qIdx}-o${aIdx}`;
-                li.textContent = `${String.fromCharCode(65 + aIdx)}. ${opt}`;
+                li.textContent = `${String.fromCharCode(64 + aIdx + 1)}. ${opt}`;
                 li.onclick = () => {
                     if (examEnded) return;
                     userSelections[qIdx] = aIdx;
@@ -229,6 +212,7 @@
                     li.classList.add('selected');
                     document.getElementById(`nav-${qIdx}`).classList.add('nav-answered');
                 };
+                if (userSelections[qIdx] === aIdx) li.classList.add('selected');
                 ul.appendChild(li);
             });
             block.appendChild(ul);
@@ -237,6 +221,7 @@
             actions.className = 'question-actions';
             const revealBtn = document.createElement('button');
             revealBtn.className = 'btn-small btn-reveal-styled';
+            revealBtn.id = `btn-show-${qIdx}`;
             revealBtn.textContent = "Show Answer";
             revealBtn.onclick = () => toggleReveal(qIdx);
 
@@ -280,8 +265,21 @@
         }
     }
 
+    function showModal(title, message, action) {
+        modalTitle.textContent = title;
+        modalMsg.textContent = message;
+        modalAction = action;
+        modal.style.display = 'flex';
+    }
+
+    modalCancel.onclick = () => { modal.style.display = 'none'; modalAction = null; };
+    modalConfirm.onclick = () => { 
+        if(modalAction) modalAction(); 
+        modal.style.display = 'none'; 
+    };
+
     btnEnd.onclick = () => {
-        if(confirm("Are you sure you want to end the exam? All answers will be revealed.")) {
+        showModal("End Exam?", "Are you sure you want to end? All answers will be revealed.", () => {
             examEnded = true;
             let score = 0;
             questions.forEach((q, idx) => {
@@ -295,18 +293,18 @@
                 const btn = document.getElementById(`btn-show-${idx}`);
                 if (btn.textContent === "Show Answer") toggleReveal(idx);
             });
-            alert(`Exam Complete! Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`);
-        }
+            showModal("Exam Result", `Your Final Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null);
+        });
     };
 
     btnReset.onclick = () => {
-        if(confirm("WARNING: Are you sure you want to reset all progress? All flags and answers will be cleared.")) {
+        showModal("Reset Everything?", "WARNING: This will clear all your progress and flags.", () => {
             userSelections.fill(null);
             flaggedQuestions.fill(false);
             examEnded = false;
             init();
             window.scrollTo(0,0);
-        }
+        });
     };
 
     setInterval(() => {
@@ -316,15 +314,5 @@
     init();
 })();
 </script>
-<div id="custom-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">
-    <div style="background:white; padding:30px; border-radius:12px; max-width:400px; text-align:center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <h3 id="modal-title" style="margin-top:0; color:#3498db;">Confirm Action</h3>
-        <p id="modal-message">Are you sure?</p>
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-            <button id="modal-confirm" style="padding:10px 20px; border:none; border-radius:6px; background:#2ecc71; color:white; font-weight:bold; cursor:pointer;">OK</button>
-            <button id="modal-cancel" style="padding:10px 20px; border:none; border-radius:6px; background:#e74c3c; color:white; font-weight:bold; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
