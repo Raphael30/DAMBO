@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC_BABY // DITHER_LINK_SYSTEM</title>
+    <title>EDUC_BABY // ASTRO_MOTION</title>
     <style>
         :root {
-            --primary: #00ff41; 
+            --primary: #00ff41;
             --bg: #050505;
-            --dither-opacity: 0.12;
         }
 
         body {
@@ -16,108 +15,150 @@
             color: var(--primary);
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Keeps the "camera" contained */
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            perspective: 1000px; /* Essential for 3D tilt */
         }
 
-        /* --- THE DITHER & CRT OVERLAY --- */
-        .dither-overlay {
+        /* --- THE DITHER OVERLAY --- */
+        .dither {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: -50%; left: -50%; width: 200%; height: 200%;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
-            opacity: var(--dither-opacity);
+            opacity: 0.15;
             pointer-events: none;
-            z-index: 100;
+            z-index: 1000;
         }
 
-        header {
-            margin-top: 60px;
-            text-align: center;
+        /* --- THE MOVING CAMERA CONTAINER --- */
+        #scene {
+            width: 90%;
+            max-width: 700px;
+            padding: 40px;
             border: 1px solid var(--primary);
-            padding: 25px;
-            width: 85%;
-            max-width: 650px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            background: rgba(0, 255, 65, 0.02);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            position: relative;
         }
 
-        .status-header {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+        /* --- FLOATING HAND ICON --- */
+        .floating-hand {
+            position: absolute;
+            font-size: 2rem;
+            top: -30px;
+            right: -30px;
+            animation: handFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 5px var(--primary));
         }
 
-        /* --- QUESTION BANK LIST --- */
+        @keyframes handFloat {
+            0%, 100% { transform: translateZ(50px) translateY(0) rotate(0deg); }
+            50% { transform: translateZ(80px) translateY(-20px) rotate(10deg); }
+        }
+
+        header h1 {
+            font-size: 2rem;
+            letter-spacing: 8px;
+            margin-bottom: 30px;
+            transform: translateZ(40px); /* Pops the text out */
+        }
+
         .module-list {
-            width: 85%;
-            max-width: 650px;
-            margin-top: 40px;
+            list-style: none;
+            padding: 0;
+            transform: translateZ(20px);
         }
 
         .module-item {
             display: flex;
             justify-content: space-between;
-            padding: 15px;
-            border: 1px solid transparent;
+            padding: 20px;
+            margin-bottom: 10px;
+            border: 1px solid var(--primary);
             text-decoration: none;
             color: var(--primary);
-            margin-bottom: 10px;
-            transition: 0.2s;
-            background: rgba(0, 255, 65, 0.03);
+            transition: 0.3s;
         }
 
-        /* Active Link Styling */
-        .module-item.active:hover {
+        .module-item:hover {
             background: var(--primary);
             color: black;
-            border: 1px solid var(--primary);
+            transform: translateZ(30px); /* Lift on hover */
         }
 
-        /* Coming Soon Styling */
-        .module-item.pending {
-            opacity: 0.4;
+        .module-item.locked {
+            opacity: 0.3;
+            border-style: dashed;
             cursor: not-allowed;
-            border: 1px dashed var(--primary);
         }
 
-        .tag { font-weight: bold; }
-
-        footer {
-            margin-top: auto;
-            padding: 30px;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
+        .cursor-follow {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--primary);
+            pointer-events: none;
+            z-index: 2000;
+            transition: transform 0.05s linear;
         }
+
     </style>
 </head>
 <body>
 
-<div class="dither-overlay"></div>
+<div class="dither"></div>
+<div class="cursor-follow" id="cursor"></div>
 
-<header>
-    <div class="status-header">SYSTEM_STATUS: ONLINE</div>
-    <h1 style="margin:0; letter-spacing: 5px;">EDUC_BABY.CORE</h1>
-    <p>> SELECT_MODULE_TO_INITIALIZE...</p>
-</header>
+<div id="scene">
+    <div class="floating-hand">☝️</div>
+    
+    <header>
+        <h1>EDUC_BABY</h1>
+        <p>> CAMERA_LINK: ESTABLISHED</p>
+    </header>
 
-<div class="module-list">
-    <!-- Active Bank -->
-    <a href="itil_exam.html" class="module-item active">
-        <span>01. ITIL_4_FOUNDATION_EXAM</span>
-        <span class="tag">[ ACCESS_GRANTED ]</span>
-    </a>
+    <div class="module-list">
+        <!-- Live Link -->
+        <a href="itil_exam.html" class="module-item">
+            <span>[01] ITIL_4_FOUNDATION</span>
+            <span>READY_</span>
+        </a>
 
-    <!-- Coming Soon Bank -->
-    <div class="module-item pending">
-        <span>02. CCNP_ENTERPRISE_ENCOR</span>
-        <span class="tag">[ COMING_SOON ]</span>
+        <!-- Coming Soon -->
+        <div class="module-item locked">
+            <span>[02] CCNP_ENTERPRISE</span>
+            <span>COMING_SOON</span>
+        </div>
     </div>
 </div>
 
-<footer>
-    ESTABLISHED_2024 // NO_AUDIO_DETECTED // DATA_STREAM_STABLE
-</footer>
+<script>
+    const scene = document.getElementById('scene');
+    const cursor = document.getElementById('cursor');
+
+    // Camera Movement Logic
+    document.addEventListener('mousemove', (e) => {
+        // Calculate mouse position relative to center
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        
+        // Rotate the scene based on mouse
+        scene.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+
+        // Custom Cursor movement
+        cursor.style.left = e.pageX + 'px';
+        cursor.style.top = e.pageY + 'px';
+    });
+
+    // Reset position when mouse leaves
+    document.addEventListener('mouseleave', () => {
+        scene.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+</script>
 
 </body>
 </html>
