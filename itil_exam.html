@@ -3,57 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Enhanced Flag</title>
+    <title>ITIL 4 Foundation Simulator - Refined</title>
     <style>
         :root {
-            --bg-color: #f4f7f6;
-            --container-bg: #ffffff;
+            --bg-color: #f0f2f5;
+            --container-bg: rgba(255, 255, 255, 0.8);
             --text-color: #333333;
-            --border-color: #dddddd;
-            --sidebar-bg: #2c3e50;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --sidebar-bg: rgba(44, 62, 80, 0.9);
             --primary: #3498db;
             --success: #2ecc71;
             --danger: #e74c3c;
             --warning: #e67e22;
             --flagged: #f1c40f;
-            --transition-speed: 0.5s;
         }
 
         body.dark-mode {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
+            --bg-color: #0f0f0f;
+            --container-bg: rgba(30, 30, 30, 0.8);
             --text-color: #e0e0e0;
-            --border-color: #333;
-            --sidebar-bg: #000;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --sidebar-bg: rgba(0, 0, 0, 0.85);
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color); 
             color: var(--text-color);
             margin: 0; display: flex; min-height: 100vh; 
-            transition: all var(--transition-speed);
+            transition: background 0.3s ease;
         }
 
-        /* Fliqlo Clock */
-        .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
-        .flip-card {
-            background: #222; color: #fff; padding: 12px; border-radius: 8px;
-            font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
-            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .flip-card::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: rgba(0,0,0,0.6); }
-
+        /* Glassmorphism Sidebar */
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
             background: var(--sidebar-bg); padding: 25px; box-sizing: border-box; 
             display: flex; flex-direction: column; gap: 15px; color: white;
+            backdrop-filter: blur(15px); border-right: 1px solid var(--border-color);
         }
-        
+
+        .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .flip-card {
+            background: #222; color: #fff; padding: 12px; border-radius: 8px;
+            font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
+        }
+
         main { flex-grow: 1; padding: 25px; display: flex; justify-content: center; }
+        
+        /* Glassmorphism Container */
         .container { 
-            width: 100%; max-width: 850px; background: var(--container-bg); 
-            padding: 40px; border-radius: 166px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            width: 100%; max-width: 850px; 
+            background: var(--container-bg); 
+            padding: 40px; border-radius: 16px; 
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
         }
 
         .question-block { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
@@ -62,37 +66,38 @@
             margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
             border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; gap: 10px;
         }
-        .options li:hover { background: rgba(52, 152, 219, 0.1); }
-        .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.05); }
+        .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.1); }
         
-        .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
-        .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
+        .correct { background-color: rgba(46, 204, 113, 0.25) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
+        .wrong { background-color: rgba(231, 76, 60, 0.25) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
 
         .question-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; transition: all 0.2s ease; }
         
-        /* FLAG BUTTON PULSE ANIMATION */
+        /* FIXED SIZE SHOW ANSWER BUTTON */
+        .btn-show { 
+            background: #d4edda; 
+            min-width: 140px; /* Ensures button doesn't change size with text */
+            text-align: center;
+        } 
+
+        .btn-flag { background: #eeeeee; }
+        .btn-flag.active { 
+            background: var(--flagged); 
+            animation: flagPulse 0.4s ease;
+        }
+        
         @keyframes flagPulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
-        .btn-flag { background: #eeeeee; } /* Default light grey for Flag Off */
-        .btn-flag.active { 
-            background: var(--flagged); 
-            color: black; 
-            animation: flagPulse 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.5);
-        }
-        
-        .btn-show { background: #d4edda; margin-right: 10px; } 
-
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; overflow-y: auto; }
         .nav-item { 
             height: 42px; display: flex; align-items: center; justify-content: center;
             border: 1px solid #444; border-radius: 8px; cursor: pointer; 
-            font-size: 13px; background: #333; color: white; position: relative;
+            background: #333; color: white; position: relative;
         }
         .nav-item.flagged::after { content: ""; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: var(--flagged); border-radius: 50%; }
         .nav-correct { background: var(--success) !important; }
@@ -100,24 +105,22 @@
 
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index:9999; 
+            background:rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index:9999; 
             justify-content:center; align-items:center; 
         }
-        .modal-content { background: var(--container-bg); padding: 35px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; color: var(--text-color); }
+        .modal-content { background: var(--container-bg); padding: 35px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <a href="index.html" style="text-decoration:none;">
-        <button style="width:100%; background:#4b5563; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
-    </a>
+    <button onclick="location.href='index.html'" style="width:100%; background:#4b5563; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
     <div class="fliqlo-container">
         <div class="flip-card" id="h-card">00</div>
         <div class="flip-card" id="m-card">00</div>
     </div>
     <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:#444; color:white; border:none;">🌙 Change Theme</button>
-    <div id="nav-grid" class="nav-grid" style="overflow-y:auto; flex-grow:1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;"></div>
+    <div id="nav-grid" class="nav-grid"></div>
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
     <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset & Shuffle</button>
 </aside>
@@ -131,7 +134,7 @@
 <div id="custom-modal">
     <div class="modal-content">
         <h2 id="m-title"></h2><p id="m-msg"></p>
-        <div style="margin-top:20px;">
+        <div style="margin-top:20px; display: flex; gap: 10px; justify-content: center;">
             <button id="m-ok" style="background:var(--success); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">OK</button>
             <button id="m-cancel" style="background:var(--danger); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Cancel</button>
         </div>
@@ -141,7 +144,6 @@
 <script>
 (function() {
     "use strict";
-    // Verified question bank remains the same
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -248,19 +250,21 @@
     const navGrid = document.getElementById('nav-grid');
     const labels = ["A", "B", "C", "D"];
     let userAns = new Array(questions.length).fill(null);
-    let flaggedQuestions = new Array(questions.length).fill(false);
     let ended = false;
-    let mAction = null;
+    let currentModalAction = null; // Renamed variable to prevent shadowing
 
     function showModal(t, m, action, hideCancel = false) {
         document.getElementById('m-title').textContent = t;
         document.getElementById('m-msg').textContent = m;
-        modalAction = action;
+        currentModalAction = action; 
         document.getElementById('m-cancel').style.display = hideCancel ? 'none' : 'inline-block';
         document.getElementById('custom-modal').style.display = 'flex';
     }
 
-    document.getElementById('m-ok').onclick = () => { document.getElementById('custom-modal').style.display='none'; if(modalAction) modalAction(); };
+    document.getElementById('m-ok').onclick = () => { 
+        document.getElementById('custom-modal').style.display='none'; 
+        if(currentModalAction) currentModalAction(); 
+    };
     document.getElementById('m-cancel').onclick = () => document.getElementById('custom-modal').style.display='none';
 
     questions.forEach((item, i) => {
@@ -277,7 +281,6 @@
                     userAns[i]=ai; 
                     ul.querySelectorAll('li').forEach(l=>l.classList.remove('selected')); 
                     li.classList.add('selected'); 
-                    document.getElementById(`nav-${i}`).style.borderColor='#3498db'; 
                 }
             };
             ul.appendChild(li);
@@ -287,14 +290,12 @@
         actions.className = 'question-actions';
         const showBtn = document.createElement('button');
         showBtn.className = 'btn-action btn-show'; 
-        showBtn.textContent = "🏳️ Show Answer";
+        showBtn.textContent = "Show Answer";
         
         showBtn.onclick = () => {
             const lis = ul.querySelectorAll('li');
-            const isShowing = showBtn.textContent === "Hide Answer";
-
-            if (isShowing) {
-                lis.forEach(li => li.classList.remove('correct', 'wrong'));
+            if (showBtn.textContent === "Hide Answer") {
+                lis.forEach(l => l.classList.remove('correct', 'wrong'));
                 showBtn.textContent = "Show Answer";
             } else {
                 lis[item.correctIndex].classList.add('correct');
@@ -308,22 +309,9 @@
         const flagBtn = document.createElement('button');
         flagBtn.className = 'btn-action btn-flag'; 
         flagBtn.textContent = "🏳️ Flag";
-        
-        // Logical Update for Flag Button Animation
         flagBtn.onclick = () => { 
-            flaggedQuestions[i] = !flaggedQuestions[i];
-            
-            // Toggle the 'active' class for animation and visual state
-            flagBtn.classList.toggle('active'); 
-            
-            // Toggle icon and text
-            if (flagBtn.classList.contains('active')) {
-                flagBtn.textContent = "🚩 Flagged";
-            } else {
-                flagBtn.textContent = "🏳️ Flag";
-            }
-            
-            // Existing sidebar link logic
+            flagBtn.classList.toggle('active');
+            flagBtn.textContent = flagBtn.classList.contains('active') ? "🚩 Flagged" : "🏳️ Flag";
             document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
         };
 
@@ -338,7 +326,7 @@
     });
 
     document.getElementById('btn-end').onclick = () => {
-        showModal("End Exam?", "Finish and see your score?", () => {
+        showModal("End Exam?", "Are you sure you want to finish?", () => {
             ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
@@ -346,16 +334,18 @@
                 if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
                 }
-
                 if(userAns[i] === q.correctIndex) score++;
                 document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.correctIndex ? 'nav-correct' : 'nav-wrong');
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            showModal("Result", `Score: ${score}/${questions.length}`, null, true);
+            showModal("Exam Result", `Your final score is: ${score} / ${questions.length}`, null, true);
         });
     };
 
-    document.getElementById('btn-reset').onclick = () => showModal("Reset & Shuffle?", "Everything will be reshuffled.", () => location.reload());
+    document.getElementById('btn-reset').onclick = () => {
+        showModal("Reset & Shuffle?", "This will reload the exam with a new random order.", () => location.reload());
+    };
+
     document.getElementById('theme-toggle').onclick = () => document.body.classList.toggle('dark-mode');
     
     function updateClock() {
