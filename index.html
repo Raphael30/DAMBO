@@ -1,617 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Portal | Shine Bright</title>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDUC BABY - Road to Knowledge Adventure!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  :root {
-    --sky: #1a1a2e;
-    --sky2: #16213e;
-    --road: #2d2d2d;
-    --yellow: #FFD93D;
-    --orange: #FF6B35;
-    --cyan: #4ECDC4;
-    --white: #FAFAFA;
-    --pink: #FF6B9D;
-  }
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffd23f, #ff6b35);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+        }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--sky);
-    color: var(--white);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-  /* ── STARS ── */
-  .stars {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 60%;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .star {
-    position: absolute;
-    width: 2px; height: 2px;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 3s infinite alternate;
-  }
+        .road-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  @keyframes twinkle {
-    0%   { opacity: 0.2; transform: scale(1); }
-    100% { opacity: 1;   transform: scale(1.4); }
-  }
+        .road {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: repeating-linear-gradient(
+                0deg,
+                #333 0px,
+                #333 40px,
+                #fff 40px,
+                #fff 80px
+            );
+            animation: roadMove 20s linear infinite;
+        }
 
-  /* ── CITYSCAPE ── */
-  .cityscape {
-    position: fixed;
-    bottom: 80px;
-    left: 0;
-    width: 200%;
-    height: 200px;
-    display: flex;
-    align-items: flex-end;
-    z-index: 1;
-    animation: scrollCity 30s linear infinite;
-  }
+        @keyframes roadMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-200px); }
+        }
 
-  @keyframes scrollCity {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
+        .van {
+            position: absolute;
+            bottom: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 180px;
+            background: linear-gradient(45deg, #00aaff, #0088cc);
+            border-radius: 20px;
+            animation: vanBounce 3s ease-in-out infinite, vanDrive 60s linear infinite;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
 
-  .building {
-    flex-shrink: 0;
-    background: #0f3460;
-    border-radius: 4px 4px 0 0;
-    position: relative;
-    margin-right: 8px;
-  }
+        @keyframes vanBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0px) rotate(-1deg); }
+            50% { transform: translateX(-50%) translateY(-10px) rotate(1deg); }
+        }
 
-  .building::after {
-    content: '';
-    position: absolute;
-    top: -8px; left: 50%;
-    transform: translateX(-50%);
-    width: 4px; height: 10px;
-    background: #e94560;
-    border-radius: 2px 2px 0 0;
-    animation: blink 1.5s step-start infinite;
-  }
+        @keyframes vanDrive {
+            0% { left: -20%; }
+            100% { left: 120%; }
+        }
 
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
+        .van::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 40px;
+            background: #333;
+            border-radius: 10px 10px 0 0;
+        }
 
-  .building .windows {
-    display: grid;
-    gap: 6px;
-    padding: 10px 8px;
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-  }
+        .van::after {
+            content: 'EDUC';
+            position: absolute;
+            top: 50px;
+            left: 90px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
 
-  .win {
-    background: rgba(255,211,61,0.15);
-    border-radius: 1px;
-    transition: background 2s;
-  }
-  .win.lit {
-    background: rgba(255,211,61,0.85);
-    box-shadow: 0 0 6px rgba(255,211,61,0.5);
-  }
+        .headlights {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
 
-  /* ── ROAD ── */
-  .road {
-    position: fixed;
-    bottom: 0; left: 0;
-    width: 100%;
-    height: 80px;
-    background: var(--road);
-    z-index: 2;
-    overflow: hidden;
-  }
-  .road::before {
-    content: '';
-    position: absolute;
-    top: 38px; left: 0;
-    width: 200%;
-    height: 6px;
-    background: repeating-linear-gradient(90deg, var(--yellow) 0 60px, transparent 60px 120px);
-    animation: roadStripe 1.5s linear infinite;
-  }
-  @keyframes roadStripe {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-120px); }
-  }
+        .headlight {
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #fff, 0 0 60px #fff;
+            animation: headlightGlow 2s ease-in-out infinite alternate;
+        }
 
-  /* ── BUS ── */
-  .bus-wrapper {
-    position: fixed;
-    bottom: 60px;
-    left: -320px;
-    z-index: 3;
-    animation: driveIn 2.5s cubic-bezier(.25,.46,.45,.94) forwards;
-  }
-  @keyframes driveIn {
-    0%   { left: -320px; }
-    100% { left: 60px; }
-  }
+        @keyframes headlightGlow {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
 
-  .bus {
-    width: 300px;
-    height: 90px;
-    background: var(--yellow);
-    border-radius: 12px 18px 8px 8px;
-    position: relative;
-    box-shadow: 4px 4px 0 #c9a800, inset 0 -6px 0 rgba(0,0,0,0.15);
-  }
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 100;
+            animation: slideInUp 1.5s ease-out;
+        }
 
-  /* roof stripe */
-  .bus::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 18px;
-    background: var(--orange);
-    border-radius: 12px 18px 0 0;
-  }
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translate(-50%, 100px); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
 
-  /* front face */
-  .bus::after {
-    content: '';
-    position: absolute;
-    right: -18px; top: 10px;
-    width: 22px; height: 58px;
-    background: var(--yellow);
-    border-radius: 0 10px 8px 0;
-    box-shadow: 3px 3px 0 #c9a800;
-  }
+        h1 {
+            font-size: 4rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            animation: titlePulse 2s ease-in-out infinite;
+            letter-spacing: 5px;
+        }
 
-  .bus-windows {
-    position: absolute;
-    top: 22px; left: 16px;
-    display: flex;
-    gap: 10px;
-  }
-  .bus-win {
-    width: 40px; height: 32px;
-    background: linear-gradient(160deg, #e0f4ff 0%, #a8dff5 100%);
-    border-radius: 4px;
-    border: 2px solid rgba(0,0,0,0.15);
-    position: relative;
-    overflow: hidden;
-  }
-  .bus-win::after {
-    content: '';
-    position: absolute;
-    top: 4px; left: 4px;
-    width: 10px; height: 8px;
-    background: rgba(255,255,255,0.7);
-    border-radius: 2px;
-  }
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
 
-  /* front window */
-  .bus-front-win {
-    position: absolute;
-    right: -12px; top: 16px;
-    width: 16px; height: 28px;
-    background: linear-gradient(160deg, #e0f4ff, #a8dff5);
-    border-radius: 0 6px 6px 0;
-    border: 2px solid rgba(0,0,0,0.1);
-  }
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeIn 2s ease-in 0.5s both;
+        }
 
-  /* headlight */
-  .bus-headlight {
-    position: absolute;
-    right: -20px; bottom: 14px;
-    width: 10px; height: 8px;
-    background: var(--yellow);
-    border-radius: 0 4px 4px 0;
-    box-shadow: 0 0 12px 6px rgba(255,235,100,0.5);
-    animation: flicker 0.1s step-start infinite;
-  }
-  @keyframes flicker {
-    0%, 90% { opacity: 1; }
-    91%, 100% { opacity: 0.8; }
-  }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 0.9; transform: translateY(0); }
+        }
 
-  /* wheels */
-  .wheels { position: absolute; bottom: -14px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 30px; }
-  .wheel {
-    width: 36px; height: 36px;
-    background: #1a1a1a;
-    border-radius: 50%;
-    border: 4px solid #444;
-    box-shadow: inset 0 0 0 4px #222;
-    animation: spin 0.5s linear infinite;
-  }
-  @keyframes spin {
-    0%   { transform: rotate(0deg); }
-    100% { transform: rotate(-360deg); }
-  }
-  .wheel::after {
-    content: '';
-    display: block;
-    width: 10px; height: 10px;
-    margin: auto; margin-top: 6px;
-    background: #666;
-    border-radius: 50%;
-  }
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(255,71,87,0.4);
+            animation: buttonBounce 2s infinite, glow 2s infinite alternate;
+            transition: all 0.3s ease;
+        }
 
-  /* destination sign */
-  .bus-sign {
-    position: absolute;
-    top: 3px; left: 60px;
-    background: #1a1a2e;
-    color: var(--cyan);
-    font-family: 'Bangers', cursive;
-    font-size: 11px;
-    letter-spacing: 2px;
-    padding: 2px 10px;
-    border-radius: 3px;
-  }
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255,71,87,0.6);
+        }
 
-  /* exhaust */
-  .puff {
-    position: absolute;
-    bottom: -4px;
-    left: -14px;
-    animation: puffOut 1s ease-out infinite;
-  }
-  .puff span {
-    display: block;
-    width: 14px; height: 14px;
-    background: rgba(180,180,180,0.6);
-    border-radius: 50%;
-    animation: puffFade 1s ease-out infinite;
-  }
-  .puff span:nth-child(2) { width: 20px; height: 20px; animation-delay: 0.2s; margin-left: -6px; margin-top: -10px; }
-  .puff span:nth-child(3) { width: 26px; height: 26px; animation-delay: 0.4s; margin-left: -10px; margin-top: -16px; }
-  @keyframes puffFade {
-    0%   { opacity: 0.7; transform: translate(0,0) scale(1); }
-    100% { opacity: 0;   transform: translate(-30px,-20px) scale(2); }
-  }
+        @keyframes buttonBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
 
-  /* ── MOON ── */
-  .moon {
-    position: fixed;
-    top: 60px; right: 100px;
-    width: 70px; height: 70px;
-    background: radial-gradient(circle at 35% 35%, #fffde7, #fdd835);
-    border-radius: 50%;
-    box-shadow: 0 0 40px rgba(253,216,53,0.3), 0 0 80px rgba(253,216,53,0.1);
-    z-index: 1;
-    animation: moonFloat 6s ease-in-out infinite;
-  }
-  @keyframes moonFloat {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-12px); }
-  }
+        @keyframes glow {
+            0% { box-shadow: 0 10px 30px rgba(255,71,87,0.4); }
+            100% { box-shadow: 0 10px 30px rgba(255,71,87,0.7); }
+        }
 
-  /* ── CONTENT ── */
-  .content {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 40px 20px 160px;
-    text-align: center;
-  }
+        .features {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
 
-  .badge {
-    display: inline-block;
-    background: var(--orange);
-    color: white;
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 6px 18px;
-    border-radius: 100px;
-    margin-bottom: 20px;
-    animation: fadeDown 0.8s ease both;
-  }
+        .feature {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+        }
 
-  .headline {
-    font-family: 'Bangers', cursive;
-    font-size: clamp(56px, 12vw, 100px);
-    line-height: 1;
-    letter-spacing: 4px;
-    color: var(--yellow);
-    text-shadow: 4px 4px 0 var(--orange), 8px 8px 0 rgba(255,107,53,0.3);
-    animation: fadeDown 0.8s 0.1s ease both;
-    margin-bottom: 8px;
-  }
+        .feature:nth-child(2) { animation-delay: 1s; }
+        .feature:nth-child(3) { animation-delay: 2s; }
 
-  .sub-headline {
-    font-family: 'Bangers', cursive;
-    font-size: clamp(28px, 6vw, 52px);
-    letter-spacing: 6px;
-    color: var(--cyan);
-    text-shadow: 2px 2px 0 #1a7a75;
-    animation: fadeDown 0.8s 0.2s ease both;
-    margin-bottom: 24px;
-  }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
 
-  .tagline {
-    font-size: clamp(14px, 2.5vw, 18px);
-    color: rgba(255,255,255,0.7);
-    max-width: 480px;
-    line-height: 1.6;
-    animation: fadeDown 0.8s 0.3s ease both;
-    margin-bottom: 48px;
-  }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .van { width: 250px; height: 150px; }
+            .features { flex-direction: column; align-items: center; gap: 15px; }
+        }
 
-  /* ── CARDS ── */
-  .cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    animation: fadeDown 0.8s 0.5s ease both;
-    max-width: 700px;
-  }
+        .stars {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
 
-  .card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
-    padding: 28px 32px;
-    backdrop-filter: blur(10px);
-    flex: 1 1 280px;
-    max-width: 320px;
-    text-align: left;
-    transition: transform 0.25s ease, border-color 0.25s ease;
-  }
-  .card:hover {
-    transform: translateY(-6px);
-    border-color: var(--yellow);
-  }
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
 
-  .card-icon { font-size: 32px; margin-bottom: 12px; }
-
-  .card-title {
-    font-size: 18px;
-    font-weight: 900;
-    color: var(--yellow);
-    margin-bottom: 6px;
-  }
-  .card-desc {
-    font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
-  .card-meta {
-    font-size: 12px;
-    color: rgba(255,255,255,0.35);
-    margin-bottom: 16px;
-  }
-
-  .btn {
-    display: inline-block;
-    background: var(--yellow);
-    color: #1a1a2e;
-    font-weight: 900;
-    font-size: 14px;
-    padding: 10px 24px;
-    border-radius: 100px;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 0 #c9a800;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 #c9a800;
-  }
-  .btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #c9a800;
-  }
-
-  .coming-soon {
-    display: inline-block;
-    background: rgba(78,205,196,0.15);
-    color: var(--cyan);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    padding: 6px 16px;
-    border-radius: 100px;
-    border: 1px solid rgba(78,205,196,0.3);
-  }
-
-  /* ── LAMP POSTS ── */
-  .lamps {
-    position: fixed;
-    bottom: 70px;
-    left: 0;
-    width: 200%;
-    z-index: 4;
-    pointer-events: none;
-    display: flex;
-    gap: 220px;
-    animation: scrollCity 15s linear infinite;
-  }
-  .lamp { position: relative; flex-shrink: 0; }
-  .lamp-pole { width: 4px; height: 60px; background: #555; margin: 0 auto; }
-  .lamp-head {
-    width: 30px; height: 10px;
-    background: #666;
-    border-radius: 6px 6px 0 0;
-    position: absolute;
-    top: 0; left: -13px;
-  }
-  .lamp-head::after {
-    content: '';
-    position: absolute;
-    bottom: -14px; left: 50%;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 14px solid rgba(255,230,100,0.25);
-    filter: blur(2px);
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-</style>
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
+    <div class="road-container">
+        <div class="stars" id="stars"></div>
+        
+        <div class="road"></div>
+        
+        <div class="van">
+            <div class="headlights">
+                <div class="headlight"></div>
+                <div class="headlight"></div>
+            </div>
+        </div>
 
-<!-- Stars -->
-<div class="stars" id="stars"></div>
+        <div class="content">
+            <h1>🚍 EDUC BABY</h1>
+            <p class="subtitle">Hop on board for your KNOWLEDGE adventure!</p>
+            <a href="#start-learning" class="cta-button">START YOUR JOURNEY ➡️</a>
+        </div>
 
-<!-- Moon -->
-<div class="moon"></div>
-
-<!-- Scrolling cityscape -->
-<div class="cityscape" id="cityscape"></div>
-
-<!-- Lamp posts -->
-<div class="lamps" id="lamps"></div>
-
-<!-- Road -->
-<div class="road"></div>
-
-<!-- Bus -->
-<div class="bus-wrapper">
-  <div class="bus">
-    <div class="bus-sign">STUDY EXPRESS</div>
-    <div class="bus-windows">
-      <div class="bus-win"></div>
-      <div class="bus-win"></div>
-      <div class="bus-win"></div>
-      <div class="bus-win"></div>
-      <div class="bus-win"></div>
-    </div>
-    <div class="bus-front-win"></div>
-    <div class="bus-headlight"></div>
-    <div class="wheels">
-      <div class="wheel"></div>
-      <div class="wheel"></div>
-    </div>
-    <div class="puff">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </div>
-</div>
-
-<!-- Main Content -->
-<main class="content">
-  <div class="badge">🚌 All aboard the study express</div>
-  <h1 class="headline">ITS YOUR TIME<br>TO SHINE!</h1>
-  <p class="sub-headline">STUDY HARD</p>
-  <p class="tagline">Jump on the knowledge bus and ride all the way to success. Your next exam won't know what hit it.</p>
-
-  <div class="cards">
-    <div class="card">
-      <div class="card-icon">📋</div>
-      <div class="card-title">ITIL 4 Foundation</div>
-      <div class="card-desc">Test your knowledge with real exam-style questions and sharpen your skills.</div>
-      <div class="card-meta">80 Questions</div>
-      <a class="btn" href="https://raphael30.github.io/EDUC_BABY/itil_exam.html">🚀 Start Practice</a>
+        <div class="features">
+            <div class="feature">📚 Interactive Lessons</div>
+            <div class="feature">🎮 Gamified Learning</div>
+            <div class="feature">🚀 Progress Tracking</div>
+        </div>
     </div>
 
-    <div class="card">
-      <div class="card-icon">⏳</div>
-      <div class="card-title">More Coming Soon</div>
-      <div class="card-desc">New question banks are loading up and heading your way. Stay tuned!</div>
-      <div class="card-meta">Coming soon</div>
-      <span class="coming-soon">🔔 Stay tuned</span>
-    </div>
-  </div>
-</main>
+    <script>
+        // Create twinkling stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 50 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 1) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
 
-<script>
-  // Stars
-  const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.style.cssText = `
-      left:${Math.random()*100}%;
-      top:${Math.random()*100}%;
-      animation-delay:${(Math.random()*3).toFixed(2)}s;
-      animation-duration:${(2+Math.random()*4).toFixed(2)}s;
-      width:${Math.random()<0.15?3:2}px;
-      height:${Math.random()<0.15?3:2}px;
-    `;
-    starsEl.appendChild(s);
-  }
+        // Restart van animation when it goes off screen
+        const van = document.querySelector('.van');
+        van.addEventListener('animationiteration', function(e) {
+            if (e.animationName === 'vanDrive') {
+                van.style.animation = 'none';
+                van.offsetHeight; // trigger reflow
+                van.style.animation = 'vanBounce 3s ease-in-out infinite, vanDrive 60s linear infinite';
+            }
+        });
 
-  // Buildings
-  const cityEl = document.getElementById('cityscape');
-  const buildingDefs = [
-    { w:60, h:180, cols:3, rows:8 },
-    { w:40, h:130, cols:2, rows:6 },
-    { w:80, h:160, cols:4, rows:7 },
-    { w:50, h:200, cols:2, rows:9 },
-    { w:70, h:110, cols:3, rows:5 },
-    { w:45, h:150, cols:2, rows:7 },
-    { w:55, h:190, cols:3, rows:8 },
-    { w:90, h:140, cols:4, rows:6 },
-    { w:35, h:120, cols:2, rows:5 },
-    { w:65, h:170, cols:3, rows:8 },
-    { w:75, h:100, cols:3, rows:4 },
-    { w:50, h:160, cols:2, rows:7 },
-  ];
+        // Initialize
+        createStars();
 
-  // Double for seamless loop
-  [...buildingDefs, ...buildingDefs].forEach(def => {
-    const b = document.createElement('div');
-    b.className = 'building';
-    b.style.cssText = `width:${def.w}px;height:${def.h}px;`;
-
-    const wins = document.createElement('div');
-    wins.className = 'windows';
-    wins.style.gridTemplateColumns = `repeat(${def.cols},1fr)`;
-    wins.style.gridTemplateRows = `repeat(${def.rows},1fr)`;
-
-    for (let i = 0; i < def.cols * def.rows; i++) {
-      const w = document.createElement('div');
-      w.className = 'win' + (Math.random() > 0.4 ? ' lit' : '');
-      wins.appendChild(w);
-    }
-    b.appendChild(wins);
-    cityEl.appendChild(b);
-  });
-
-  // Lamp posts
-  const lampsEl = document.getElementById('lamps');
-  for (let i = 0; i < 20; i++) {
-    const lamp = document.createElement('div');
-    lamp.className = 'lamp';
-    lamp.innerHTML = '<div class="lamp-head"></div><div class="lamp-pole"></div>';
-    lampsEl.appendChild(lamp);
-  }
-
-  // Random window lights flicker
-  setInterval(() => {
-    const wins = document.querySelectorAll('.win');
-    const toToggle = Math.floor(Math.random() * 8) + 2;
-    for (let i = 0; i < toToggle; i++) {
-      const w = wins[Math.floor(Math.random() * wins.length)];
-      w.classList.toggle('lit');
-    }
-  }, 1200);
-</script>
+        // Smooth scroll for CTA
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('.cta-button').style.animation = 'none';
+            setTimeout(() => {
+                document.querySelector('.cta-button').style.animation = 'buttonBounce 2s infinite, glow 2s infinite alternate';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
