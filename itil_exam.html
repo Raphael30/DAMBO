@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Refined</title>
+    <title>ITIL 4 Foundation Simulator - Eye Lock Edition</title>
     <style>
         :root {
             --bg-color: #f0f2f5;
-            --container-bg: rgba(255, 255, 255, 0.8);
+            --container-bg: rgba(255, 255, 255, 0.75);
             --text-color: #333333;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --sidebar-bg: rgba(44, 62, 80, 0.9);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --sidebar-bg: rgba(44, 62, 80, 0.85);
             --primary: #3498db;
             --success: #2ecc71;
             --danger: #e74c3c;
@@ -19,11 +19,11 @@
         }
 
         body.dark-mode {
-            --bg-color: #0f0f0f;
-            --container-bg: rgba(30, 30, 30, 0.8);
+            --bg-color: #0d0d0d;
+            --container-bg: rgba(30, 30, 30, 0.7);
             --text-color: #e0e0e0;
             --border-color: rgba(255, 255, 255, 0.1);
-            --sidebar-bg: rgba(0, 0, 0, 0.85);
+            --sidebar-bg: rgba(0, 0, 0, 0.8);
         }
 
         body { 
@@ -39,28 +39,44 @@
             position: sticky; top: 0; width: 280px; height: 100vh; 
             background: var(--sidebar-bg); padding: 25px; box-sizing: border-box; 
             display: flex; flex-direction: column; gap: 15px; color: white;
-            backdrop-filter: blur(15px); border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px); border-right: 1px solid var(--border-color);
         }
 
         .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
         .flip-card {
-            background: #222; color: #fff; padding: 12px; border-radius: 8px;
+            background: rgba(34, 34, 34, 0.9); color: #fff; padding: 12px; border-radius: 8px;
             font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
         }
 
         main { flex-grow: 1; padding: 25px; display: flex; justify-content: center; }
         
-        /* Glassmorphism Container */
+        /* Premium Glassmorphism Container */
         .container { 
             width: 100%; max-width: 850px; 
             background: var(--container-bg); 
-            padding: 40px; border-radius: 16px; 
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--border-color);
+            padding: 40px; border-radius: 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
-        .question-block { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
+        .question-block { 
+            margin-bottom: 40px; padding: 20px; 
+            border-radius: 12px;
+            border-bottom: 1px solid var(--border-color); 
+            transition: all 0.4s ease;
+        }
+
+        /* EYE LOCK BLINK ANIMATION */
+        @keyframes blink {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(52, 152, 219, 0.3); transform: scale(1.02); }
+            100% { background-color: transparent; }
+        }
+        .blink-effect {
+            animation: blink 0.8s ease-out;
+        }
+
         .options { list-style: none; padding: 0; margin: 20px 0; }
         .options li { 
             margin: 10px 0; padding: 15px; border: 1px solid var(--border-color); 
@@ -74,30 +90,21 @@
         .question-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; transition: all 0.2s ease; }
         
-        /* FIXED SIZE SHOW ANSWER BUTTON */
-        .btn-show { 
-            background: #d4edda; 
-            min-width: 140px; /* Ensures button doesn't change size with text */
-            text-align: center;
-        } 
-
+        .btn-show { background: #d4edda; min-width: 140px; text-align: center; } 
         .btn-flag { background: #eeeeee; }
-        .btn-flag.active { 
-            background: var(--flagged); 
-            animation: flagPulse 0.4s ease;
-        }
+        .btn-flag.active { background: var(--flagged); animation: flagPulse 0.4s ease; }
         
         @keyframes flagPulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
 
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; overflow-y: auto; }
         .nav-item { 
             height: 42px; display: flex; align-items: center; justify-content: center;
-            border: 1px solid #444; border-radius: 8px; cursor: pointer; 
-            background: #333; color: white; position: relative;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; 
+            background: rgba(0,0,0,0.3); color: white; position: relative;
         }
         .nav-item.flagged::after { content: ""; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: var(--flagged); border-radius: 50%; }
         .nav-correct { background: var(--success) !important; }
@@ -105,7 +112,7 @@
 
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index:9999; 
+            background:rgba(0,0,0,0.7); backdrop-filter: blur(10px); z-index:9999; 
             justify-content:center; align-items:center; 
         }
         .modal-content { background: var(--container-bg); padding: 35px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; }
@@ -114,12 +121,12 @@
 <body>
 
 <aside id="sidebar">
-    <button onclick="location.href='index.html'" style="width:100%; background:#4b5563; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
+    <button onclick="location.href='index.html'" style="width:100%; background:rgba(75, 85, 99, 0.8); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
     <div class="fliqlo-container">
         <div class="flip-card" id="h-card">00</div>
         <div class="flip-card" id="m-card">00</div>
     </div>
-    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:#444; color:white; border:none;">🌙 Change Theme</button>
+    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:rgba(255,255,255,0.1); color:white; border:none;">🌙 Change Theme</button>
     <div id="nav-grid" class="nav-grid"></div>
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
     <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset & Shuffle</button>
@@ -144,6 +151,7 @@
 <script>
 (function() {
     "use strict";
+    // Full ITIL Question Bank (Simplified version for space, ensure your copy has all 80)
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -251,7 +259,7 @@
     const labels = ["A", "B", "C", "D"];
     let userAns = new Array(questions.length).fill(null);
     let ended = false;
-    let currentModalAction = null; // Renamed variable to prevent shadowing
+    let currentModalAction = null;
 
     function showModal(t, m, action, hideCancel = false) {
         document.getElementById('m-title').textContent = t;
@@ -321,7 +329,14 @@
 
         const nav = document.createElement('div');
         nav.className = 'nav-item'; nav.id = `nav-${i}`; nav.textContent = i+1;
-        nav.onclick = () => block.scrollIntoView({behavior:'smooth'});
+        
+        // EYE LOCK NAV LOGIC
+        nav.onclick = () => {
+            block.scrollIntoView({behavior:'smooth', block: 'center'});
+            // Apply eye-lock blink effect
+            block.classList.add('blink-effect');
+            setTimeout(() => block.classList.remove('blink-effect'), 1000);
+        };
         navGrid.appendChild(nav);
     });
 
