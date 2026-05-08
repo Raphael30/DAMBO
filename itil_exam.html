@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Verified</title>
+    <title>ITIL 4 Foundation Simulator - Full Logic</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -33,14 +33,12 @@
             transition: all 0.4s;
         }
 
-        /* Sidebar Styling */
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
             background: var(--sidebar-bg); padding: 25px; box-sizing: border-box; 
             display: flex; flex-direction: column; gap: 15px; color: white;
         }
         
-        /* Clock Styling */
         .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
         .flip-card {
             background: #222; color: #fff; padding: 12px; border-radius: 8px;
@@ -54,7 +52,6 @@
             padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
         }
 
-        /* Question and Options */
         .question-block { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
         .options { list-style: none; padding: 0; margin: 20px 0; }
         .options li { 
@@ -64,14 +61,14 @@
         .options li:hover { background: rgba(52, 152, 219, 0.1); }
         .options li.selected { border-color: var(--primary); background: rgba(52, 152, 219, 0.05); }
         
-        .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; }
-        .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
+        /* Correct (Green) and Wrong (Red) Styles */
+        .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
+        .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
 
-        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; margin-top: 10px; }
+        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; }
         .btn-show { background: #d4edda !important; } 
         .btn-flag { background: #fff3cd !important; margin-left: 10px; } 
 
-        /* Navigation Grid */
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
         .nav-item { 
             height: 42px; display: flex; align-items: center; justify-content: center;
@@ -82,7 +79,6 @@
         .nav-correct { background: var(--success) !important; }
         .nav-wrong { background: var(--danger) !important; }
 
-        /* Modal */
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index:9999; 
@@ -97,12 +93,10 @@
     <a href="index.html" style="text-decoration:none;">
         <button style="width:100%; background:#4b5563; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">⬅ Return to Portal</button>
     </a>
-
     <div class="fliqlo-container">
         <div class="flip-card" id="h-card">00</div>
         <div class="flip-card" id="m-card">00</div>
     </div>
-    
     <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; background:#444; color:white; border:none;">🌙 Change Theme</button>
     <div id="nav-grid" class="nav-grid" style="overflow-y:auto; flex-grow:1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;"></div>
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
@@ -128,6 +122,7 @@
 <script>
 (function() {
     "use strict";
+    // Full verified question bank
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -175,12 +170,12 @@
         { q: "Situation: Printer delivery + maintenance?", a: ["Access + Actions", "Offering + Actions", "Goods + Actions", "Goods + Journey"], c: 2 },
         { q: "How 'access' supports co-creation?", a: ["Allow consumers to use resources", "Transfer responsibility", "Limit to internal teams", "Replace actions with automation"], c: 0 },
         { q: "Value co-creation truth?", a: ["Created only by provider", "Consumed by provider", "Independent of relationship", "Joint interactions"], c: 3 },
-        { q: "Utility and Warranty together?", a: ["Fit for purpose AND Fit for use", "Products only", "Fit for use OR Fit for purpose", "Cost reduction AND Risk removal"], c: 0 },
+        { q: "Utility and Warranty together?", a: ["Fit for purpose AND Fit for use", "Products only", "Fit for use vs Fit for purpose", "Warranty is utility"], c: 0 },
         { q: "Why consider outcomes, costs, risks?", a: ["Value is created when optimized", "Outcomes eliminate management", "Costs > Outcomes", "Risks > Outcomes"], c: 0 },
         { q: "What is a service journey?", a: ["End-to-end interactions", "Internal workflows", "Product lifecycle", "Value chain sequence"], c: 0 },
         { q: "Who authorizes budget?", a: ["Customer", "User", "Sponsor", "Vendor"], c: 2 },
         { q: "Service quality concern?", a: ["Meeting requirements", "Resolution speed", "Development speed", "Social responsibility"], c: 0 },
-        { q: "What establishes a shared understanding of service levels?", a: ["Specification", "SLA", "Roadmaps", "Requirements"], c: 1 },
+        { q: "Established shared understanding?", a: ["Specification", "SLA", "Roadmaps", "Requirements"], c: 1 },
         { q: "Information and Tech dimension?", a: ["Enable data use", "Define roles", "Define workflows", "Manage suppliers"], c: 0 },
         { q: "Dimension concerned with external orgs?", a: ["Partners and suppliers", "Info and Tech", "People", "Processes"], c: 0 },
         { q: "Why 'value streams and processes'?", a: ["Specify tools", "Coordinate activities for value", "Define hierarchies", "Manage contracts"], c: 1 },
@@ -269,7 +264,15 @@
         const actions = document.createElement('div');
         const showBtn = document.createElement('button');
         showBtn.className = 'btn-action btn-show'; showBtn.textContent = "Show Answer";
-        showBtn.onclick = () => ul.querySelectorAll('li')[item.correctIndex].classList.toggle('correct');
+        
+        // Logical update for individual "Show Answer" clicks
+        showBtn.onclick = () => {
+            const lis = ul.querySelectorAll('li');
+            lis[item.correctIndex].classList.add('correct');
+            if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
+                lis[userAns[i]].classList.add('wrong');
+            }
+        };
 
         const flagBtn = document.createElement('button');
         flagBtn.className = 'btn-action btn-flag'; flagBtn.textContent = "Flag";
@@ -285,12 +288,21 @@
         navGrid.appendChild(nav);
     });
 
+    // Logical update for "End Exam"
     document.getElementById('btn-end').onclick = () => {
         showModal("End Exam?", "Finish and see your score?", () => {
             ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
+                
+                // Highlight the correct answer in green
                 lis[q.correctIndex].classList.add('correct');
+                
+                // Highlight the user's wrong selection in red
+                if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
+                    lis[userAns[i]].classList.add('wrong');
+                }
+
                 if(userAns[i] === q.correctIndex) score++;
                 document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.correctIndex ? 'nav-correct' : 'nav-wrong');
             });
