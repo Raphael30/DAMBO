@@ -3,78 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC_BABY // BATTLE_VOID_V2</title>
+    <title>EDUC_BABY // NEON_COMET_VOID</title>
     <style>
-        :root {
-            --primary: #00ff41;
-            --bg: #000000;
-        }
-
+        :root { --primary: #00ff41; --bg: #000000; }
         body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            color: var(--primary);
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg); color: var(--primary);
             font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            perspective: 1000px;
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+            perspective: 1200px;
         }
-
-        canvas {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-        }
-
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
         .dither {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
-            opacity: 0.15; pointer-events: none; z-index: 1000;
+            opacity: 0.1; pointer-events: none; z-index: 1000;
         }
-
-        /* UI PANEL FIXED */
         #scene {
-            width: 85%; max-width: 500px;
-            padding: 40px;
-            border: 1px solid var(--primary);
-            background: rgba(0, 0, 0, 0.9);
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
-            position: relative;
-            z-index: 5;
+            width: 85%; max-width: 500px; padding: 40px;
+            border: 1px solid var(--primary); background: rgba(0, 0, 0, 0.95);
+            transform-style: preserve-3d; transition: transform 0.1s ease-out;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.2); position: relative; z-index: 10;
         }
-
         .floating-hand {
-            position: absolute; top: -60px; right: -10px;
-            font-size: 3rem; filter: drop-shadow(0 0 10px var(--primary));
-            animation: handFloat 4s ease-in-out infinite;
+            position: absolute; top: -75px; right: 0; font-size: 3.5rem;
+            filter: drop-shadow(0 0 10px var(--primary)); animation: handFloat 5s ease-in-out infinite;
         }
-
         @keyframes handFloat {
             0%, 100% { transform: translateZ(120px) translateY(0); }
-            50% { transform: translateZ(180px) translateY(-30px); }
+            50% { transform: translateZ(200px) translateY(-30px); }
         }
-
-        h1 { letter-spacing: 12px; margin: 0; font-size: 2rem; transform: translateZ(60px); }
-        
+        h1 { letter-spacing: 12px; margin: 0; font-size: 2.2rem; transform: translateZ(60px); }
         .module-item {
-            display: flex; justify-content: space-between;
-            padding: 20px; margin-top: 20px;
-            border: 1px solid var(--primary);
-            text-decoration: none; color: var(--primary);
-            background: rgba(0, 255, 65, 0.1);
-            transition: 0.3s;
-            transform: translateZ(30px);
+            display: flex; justify-content: space-between; padding: 20px; margin-top: 20px;
+            border: 1px solid var(--primary); text-decoration: none; color: var(--primary);
+            background: rgba(0, 255, 65, 0.1); transition: 0.3s; transform: translateZ(30px);
         }
-
-        .module-item:hover {
-            background: var(--primary); color: black;
-            transform: translateZ(70px);
-        }
-
-        .locked { opacity: 0.2; pointer-events: none; border-style: dotted; }
+        .module-item:hover { background: var(--primary); color: black; transform: translateZ(80px); }
+        .locked { opacity: 0.25; pointer-events: none; border-style: dotted; }
     </style>
 </head>
 <body>
@@ -86,9 +52,8 @@
     <div class="floating-hand">☝️</div>
     <header>
         <h1>EDUC_BABY</h1>
-        <p style="font-size: 0.7rem; margin-top: 10px;">> CMD_CENTER: SECTOR_BATTLE_ACTIVE</p>
+        <p style="font-size: 0.7rem; margin-top: 10px;">> CMD: COMET_BURN_LIVE // 120_FPS_SMOOTH</p>
     </header>
-
     <div class="module-list">
         <a href="itil_exam.html" class="module-item">
             <span>[01] ITIL_4_FOUNDATION</span>
@@ -96,7 +61,7 @@
         </a>
         <div class="module-item locked">
             <span>[02] CCNP_ENTERPRISE</span>
-            <span>COMING_SOON</span>
+            <span>LOCKED</span>
         </div>
     </div>
 </div>
@@ -104,147 +69,181 @@
 <script>
     const canvas = document.getElementById('voidCanvas');
     const ctx = canvas.getContext('2d');
-    let ships = [], stars = [], shootingStars = [];
-    let gridOffset = 0;
-
+    let ships = [], stars = [], comets = [], bullets = [], gridOffset = 0;
     const neonColors = ['#00ff41', '#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#ffffff'];
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         initStars();
+        if(ships.length === 0) initShips();
+        if(comets.length === 0) initComets();
     }
 
-    /* --- STAR SYSTEM (Twinkling) --- */
-    function initStars() {
-        stars = [];
-        for(let i=0; i<150; i++) {
-            stars.push({
-                x: Math.random()*canvas.width,
-                y: Math.random()*canvas.height,
-                size: Math.random()*1.5,
-                opacity: Math.random(),
-                speed: 0.01 + Math.random() * 0.02
-            });
-        }
-    }
-
-    function drawStars() {
-        stars.forEach(s => {
-            s.opacity += s.speed;
-            if(s.opacity > 1 || s.opacity < 0) s.speed *= -1;
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(s.opacity)})`;
-            ctx.fillRect(s.x, s.y, s.size, s.size);
-        });
-
-        // Chance to spawn a shooting star
-        if(Math.random() < 0.02) {
-            shootingStars.push({
-                x: Math.random() * canvas.width,
-                y: 0,
-                vx: (Math.random() - 0.5) * 10,
-                vy: Math.random() * 15 + 5,
-                len: Math.random() * 30 + 20
-            });
-        }
-
-        shootingStars.forEach((ss, index) => {
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-            ctx.beginPath();
-            ctx.moveTo(ss.x, ss.y);
-            ctx.lineTo(ss.x - ss.vx, ss.y - ss.vy);
-            ctx.stroke();
-            ss.x += ss.vx;
-            ss.y += ss.vy;
-            if(ss.y > canvas.height) shootingStars.splice(index, 1);
-        });
-    }
-
-    /* --- AUTO-BATTLE SHIPS --- */
-    class BattleShip {
+    // --- COMET LOGIC (Replaces Shooting Stars) ---
+    class Comet {
         constructor() { this.reset(); }
         reset() {
-            this.x = Math.random() * canvas.width;
+            this.x = Math.random() > 0.5 ? -200 : canvas.width + 200;
             this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 6;
-            this.vy = (Math.random() - 0.5) * 2.5;
-            this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
-            this.fireRate = Math.floor(Math.random() * 50) + 20;
-            this.timer = 0;
-        }
-        drawShip() {
-            ctx.fillStyle = this.color;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = this.color;
-            const p = 3; 
-            ctx.fillRect(this.x, this.y, p*4, p); // tail
-            ctx.fillRect(this.x+p*2, this.y-p, p*3, p*3); // body
-            ctx.fillRect(this.x+p*5, this.y, p*2, p); // nose
-            ctx.shadowBlur = 0;
+            this.targetX = this.x < 0 ? canvas.width + 200 : -200;
+            this.targetY = Math.random() * canvas.height;
+            
+            const angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+            this.speed = 0.3 + Math.random() * 0.5; // Very slow burn
+            this.vx = Math.cos(angle) * this.speed;
+            this.vy = Math.sin(angle) * this.speed;
+            
+            this.color1 = neonColors[Math.floor(Math.random() * neonColors.length)];
+            this.color2 = neonColors[Math.floor(Math.random() * neonColors.length)];
+            this.size = 2 + Math.random() * 2;
+            this.tailLength = 150 + Math.random() * 200;
         }
         update() {
             this.x += this.vx;
             this.y += this.vy;
-            this.timer++;
-
-            // AUTO FIRING LOGIC
-            if(this.timer % this.fireRate === 0) {
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(this.x + 10, this.y);
-                ctx.lineTo(this.x + this.vx * 30, this.y + this.vy * 30);
-                ctx.stroke();
-            }
-
-            if(this.x < -100 || this.x > canvas.width + 100 || this.y < -100 || this.y > canvas.height + 100) this.reset();
+            if (Math.abs(this.x - this.targetX) < 5) this.reset();
+        }
+        draw() {
+            ctx.save();
+            const grad = ctx.createLinearGradient(this.x, this.y, this.x - this.vx * this.tailLength, this.y - this.vy * this.tailLength);
+            grad.addColorStop(0, this.color1);
+            grad.addColorStop(0.2, this.color2);
+            grad.addColorStop(1, 'transparent');
+            
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = this.size;
+            ctx.lineCap = 'round';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color1;
+            
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x - this.vx * this.tailLength, this.y - this.vy * this.tailLength);
+            ctx.stroke();
+            ctx.restore();
         }
     }
 
-    for(let i=0; i<15; i++) ships.push(new BattleShip());
+    function initComets() {
+        comets = [];
+        for(let i=0; i<4; i++) comets.push(new Comet());
+    }
 
-    function drawGrid() {
-        ctx.strokeStyle = 'rgba(0, 255, 65, 0.1)';
-        ctx.lineWidth = 1;
-        const spacing = 70;
-        gridOffset = (gridOffset + 1.5) % spacing;
+    // --- STAR & SHIP LOGIC ---
+    function initStars() {
+        stars = [];
+        for(let i=0; i<120; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                opacity: 0,
+                fadeSpeed: 0.002 + Math.random() * 0.005,
+                state: 'in',
+                size: Math.random() * 1.5
+            });
+        }
+    }
 
-        for(let i = -spacing; i < canvas.height; i += spacing) {
-            ctx.beginPath();
-            ctx.moveTo(0, i + gridOffset);
-            ctx.lineTo(canvas.width, i + gridOffset);
-            ctx.stroke();
+    class Bullet {
+        constructor(x, y, angle, color) {
+            this.x = x; this.y = y;
+            this.vx = Math.cos(angle) * 5;
+            this.vy = Math.sin(angle) * 5;
+            this.color = color;
         }
-        for(let i = 0; i < canvas.width; i += spacing) {
-            ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i, canvas.height);
-            ctx.stroke();
+        update() { this.x += this.vx; this.y += this.vy; }
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 5; ctx.shadowColor = this.color;
+            ctx.fillRect(this.x, this.y, 2, 2);
         }
+    }
+
+    class Ship {
+        constructor() {
+            this.x = Math.random() * window.innerWidth;
+            this.y = Math.random() * window.innerHeight;
+            let angle = Math.random() * Math.PI * 2;
+            let speed = 0.5 + Math.random() * 0.8;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
+            this.fireTimer = Math.floor(Math.random() * 300);
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            this.fireTimer++;
+            if (this.fireTimer % 300 === 0) {
+                bullets.push(new Bullet(this.x, this.y, Math.atan2(this.vy, this.vx), this.color));
+            }
+        }
+        draw() {
+            const angle = Math.atan2(this.vy, this.vx);
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(angle);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 8; ctx.shadowColor = this.color;
+            const p = 2.5;
+            ctx.fillRect(-p*2, -p, p, p/2); ctx.fillRect(-p*2, p, p, p/2);
+            ctx.fillRect(-p, -p/2, p*4, p); ctx.fillRect(0, -p, p, p*2.5);
+            ctx.restore();
+        }
+    }
+
+    function initShips() {
+        ships = [];
+        for(let i=0; i<25; i++) ships.push(new Ship());
     }
 
     function animate() {
         ctx.fillStyle = 'black';
         ctx.fillRect(0,0,canvas.width, canvas.height);
         
-        drawStars();
-        drawGrid();
-        ships.forEach(s => { s.update(); s.drawShip(); });
+        // Stars
+        stars.forEach(s => {
+            if (s.state === 'in') { s.opacity += s.fadeSpeed; if (s.opacity >= 1) s.state = 'out'; }
+            else { s.opacity -= s.fadeSpeed; if (s.opacity <= 0) { s.x = Math.random() * canvas.width; s.y = Math.random() * canvas.height; s.state = 'in'; } }
+            ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+            ctx.fillRect(s.x, s.y, s.size, s.size);
+        });
+
+        // Comets Layer
+        comets.forEach(c => { c.update(); c.draw(); });
+
+        // Grid
+        const h = canvas.height, w = canvas.width;
+        const horizon = h * 0.6;
+        gridOffset = (gridOffset + 0.3) % 60;
+        ctx.strokeStyle = 'rgba(0, 255, 65, 0.08)';
+        for (let i = 0; i < (h - horizon); i += 60) {
+            let yPos = horizon + ((i + gridOffset) % (h - horizon));
+            ctx.globalAlpha = ((yPos - horizon) / (h - horizon)) * 0.4;
+            ctx.beginPath(); ctx.moveTo(0, yPos); ctx.lineTo(w, yPos); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+
+        // Bullets & Ships
+        for (let i = bullets.length - 1; i >= 0; i--) {
+            bullets[i].update(); bullets[i].draw();
+            if (bullets[i].x < -50 || bullets[i].x > canvas.width + 50) bullets.splice(i, 1);
+        }
+        ships.forEach(s => { s.update(); s.draw(); });
 
         requestAnimationFrame(animate);
     }
 
-    // Interactive Camera
     document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 45;
-        const y = (window.innerHeight / 2 - e.pageY) / 45;
+        const x = (window.innerWidth / 2 - e.pageX) / 80;
+        const y = (window.innerHeight / 2 - e.pageY) / 80;
         document.getElementById('scene').style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
     });
 
     window.addEventListener('resize', resize);
-    resize();
-    animate();
+    resize(); animate();
 </script>
-
 </body>
 </html>
