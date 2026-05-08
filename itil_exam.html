@@ -16,10 +16,7 @@
             --danger: #e74c3c;
             --warning: #e67e22;
             --flagged: #f1c40f;
-            /* Action Button Theme - Persistent */
-            --btn-action-bg: #e0e0e0;
-            --btn-action-text: #333333;
-            --btn-action-hover: #d0d0d0;
+            --transition-speed: 0.5s;
         }
 
         body.dark-mode {
@@ -28,9 +25,6 @@
             --text-color: #e0e0e0;
             --border-color: #333;
             --sidebar-bg: #000;
-            --btn-action-bg: #333;
-            --btn-action-text: #ffffff;
-            --btn-action-hover: #444;
         }
 
         body { 
@@ -38,7 +32,7 @@
             background-color: var(--bg-color); 
             color: var(--text-color);
             margin: 0; display: flex; min-height: 100vh; 
-            transition: background-color 0.4s;
+            transition: all var(--transition-speed);
         }
 
         /* Fliqlo Clock */
@@ -46,7 +40,9 @@
         .flip-card {
             background: #222; color: #fff; padding: 12px; border-radius: 8px;
             font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
+            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
+        .flip-card::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: rgba(0,0,0,0.6); }
 
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
@@ -72,25 +68,12 @@
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
 
-        /* PERSISTENT ACTION BUTTONS */
-        .question-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action { 
-            padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; 
-            background: var(--btn-action-bg); color: var(--btn-action-text); 
-            font-weight: bold; transition: background 0.3s, transform 0.1s;
-        }
-        .btn-action:hover { background: var(--btn-action-hover); transform: translateY(-2px); }
-        .btn-flag.active { background: var(--flagged); color: black; }
+        /* FIXED COLOR ACTION BUTTONS (Locked In) */
+        .question-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: black; font-weight: bold; transition: opacity 0.3s, transform 0.1s; }
+        .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
-        .nav-item { 
-            padding: 10px 0; text-align: center; border: 1px solid #444; 
-            border-radius: 8px; cursor: pointer; font-size: 13px; background: #333; color: white;
-        }
-        .nav-item.flagged::after { content: "🚩"; font-size: 10px; }
-        .nav-correct { background: var(--success) !important; }
-        .nav-wrong { background: var(--danger) !important; }
-
+        /* Custom Modal Fixes */
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index:9999; 
@@ -100,6 +83,16 @@
             background: var(--container-bg); padding: 35px; border-radius: 20px; 
             text-align: center; max-width: 400px; width: 90%; color: var(--text-color);
         }
+
+        /* Nav Grid Fix */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
+        .nav-item { 
+            padding: 10px 0; text-align: center; border: 1px solid #444; 
+            border-radius: 8px; cursor: pointer; font-size: 13px; background: #333; color: white;
+        }
+        .nav-item.flagged::after { content: "🚩"; font-size: 10px; margin-left: 2px; }
+        .nav-correct { background: var(--success) !important; }
+        .nav-wrong { background: var(--danger) !important; }
     </style>
 </head>
 <body>
@@ -109,7 +102,7 @@
         <div class="flip-card" id="h-card">00</div>
         <div class="flip-card" id="m-card">00</div>
     </div>
-    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; border:none; background:#444; color:white;">🌙 Change Theme</button>
+    <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; border:none; background:#444; color:white;">🌙 Theme</button>
     <div id="nav-grid" class="nav-grid" style="overflow-y:auto; flex-grow:1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;"></div>
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
     <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset All</button>
@@ -130,7 +123,7 @@
 <script>
 (function() {
     "use strict";
-    // Full Question Bank (80 items)
+    // Add your 80 questions back here
     const questions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -242,7 +235,7 @@
         
         item.a.forEach((opt, ai) => {
             const li = document.createElement('li');
-            li.textContent = `${String.fromCharCode(65 + ai)}. ${opt}`;
+            li.textContent = opt;
             li.onclick = () => { 
                 if(!ended){ 
                     userAns[i]=ai; 
@@ -254,31 +247,24 @@
             ul.appendChild(li);
         });
 
+        // ACTION BUTTONS with FIXED COLORS
         const actions = document.createElement('div');
         actions.className = 'question-actions';
         
         const showBtn = document.createElement('button');
         showBtn.className = 'btn-action'; showBtn.textContent = "Show Answer";
+        // Light Green
+        showBtn.style.background = "#d4edda";
         showBtn.onclick = () => {
             const lis = ul.querySelectorAll('li');
-            if(showBtn.textContent === "Show Answer") {
-                lis[item.c].classList.add('correct');
-                if(userAns[i] !== null && userAns[i] !== item.c) lis[userAns[i]].classList.add('wrong');
-                showBtn.textContent = "Hide Answer";
-            } else {
-                lis.forEach(l => l.classList.remove('correct', 'wrong'));
-                showBtn.textContent = "Show Answer";
-            }
+            lis[item.c].classList.toggle('correct');
         };
 
         const flagBtn = document.createElement('button');
         flagBtn.className = 'btn-action btn-flag'; flagBtn.textContent = "Flag";
-        flagBtn.onclick = () => { 
-            flags[i]=!flags[i]; 
-            flagBtn.classList.toggle('active'); 
-            flagBtn.textContent = flags[i] ? "🚩 Flagged" : "Flag";
-            document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
-        };
+        // Yellow Orange
+        flagBtn.style.background = "#fff3cd";
+        flagBtn.onclick = () => { flags[i]=!flags[i]; flagBtn.classList.toggle('active'); document.getElementById(`nav-${i}`).classList.toggle('flagged'); };
         
         actions.append(showBtn, flagBtn);
         block.appendChild(actions);
@@ -291,32 +277,24 @@
     });
 
     document.getElementById('btn-end').onclick = () => {
-        showModal("End Exam?", "Reveal all results?", () => {
+        showModal("End Exam?", "Are you sure you want to see your results?", () => {
             ended = true;
             let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
                 lis[q.c].classList.add('correct');
-                if(userAns[i] === q.c) {
-                    score++;
-                    document.getElementById(`nav-${i}`).classList.add('nav-correct');
-                } else {
-                    if(userAns[i] !== null) lis[userAns[i]].classList.add('wrong');
-                    document.getElementById(`nav-${i}`).classList.add('nav-wrong');
-                }
+                if(userAns[i] === q.c) score++;
+                document.getElementById(`nav-${i}`).classList.add(userAns[i] === q.c ? 'nav-correct' : 'nav-wrong');
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            showModal("Result", `Score: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%)`, null, true);
+            showModal("Result", `Score: ${score}/${questions.length}`, null, true);
         });
     };
 
-    document.getElementById('btn-reset').onclick = () => {
-        showModal("Reset All?", "Progress will be cleared. Scroll to top?", () => {
-            window.scrollTo(0,0);
-            location.reload();
-        });
-    };
-
+    document.getElementById('btn-reset').onclick = () => showModal("Reset?", "Clear all progress?", () => {
+        window.scrollTo(0,0);
+        location.reload();
+    });
     document.getElementById('theme-toggle').onclick = () => document.body.classList.toggle('dark-mode');
     
     function updateClock() {
