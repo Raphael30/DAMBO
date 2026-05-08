@@ -65,12 +65,11 @@
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
 
-        /* BUTTON COLORS */
         .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; }
-        .btn-show { background: #d4edda !important; } /* Light Green */
-        .btn-flag { background: #fff3cd !important; } /* Yellow Orange */
+        .btn-show { background: #d4edda !important; } 
+        .btn-flag { background: #fff3cd !important; } 
 
-        /* NAV ALIGNMENT FIX */
+        /* CENTERED NAVIGATION TEXT */
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
         .nav-item { 
             height: 42px; display: flex; align-items: center; justify-content: center;
@@ -110,7 +109,6 @@
 <main>
     <div class="container" id="exam-content">
         <h1 style="text-align:center; color:var(--primary);">ITIL 4 Foundation Simulator</h1>
-        <p style="text-align:center; opacity:0.7;">Questions and choices are randomized.</p>
     </div>
 </main>
 
@@ -213,15 +211,22 @@
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[array[j]]] = [array[j], array[i]];
+            [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
     }
 
-    // Process questions: Shuffle order and then shuffle options
-    const questions = shuffle([...rawQuestions]).map(item => {
-        const originalChoices = item.a.map((text, index) => ({ text, isCorrect: index === item.c }));
-        const shuffledChoices = shuffle([...originalChoices]);
+    // RANDOMIZATION ENGINE
+    // 1. Shuffle Question Order
+    const shuffledQuestions = shuffle([...rawQuestions]);
+
+    const questions = shuffledQuestions.map(item => {
+        // 2. Create objects for choices to track the correct one locally
+        const localChoices = item.a.map((text, idx) => ({ text, isCorrect: idx === item.c }));
+        
+        // 3. Shuffle ONLY these local choices
+        const shuffledChoices = shuffle([...localChoices]);
+        
         return {
             q: item.q,
             options: shuffledChoices.map(c => c.text),
