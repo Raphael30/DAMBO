@@ -68,12 +68,11 @@
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; }
 
-        /* FIXED COLOR ACTION BUTTONS (Locked In) */
+        /* FIXED COLOR ACTION BUTTONS */
         .question-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: black; font-weight: bold; transition: opacity 0.3s, transform 0.1s; }
         .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        /* Custom Modal Fixes */
         #custom-modal { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
             background:rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index:9999; 
@@ -84,7 +83,6 @@
             text-align: center; max-width: 400px; width: 90%; color: var(--text-color);
         }
 
-        /* Nav Grid Fix */
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
         .nav-item { 
             padding: 10px 0; text-align: center; border: 1px solid #444; 
@@ -98,12 +96,19 @@
 <body>
 
 <aside id="sidebar">
+    <a href="index.html" style="text-decoration:none;">
+        <button style="width:100%; background:#7f8c8d; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:5px;">⬅ Return to Portal</button>
+    </a>
+
     <div class="fliqlo-container">
         <div class="flip-card" id="h-card">00</div>
         <div class="flip-card" id="m-card">00</div>
     </div>
+    
     <button id="theme-toggle" style="padding:10px; cursor:pointer; font-weight:bold; border-radius:8px; border:none; background:#444; color:white;">🌙 Theme</button>
+    
     <div id="nav-grid" class="nav-grid" style="overflow-y:auto; flex-grow:1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;"></div>
+    
     <button id="btn-end" style="background:var(--success); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">End Exam</button>
     <button id="btn-reset" style="background:var(--warning); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Reset All</button>
 </aside>
@@ -123,7 +128,7 @@
 <script>
 (function() {
     "use strict";
-    // Add your 80 questions back here
+    // Questions bank remains the same
     const questions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -253,7 +258,7 @@
         
         const showBtn = document.createElement('button');
         showBtn.className = 'btn-action'; showBtn.textContent = "Show Answer";
-        // Light Green
+        // Light Green Locked
         showBtn.style.background = "#d4edda";
         showBtn.onclick = () => {
             const lis = ul.querySelectorAll('li');
@@ -262,9 +267,13 @@
 
         const flagBtn = document.createElement('button');
         flagBtn.className = 'btn-action btn-flag'; flagBtn.textContent = "Flag";
-        // Yellow Orange
+        // Yellow Orange Locked
         flagBtn.style.background = "#fff3cd";
-        flagBtn.onclick = () => { flags[i]=!flags[i]; flagBtn.classList.toggle('active'); document.getElementById(`nav-${i}`).classList.toggle('flagged'); };
+        flagBtn.onclick = () => { 
+            flags[i]=!flags[i]; 
+            flagBtn.classList.toggle('active'); 
+            document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
+        };
         
         actions.append(showBtn, flagBtn);
         block.appendChild(actions);
@@ -295,6 +304,7 @@
         window.scrollTo(0,0);
         location.reload();
     });
+
     document.getElementById('theme-toggle').onclick = () => document.body.classList.toggle('dark-mode');
     
     function updateClock() {
