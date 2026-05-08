@@ -3,72 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDUC_BABY // ASTRO_MOTION</title>
+    <title>EDUC_BABY // GEOMETRIC_CORE</title>
     <style>
         :root {
             --primary: #00ff41;
             --bg: #050505;
         }
 
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             background-color: var(--bg);
             color: var(--primary);
             font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            height: 100vh;
-            overflow: hidden; /* Keeps the "camera" contained */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px; /* Essential for 3D tilt */
+            perspective: 1200px;
         }
 
-        /* --- THE DITHER OVERLAY --- */
+        /* --- BACKGROUND CANVAS --- */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Sits behind everything */
+        }
+
+        /* --- DITHER OVERLAY (TOP LAYER) --- */
         .dither {
             position: fixed;
-            top: -50%; left: -50%; width: 200%; height: 200%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhh2uGAA5AemBEyEK4EBADfSzzS7YzUAAAAAElFTkSuQmCC');
-            opacity: 0.15;
+            opacity: 0.12;
             pointer-events: none;
             z-index: 1000;
         }
 
-        /* --- THE MOVING CAMERA CONTAINER --- */
+        /* --- 3D INTERFACE CONTAINER --- */
         #scene {
-            width: 90%;
-            max-width: 700px;
-            padding: 40px;
+            width: 85%;
+            max-width: 600px;
+            padding: 50px;
             border: 1px solid var(--primary);
-            background: rgba(0, 255, 65, 0.02);
+            background: rgba(0, 0, 0, 0.8); /* Slight darkness to make text pop */
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.2s cubic-bezier(0.2, 0.5, 0.3, 1);
             position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
         }
 
-        /* --- FLOATING HAND ICON --- */
         .floating-hand {
             position: absolute;
-            font-size: 2rem;
-            top: -30px;
-            right: -30px;
-            animation: handFloat 4s ease-in-out infinite;
-            filter: drop-shadow(0 0 5px var(--primary));
+            font-size: 2.5rem;
+            top: -40px;
+            right: -20px;
+            animation: handFloat 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px var(--primary));
+            user-select: none;
         }
 
         @keyframes handFloat {
-            0%, 100% { transform: translateZ(50px) translateY(0) rotate(0deg); }
-            50% { transform: translateZ(80px) translateY(-20px) rotate(10deg); }
+            0%, 100% { transform: translateZ(60px) translateY(0) rotate(-5deg); }
+            50% { transform: translateZ(100px) translateY(-30px) rotate(15deg); }
         }
 
         header h1 {
-            font-size: 2rem;
-            letter-spacing: 8px;
-            margin-bottom: 30px;
-            transform: translateZ(40px); /* Pops the text out */
+            font-size: 2.2rem;
+            letter-spacing: 10px;
+            margin: 0 0 10px 0;
+            transform: translateZ(50px);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .status-line {
+            font-size: 0.8rem;
+            margin-bottom: 40px;
+            transform: translateZ(30px);
+            opacity: 0.8;
         }
 
         .module-list {
-            list-style: none;
             padding: 0;
             transform: translateZ(20px);
         }
@@ -76,59 +96,51 @@
         .module-item {
             display: flex;
             justify-content: space-between;
-            padding: 20px;
-            margin-bottom: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
             border: 1px solid var(--primary);
             text-decoration: none;
             color: var(--primary);
-            transition: 0.3s;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(0, 255, 65, 0.05);
         }
 
         .module-item:hover {
             background: var(--primary);
             color: black;
-            transform: translateZ(30px); /* Lift on hover */
+            transform: translateZ(40px) scale(1.05);
         }
 
-        .module-item.locked {
-            opacity: 0.3;
+        .locked {
+            opacity: 0.25;
             border-style: dashed;
             cursor: not-allowed;
-        }
-
-        .cursor-follow {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--primary);
             pointer-events: none;
-            z-index: 2000;
-            transition: transform 0.05s linear;
         }
 
     </style>
 </head>
 <body>
 
+<canvas id="canvas-bg"></canvas>
 <div class="dither"></div>
-<div class="cursor-follow" id="cursor"></div>
 
 <div id="scene">
     <div class="floating-hand">☝️</div>
     
     <header>
         <h1>EDUC_BABY</h1>
-        <p>> CAMERA_LINK: ESTABLISHED</p>
+        <div class="status-line">> GEOMETRIC_SYNC_STABLE // 60FPS</div>
     </header>
 
     <div class="module-list">
-        <!-- Live Link -->
+        <!-- LIVE EXAM -->
         <a href="itil_exam.html" class="module-item">
             <span>[01] ITIL_4_FOUNDATION</span>
-            <span>READY_</span>
+            <span>INITIALIZE_</span>
         </a>
 
-        <!-- Coming Soon -->
+        <!-- UPCOMING -->
         <div class="module-item locked">
             <span>[02] CCNP_ENTERPRISE</span>
             <span>COMING_SOON</span>
@@ -137,27 +149,90 @@
 </div>
 
 <script>
+    /* --- GEOMETRIC BACKGROUND LOGIC --- */
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const particleCount = 80;
+
+    function initCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.radius = Math.random() * 1.5;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#00ff41';
+            ctx.fill();
+        }
+    }
+
+    function createParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0, 255, 65, ${1 - dist / 150})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        drawLines();
+        requestAnimationFrame(animate);
+    }
+
+    /* --- CAMERA MOVEMENT LOGIC --- */
     const scene = document.getElementById('scene');
-    const cursor = document.getElementById('cursor');
-
-    // Camera Movement Logic
     document.addEventListener('mousemove', (e) => {
-        // Calculate mouse position relative to center
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-        
-        // Rotate the scene based on mouse
-        scene.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
-
-        // Custom Cursor movement
-        cursor.style.left = e.pageX + 'px';
-        cursor.style.top = e.pageY + 'px';
+        const x = (window.innerWidth / 2 - e.pageX) / 30;
+        const y = (window.innerHeight / 2 - e.pageY) / 30;
+        scene.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
     });
 
-    // Reset position when mouse leaves
-    document.addEventListener('mouseleave', () => {
-        scene.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    window.addEventListener('resize', () => {
+        initCanvas();
+        createParticles();
     });
+
+    initCanvas();
+    createParticles();
+    animate();
 </script>
 
 </body>
