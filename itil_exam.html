@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITIL 4 Foundation Simulator - Toggle Verified</title>
+    <title>ITIL 4 Foundation Simulator - Enhanced Flag</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -15,6 +15,8 @@
             --success: #2ecc71;
             --danger: #e74c3c;
             --warning: #e67e22;
+            --flagged: #f1c40f;
+            --transition-speed: 0.5s;
         }
 
         body.dark-mode {
@@ -30,8 +32,17 @@
             background-color: var(--bg-color); 
             color: var(--text-color);
             margin: 0; display: flex; min-height: 100vh; 
-            transition: all 0.4s;
+            transition: all var(--transition-speed);
         }
+
+        /* Fliqlo Clock */
+        .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .flip-card {
+            background: #222; color: #fff; padding: 12px; border-radius: 8px;
+            font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
+            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .flip-card::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: rgba(0,0,0,0.6); }
 
         #sidebar { 
             position: sticky; top: 0; width: 280px; height: 100vh; 
@@ -39,17 +50,10 @@
             display: flex; flex-direction: column; gap: 15px; color: white;
         }
         
-        .fliqlo-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
-        .flip-card {
-            background: #222; color: #fff; padding: 12px; border-radius: 8px;
-            font-size: 2rem; font-weight: 800; min-width: 50px; text-align: center;
-            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
         main { flex-grow: 1; padding: 25px; display: flex; justify-content: center; }
         .container { 
             width: 100%; max-width: 850px; background: var(--container-bg); 
-            padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            padding: 40px; border-radius: 166px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
         }
 
         .question-block { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
@@ -64,9 +68,25 @@
         .correct { background-color: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border-color: #2ecc71 !important; font-weight: bold; }
         .wrong { background-color: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; border-color: #e74c3c !important; font-weight: bold; }
 
-        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; }
-        .btn-show { background: #d4edda !important; } 
-        .btn-flag { background: #fff3cd !important; margin-left: 10px; } 
+        .question-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-action { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; color: #333; font-weight: bold; transition: all 0.2s ease; }
+        
+        /* FLAG BUTTON PULSE ANIMATION */
+        @keyframes flagPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-flag { background: #eeeeee; } /* Default light grey for Flag Off */
+        .btn-flag.active { 
+            background: var(--flagged); 
+            color: black; 
+            animation: flagPulse 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            box-shadow: 0 2px 8px rgba(241, 196, 15, 0.5);
+        }
+        
+        .btn-show { background: #d4edda; margin-right: 10px; } 
 
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
         .nav-item { 
@@ -74,7 +94,7 @@
             border: 1px solid #444; border-radius: 8px; cursor: pointer; 
             font-size: 13px; background: #333; color: white; position: relative;
         }
-        .nav-item.flagged::after { content: "🚩"; font-size: 9px; position: absolute; top: 2px; right: 2px; }
+        .nav-item.flagged::after { content: ""; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: var(--flagged); border-radius: 50%; }
         .nav-correct { background: var(--success) !important; }
         .nav-wrong { background: var(--danger) !important; }
 
@@ -121,6 +141,7 @@
 <script>
 (function() {
     "use strict";
+    // Verified question bank remains the same
     const rawQuestions = [
         { q: "Which concept is illustrated when an employee is granted permission to the company’s new file-sharing platform for daily use?", a: ["Warranty", "Goods", "Utility", "Access to resources"], c: 3 },
         { q: "An IT support engineer assisting a user in configuring their laptop is an example of which concept?", a: ["Transfer of goods", "Service actions", "Sustainability", "Access to resources"], c: 1 },
@@ -227,16 +248,19 @@
     const navGrid = document.getElementById('nav-grid');
     const labels = ["A", "B", "C", "D"];
     let userAns = new Array(questions.length).fill(null);
+    let flaggedQuestions = new Array(questions.length).fill(false);
     let ended = false;
+    let mAction = null;
 
     function showModal(t, m, action, hideCancel = false) {
         document.getElementById('m-title').textContent = t;
         document.getElementById('m-msg').textContent = m;
+        modalAction = action;
         document.getElementById('m-cancel').style.display = hideCancel ? 'none' : 'inline-block';
         document.getElementById('custom-modal').style.display = 'flex';
-        document.getElementById('m-ok').onclick = () => { document.getElementById('custom-modal').style.display='none'; if(action) action(); };
     }
 
+    document.getElementById('m-ok').onclick = () => { document.getElementById('custom-modal').style.display='none'; if(modalAction) modalAction(); };
     document.getElementById('m-cancel').onclick = () => document.getElementById('custom-modal').style.display='none';
 
     questions.forEach((item, i) => {
@@ -260,21 +284,19 @@
         });
 
         const actions = document.createElement('div');
+        actions.className = 'question-actions';
         const showBtn = document.createElement('button');
         showBtn.className = 'btn-action btn-show'; 
-        showBtn.textContent = "Show Answer";
+        showBtn.textContent = "🏳️ Show Answer";
         
-        // Toggle Logic for Show/Hide Answer
         showBtn.onclick = () => {
             const lis = ul.querySelectorAll('li');
             const isShowing = showBtn.textContent === "Hide Answer";
 
             if (isShowing) {
-                // Remove highlights
                 lis.forEach(li => li.classList.remove('correct', 'wrong'));
                 showBtn.textContent = "Show Answer";
             } else {
-                // Apply highlights
                 lis[item.correctIndex].classList.add('correct');
                 if (userAns[i] !== null && userAns[i] !== item.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
@@ -284,8 +306,26 @@
         };
 
         const flagBtn = document.createElement('button');
-        flagBtn.className = 'btn-action btn-flag'; flagBtn.textContent = "Flag";
-        flagBtn.onclick = () => document.getElementById(`nav-${i}`).classList.toggle('flagged');
+        flagBtn.className = 'btn-action btn-flag'; 
+        flagBtn.textContent = "🏳️ Flag";
+        
+        // Logical Update for Flag Button Animation
+        flagBtn.onclick = () => { 
+            flaggedQuestions[i] = !flaggedQuestions[i];
+            
+            // Toggle the 'active' class for animation and visual state
+            flagBtn.classList.toggle('active'); 
+            
+            // Toggle icon and text
+            if (flagBtn.classList.contains('active')) {
+                flagBtn.textContent = "🚩 Flagged";
+            } else {
+                flagBtn.textContent = "🏳️ Flag";
+            }
+            
+            // Existing sidebar link logic
+            document.getElementById(`nav-${i}`).classList.toggle('flagged'); 
+        };
 
         actions.append(showBtn, flagBtn);
         block.appendChild(actions);
@@ -302,8 +342,6 @@
             ended = true; let score = 0;
             questions.forEach((q, i) => {
                 const lis = document.querySelectorAll(`#opts-${i} li`);
-                
-                // Final reveal: Highlight correct in green, wrong selections in red
                 lis[q.correctIndex].classList.add('correct');
                 if(userAns[i] !== null && userAns[i] !== q.correctIndex) {
                     lis[userAns[i]].classList.add('wrong');
