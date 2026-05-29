@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNP Enterprise (300-410 ENARSI) Exam Engine</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-full flex flex-col antialiased transition-colors duration-200">
+
+    <!-- TOP HEADER BAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600 text-white rounded-lg shadow-md shadow-indigo-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900 leading-tight">300-410 ENARSI</h1>
+                    <p class="text-xs text-slate-500">Cisco Enterprise Advanced Routing and Services</p>
+                </div>
+            </div>
+
+            <!-- Global Actions / Live Stats -->
+            <div class="flex items-center space-x-4">
+                <div id="headerTimerContainer" class="hidden flex items-center space-x-2 px-3 py-1.5 bg-slate-100 rounded-full text-slate-700 font-semibold text-sm border border-slate-200">
+                    <svg class="w-4 h-4 animate-spin text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span id="headerTimer">110:00</span>
+                </div>
+                <button onclick="toggleTheme()" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition hidden">
+                    <!-- Theme Toggle Placeholder -->
+                </button>
+                <button onclick="showUploadModal()" class="flex items-center space-x-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2 rounded-lg font-medium text-sm transition border border-indigo-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    <span>Import Exam TXT</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP WRAPPER -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- WELCOME & CONFIGURATION SCREEN -->
+        <div id="welcomeScreen" class="flex-1 overflow-y-auto px-4 py-12 flex flex-col items-center justify-center">
+            <div class="max-w-xl w-full bg-white border border-slate-200 rounded-2xl shadow-xl p-8 space-y-6">
+                <div class="text-center space-y-2">
+                    <span class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full uppercase tracking-wider">Cisco CCNP Enterprise Certification</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900 sm:text-3xl">Implementing Cisco Enterprise Advanced Routing and Services</h2>
+                    <p class="text-slate-500 text-sm">Pass Score: 825/1000 (82.5%) | Practice and improve with VCE format simulation.</p>
+                </div>
+
+                <div class="border-t border-b border-slate-100 py-4 space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-slate-500 font-medium">Loaded Questions:</span>
+                        <span id="loadedQuestionsCount" class="font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">15 Questions (Pre-loaded)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-slate-500 font-medium">Time Limit:</span>
+                        <span class="font-semibold text-slate-800">110 Minutes</span>
+                    </div>
+                </div>
+
+                <!-- CONFIGURATOR -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-slate-700">Choose Mode</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Practice Mode -->
+                        <div id="modePractice" onclick="setMode('practice')" class="cursor-pointer border-2 border-indigo-600 bg-indigo-50/50 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-indigo-600">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-indigo-900 text-sm">Practice Mode</span>
+                                <div class="w-4 h-4 rounded-full border border-indigo-600 flex items-center justify-center">
+                                    <div class="w-2.5 h-2.5 bg-indigo-600 rounded-full"></div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-indigo-700">Instant validation, step-by-step guidance, no timer stress.</p>
+                        </div>
+                        <!-- Exam Mode -->
+                        <div id="modeExam" onclick="setMode('exam')" class="cursor-pointer border-2 border-slate-200 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-slate-300">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-slate-900 text-sm">Exam Mode</span>
+                                <div class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center">
+                                    <div class="w-2.5 h-2.5 bg-transparent rounded-full"></div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500">Real simulation. Timed countdown, review answers at the end.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="startExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-100 transition duration-150 flex items-center justify-center space-x-2">
+                        <span>Begin Simulator Session</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                    <button onclick="showUploadModal()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition duration-150 text-sm">
+                        Import complete 400-question .txt file
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVE SIMULATION CONTAINER -->
+        <div id="simScreen" class="hidden flex-1 flex overflow-hidden">
+            
+            <!-- Side Navigation Grid (Left-Side) -->
+            <aside class="w-80 bg-white border-r border-slate-200 flex flex-col h-full shrink-0">
+                <div class="p-4 border-b border-slate-200 bg-slate-50">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Navigation Console</h3>
+                    <div class="mt-2 flex items-center justify-between">
+                        <span id="answeredStatusText" class="text-sm font-medium text-slate-700">0 of 15 Answered</span>
+                        <span id="sessionPercentage" class="text-xs text-slate-500">0% Done</span>
+                    </div>
+                    <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <div id="sidebarProgressBar" class="bg-indigo-600 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Grid -->
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div id="questionsGrid" class="grid grid-cols-5 gap-2">
+                        <!-- Dynamic Question Blocks -->
+                    </div>
+                </div>
+
+                <!-- Sidebar Footer Status Controls -->
+                <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
+                    <div class="flex flex-col space-y-1 text-xs text-slate-600">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-indigo-600 rounded"></span>
+                            <span>Current Question</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-emerald-100 border border-emerald-300 rounded"></span>
+                            <span>Answered</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-amber-100 border border-amber-300 rounded"></span>
+                            <span>Flagged/Bookmarked</span>
+                        </div>
+                    </div>
+                    <button onclick="confirmSubmitExam()" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-semibold rounded-lg transition shadow-md shadow-rose-100">
+                        Finish & Submit Exam
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Question & Choices Presentation Area (Center-Right) -->
+            <section class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50">
+                
+                <!-- Active Question Top Status -->
+                <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <span id="questionCounterLabel" class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Question 1 of 15</span>
+                        <button id="flagBtn" onclick="toggleFlag()" class="flex items-center space-x-1 px-3 py-1 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-semibold text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+                                <path d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V15h2a2 2 0 011.6.8l1.6 2.4A2 2 0 0010.8 19h5.2a1 1 0 001-1V9a1 1 0 00-1-1h-3.2a2 2 0 01-1.6-.8L9.6 4.8A2 2 0 008 4H4a1 1 0 00-1-1z"></path>
+                            </svg>
+                            <span id="flagBtnText">Bookmark Question</span>
+                        </button>
+                    </div>
+
+                    <!-- Mode Indicator Pill -->
+                    <div id="activeModePill" class="px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-700 font-semibold text-xs uppercase tracking-widest">
+                        Practice Mode
+                    </div>
+                </div>
+
+                <!-- SCROLLABLE CONTAINER FOR QUESTION CARD -->
+                <div class="flex-1 overflow-y-auto p-6 sm:p-8">
+                    <div class="max-w-4xl mx-auto space-y-6">
+                        
+                        <!-- Main Question Card -->
+                        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8 space-y-6">
+                            
+                            <!-- Question Text -->
+                            <div class="space-y-4">
+                                <p id="questionText" class="text-slate-800 text-lg font-medium leading-relaxed">
+                                    Loading Question Content...
+                                </p>
+                            </div>
+
+                            <!-- Choices -->
+                            <div id="choicesContainer" class="space-y-3">
+                                <!-- Choices rendered dynamically with clean custom style -->
+                            </div>
+                        </div>
+
+                        <!-- FEEDBACK MODULE (Instant Explanation in Practice Mode) -->
+                        <div id="practiceFeedback" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all">
+                            <div class="flex items-center space-x-2">
+                                <div id="feedbackBadge" class="p-1.5 rounded-full text-white">
+                                    <!-- Dynamic Check/Cross Icon -->
+                                </div>
+                                <h4 id="feedbackTitle" class="text-base font-bold">Feedback Title</h4>
+                            </div>
+                            <div class="text-sm text-slate-600 space-y-2">
+                                <p id="feedbackExplanation" class="leading-relaxed">Explanation content goes here.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- STICKY STEERING PANEL (Footer) -->
+                <footer class="bg-white border-t border-slate-200 px-6 py-4 shadow-lg flex items-center justify-between">
+                    <button id="prevBtn" onclick="navigateQuestion(-1)" class="flex items-center space-x-2 px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-sm rounded-xl transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span>Previous</span>
+                    </button>
+
+                    <div class="flex items-center space-x-3">
+                        <button id="showAnswerBtn" onclick="revealAnswer()" class="hidden px-5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-sm font-semibold rounded-xl transition">
+                            Check Answer
+                        </button>
+                    </div>
+
+                    <button id="nextBtn" onclick="navigateQuestion(1)" class="flex items-center space-x-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-indigo-100">
+                        <span>Next Question</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </footer>
+
+            </section>
+
+        </div>
+
+        <!-- EXAM REVIEW SCREEN -->
+        <div id="reviewScreen" class="hidden flex-1 overflow-y-auto px-4 py-12 flex flex-col items-center">
+            <div class="max-w-4xl w-full bg-white border border-slate-200 rounded-2xl shadow-xl p-8 space-y-8">
+                
+                <!-- Performance Scorecard -->
+                <div class="text-center space-y-4">
+                    <div id="scoreBadge" class="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg shadow-emerald-100">
+                        85%
+                    </div>
+                    <div class="space-y-1">
+                        <h2 id="reviewVerdict" class="text-2xl font-black text-slate-900">Congratulations, You Passed!</h2>
+                        <p id="reviewScoreText" class="text-slate-500 text-sm">You scored 13 out of 15 questions correctly (Score: 866/1000).</p>
+                    </div>
+                </div>
+
+                <!-- Visual Statistics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-b border-slate-100 py-6">
+                    <div class="bg-slate-50 p-4 rounded-xl text-center space-y-1">
+                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Required Score</span>
+                        <h4 class="text-lg font-bold text-slate-800">825 (82.5%)</h4>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl text-center space-y-1">
+                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Your Score</span>
+                        <h4 id="statYourScore" class="text-lg font-bold text-slate-800">866 (86.6%)</h4>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl text-center space-y-1">
+                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Time Spent</span>
+                        <h4 id="statTimeSpent" class="text-lg font-bold text-slate-800">12:35</h4>
+                    </div>
+                </div>
+
+                <!-- Review Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900">Detailed Review Breakdown</h3>
+                    <div id="detailedReviewContainer" class="space-y-4">
+                        <!-- Questions summary listed here with red/green borders -->
+                    </div>
+                </div>
+
+                <!-- Return controls -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="resetApp()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition shadow-lg shadow-indigo-100">
+                        Start New Session
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- IMPORT MODAL -->
+    <div id="uploadModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="px-6 py-4 bg-indigo-600 text-white flex items-center justify-between">
+                <h3 class="font-bold text-lg">Universal Exam File Importer</h3>
+                <button onclick="hideUploadModal()" class="text-indigo-200 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Upload your raw cleared exam text file (e.g. <code>CCNP_300-410_ENARSI_VCE_Ready.txt</code>). Our engine will parse your entire 400 questions instantly and allow you to study using our sleek simulator.
+                </p>
+
+                <!-- FILE INPUT DROPZONE -->
+                <div class="border-2 border-dashed border-slate-200 hover:border-indigo-500 rounded-xl p-6 text-center space-y-2 cursor-pointer transition relative" id="dropzone">
+                    <input type="file" id="fileInput" accept=".txt" onchange="handleFile(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <svg class="w-8 mx-auto text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <p class="text-sm font-semibold text-slate-700">Choose or Drag local text file here</p>
+                    <p class="text-xs text-slate-400">Supporting .txt formatted questions</p>
+                </div>
+
+                <!-- TEXTAREA FALLBACK PASTE -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Or Paste Raw Question Text</label>
+                    <textarea id="pasteArea" placeholder="QUESTION 1&#10;Refer to the exhibit...&#10;A. ...&#10;Correct Answer: B" class="w-full h-32 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none font-mono"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
+                    <button onclick="hideUploadModal()" class="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl text-sm font-semibold transition">Cancel</button>
+                    <button onclick="processPastedText()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition">Process & Load</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION PILL -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[200] hidden bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg flex items-center space-x-2 animate-bounce">
+        <span>Settings Saved Successfully!</span>
+    </div>
+
+    <!-- PRE-LOADED CCNP ENARSI EXAM POOL -->
+    <script>
+        const PRELOADED_POOL = [
+            {
+                id: 1,
+                text: "Refer to the exhibit. Users in the branch network of 2001:db8:0:4::/64 report that they cannot access the Internet. Which command is issued in IPv6 router EIGRP 100 configuration mode to solve this issue?",
+                choices: [
+                    "A. Issue the eigrp stub command on R1.",
+                    "B. Issue the no eigrp stub command on R1.",
+                    "C. Issue the eigrp stub command on R2.",
+                    "D. Issue the no eigrp stub command on R2."
+                ],
+                answer: "B",
+                explanation: "The command 'no eigrp stub' must be issued on R1. R1 is likely configured as an EIGRP stub, restricting route propagation. Removing this stub configuration on R1 will allow it to advertise the necessary default routes or dynamic routes back to the branch networks."
+            },
+            {
+                id: 2,
+                text: "Which configuration configures a policy on R1 to forward any traffic that is sourced from the 192.168.130.0/24 network to R2?",
+                choices: [
+                    "A. Option A",
+                    "B. Option B",
+                    "C. Option C",
+                    "D. Option D"
+                ],
+                answer: "D",
+                explanation: "Option D is correct. To route traffic sourced from 192.168.130.0/24 to R2, we need an Access Control List matching the source subnet, and a route-map matching that IP address list and setting the IP next-hop to R2's interface IP (172.20.40.1). This policy is then applied in the inbound direction on the incoming interface."
+            },
+            {
+                id: 3,
+                text: "R2 has a locally originated prefix 192.168.130.0/24 and has these configurations:\n\nWhat is the result when the route-map OUT command is applied toward an eBGP neighbor R1 (1.1.1.1) by using the neighbor 1.1.1.1 route-map OUT out command?",
+                choices: [
+                    "A. R1 sees 192.168.130.0/24 as two AS hops away instead of one AS hop away.",
+                    "B. R1 does not accept any routes other than 192.168.130.0/24.",
+                    "C. R1 does not forward traffic that is destined for 192.168.30.0/24.",
+                    "D. Network 192.168.130.0/24 is not allowed in the R1 table."
+                ],
+                answer: "A",
+                explanation: "Using 'set as-path prepend 65000' adds one additional AS number to the path list when advertised to neighbor R1. Therefore, R1 will see the prefix as two AS hops away instead of just one."
+            },
+            {
+                id: 4,
+                text: "Which method changes the forwarding decision that a router makes without first changing the routing table or influencing the IP data plane?",
+                choices: [
+                    "A. nonbroadcast multiaccess",
+                    "B. packet switching",
+                    "C. policy-based routing",
+                    "D. forwarding information base"
+                ],
+                answer: "C",
+                explanation: "Policy-Based Routing (PBR) allows administrators to bypass traditional routing lookups by forwarding traffic based on criteria other than the destination IP address (such as source IP address, protocol, port, or packet size)."
+            },
+            {
+                id: 5,
+                text: "Refer to the exhibit. The output of the trace route from R5 shows a loop in the network. Which configuration prevents this loop?",
+                choices: [
+                    "A. Option A",
+                    "B. Option B",
+                    "C. Option C",
+                    "D. Option D"
+                ],
+                answer: "A",
+                explanation: "Option A is the correct configuration. To prevent mutual redistribution routing loops between EIGRP and OSPF, route tags should be set when redistributing on one protocol (R3 setting tag 1), and then filtered out / denied when redistributing back into the other protocol (R4 denying tag 1)."
+            },
+            {
+                id: 6,
+                text: "Refer to the exhibit. An engineer configures a static route on a router, but when the engineer checks the route to the destination, a different next hop is chosen. What is the reason for this?",
+                choices: [
+                    "A. Dynamic routing protocols always have priority over static routes.",
+                    "B. The metric of the OSPF route is lower than the metric of the static route.",
+                    "C. The configured AD for the static route is higher than the AD of OSPF.",
+                    "D. The syntax of the static route is not valid, so the route is not considered."
+                ],
+                answer: "C",
+                explanation: "Static routes have a default Administrative Distance of 1. However, if a static route is configured with a higher Administrative Distance (e.g. 130) than the running dynamic routing protocol (OSPF default AD is 110), the dynamic path will be preferred and installed in the RIB instead."
+            },
+            {
+                id: 7,
+                text: "Refer to the exhibit. An engineer is trying to generate a summary route in OSPF for network 10.0.0.0/8, but the summary route does not show up in the routing table. Why is the summary route missing?",
+                choices: [
+                    "A. The summary-address command is used only for summarizing prefixes between areas.",
+                    "B. The summary route is visible only in the OSPF database, not in the routing table.",
+                    "C. There is no route for a subnet inside 10.0.0.0/8, so the summary route is not generated.",
+                    "D. The summary route is not visible on this router, but it is visible on other OSPF routers in the same area."
+                ],
+                answer: "C",
+                explanation: "OSPF does not generate a summary route unless there is at least one active subordinate subnet (a route for a subnet inside the 10.0.0.0/8 scope) present in the OSPF routing process table."
+            },
+            {
+                id: 8,
+                text: "Refer to the exhibit. An engineer is trying to block the route to 192.168.2.2 from the routing table by using the configuration that is shown. The route is still present in the routing table as an OSPF route. Which action blocks the route?",
+                choices: [
+                    "A. Use an extended access list instead of a standard access list.",
+                    "B. Change sequence 10 in the route-map command from permit to deny.",
+                    "C. Use a prefix list instead of an access list in the route map.",
+                    "D. Add this statement to the route map: route-map RM-OSPF-DL deny 20."
+                ],
+                answer: "B",
+                explanation: "To block the route using a distribute-list with a route-map, you must change the route-map sequence 10 from permit to 'deny'. Under a distribute-list, 'deny' blocks the route, while 'permit' permits the route to be installed."
+            },
+            {
+                id: 9,
+                text: "What is a prerequisite for configuring BFD?",
+                choices: [
+                    "A. Jumbo frame support must be configured on the router that is using BFD.",
+                    "B. All routers in the path between two BFD endpoints must have BFD enabled.",
+                    "C. Cisco Express Forwarding must be enabled on all participating BFD endpoints.",
+                    "D. To use BFD with BGP, the timers 3 9 command must first be configured in the BGP routing process."
+                ],
+                answer: "C",
+                explanation: "Cisco Express Forwarding (CEF) is a strict prerequisite for configuring Bidirectional Forwarding Detection (BFD) on Cisco devices to allow fast hardware-driven keepalives."
+            },
+            {
+                id: 10,
+                text: "Refer to the exhibit. R2 is a route reflector, and R1 and R3 are route reflector clients. The route reflector learns the route to 172.16.25.0/24 from R1, but it does not advertise to R3. What is the reason the route is not advertised?",
+                choices: [
+                    "A. R2 does not have a route to the next hop, so R2 does not advertise the prefix to other clients.",
+                    "B. Route reflector setup requires full IBGP mesh between the routers.",
+                    "C. In route reflector setup, only classful prefixes are advertised to other clients.",
+                    "D. In route reflector setups, prefixes are not advertised from one client to another."
+                ],
+                answer: "A",
+                explanation: "For a Route Reflector (or any BGP router) to advertise a path to any neighbor, the path must be deemed valid and active, which strictly requires resolving the Next Hop IP address in the local routing table."
+            },
+            {
+                id: 11,
+                text: "Refer to the exhibit. An engineer is trying to redistribute OSPF to BGP, but not all of the routes are redistributed. What is the reason for this issue?",
+                choices: [
+                    "A. By default, only internal routes and external type 1 routes are redistributed into BGP.",
+                    "B. Only classful networks are redistributed from OSPF to BGP.",
+                    "C. BGP convergence is slow, so the route will eventually be present in the BGP table.",
+                    "D. By default, only internal OSPF routes are redistributed into BGP."
+                ],
+                answer: "D",
+                explanation: "By default, when redistributing OSPF into BGP using standard configurations, only internal OSPF routes (Intra-area and Inter-area) are redistributed. If you wish to redistribute external routes (type-1 and type-2), they must be explicitly permitted using match parameters."
+            },
+            {
+                id: 12,
+                text: "Refer to the exhibit. In which circumstance does the BGP neighbor remain in the idle condition?",
+                choices: [
+                    "A. if prefixes are not received from the BGP peer",
+                    "B. if prefixes reach the maximum limit",
+                    "C. if a prefix list is applied on the inbound direction",
+                    "D. if prefixes exceed the maximum limit"
+                ],
+                answer: "D",
+                explanation: "If you configure BGP maximum prefix limit on a neighbor, exceeding this configured maximum threshold shuts down the session and puts the neighbor into an 'Idle' (or Idle (PfxCt)) state."
+            },
+            {
+                id: 13,
+                text: "Which attribute eliminates LFAs that belong to protected paths in situations where links in a network are connected through a common fiber?",
+                choices: [
+                    "A. shared risk link group-disjoint",
+                    "B. linecard-disjoint",
+                    "C. lowest-repair-path-metric",
+                    "D. interface-disjoint"
+                ],
+                answer: "A",
+                explanation: "The Shared Risk Link Group (SRLG) disjointness attribute ensures that Loop-Free Alternates (LFAs) are chosen from paths that do not share the same physical risk factors (like running inside the same optical fiber cable bundles)."
+            },
+            {
+                id: 14,
+                text: "Refer to the exhibit. An engineer is troubleshooting BGP on a device but discovers that the clock on the device does not correspond to the time stamp of the log entries. Which action ensures consistency between the two times?",
+                choices: [
+                    "A. Configure the service timestamps log uptime command in global configuration mode.",
+                    "B. Configure the logging clock synchronize command in global configuration mode.",
+                    "C. Configure the service timestamps log datetime localtime command in global configuration mode.",
+                    "D. Make sure that the clock on the device is synchronized with an NTP server."
+                ],
+                answer: "C",
+                explanation: "Using the 'service timestamps log datetime localtime' command ensures that log file timestamp entries show local clock time instead of universal Coordinated Universal Time (UTC) or device system uptime."
+            },
+            {
+                id: 15,
+                text: "Refer to the exhibit. What is the result of applying this configuration?",
+                choices: [
+                    "A. The router can form BGP neighborships with any other device.",
+                    "B. The router cannot form BGP neighborships with any other device.",
+                    "C. The router cannot form BGP neighborships with any device that is matched by the access list named “BGP”.",
+                    "D. The router can form BGP neighborships with any device that is matched by the access list named “BGP”."
+                ],
+                answer: "C",
+                explanation: "The CoPP policy matches access-group 'BGP' and directs it to 'drop'. Therefore, any BGP connection from devices matched in the BGP access-list is blocked."
+            }
+        ];
+    </script>
+
+    <!-- CORE LOGIC & PARSER SCRIPT -->
+    <script>
+        let currentPool = [...PRELOADED_POOL];
+        let userAnswers = {}; // { questionId: chosenIndex }
+        let sessionFlags = {}; // { questionId: boolean }
+        let currentQuestionIndex = 0;
+        let activeMode = 'practice'; // 'practice' or 'exam'
+        let examTimeRemaining = 110 * 60; // 110 minutes in seconds
+        let examInterval = null;
+
+        window.onload = function() {
+            renderWelcomeStats();
+        };
+
+        function renderWelcomeStats() {
+            const countLabel = document.getElementById('loadedQuestionsCount');
+            countLabel.textContent = `${currentPool.length} Questions Loaded`;
+        }
+
+        function setMode(mode) {
+            activeMode = mode;
+            const pm = document.getElementById('modePractice');
+            const em = document.getElementById('modeExam');
+            
+            if (mode === 'practice') {
+                pm.className = "cursor-pointer border-2 border-indigo-600 bg-indigo-50/50 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-indigo-600";
+                em.className = "cursor-pointer border-2 border-slate-200 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-slate-300";
+                document.getElementById('activeModePill').textContent = "Practice Mode";
+                document.getElementById('showAnswerBtn').classList.remove('hidden');
+            } else {
+                em.className = "cursor-pointer border-2 border-indigo-600 bg-indigo-50/50 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-indigo-600";
+                pm.className = "cursor-pointer border-2 border-slate-200 p-4 rounded-xl flex flex-col space-y-2 transition-all hover:border-slate-300";
+                document.getElementById('activeModePill').textContent = "Exam Mode";
+                document.getElementById('showAnswerBtn').classList.add('hidden');
+            }
+        }
+
+        function startExam() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('simScreen').classList.remove('hidden');
+            
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            sessionFlags = {};
+
+            if (activeMode === 'exam') {
+                examTimeRemaining = 110 * 60;
+                document.getElementById('headerTimerContainer').classList.remove('hidden');
+                startTimer();
+            } else {
+                document.getElementById('headerTimerContainer').classList.add('hidden');
+            }
+
+            renderGrid();
+            showQuestion(0);
+        }
+
+        function startTimer() {
+            clearInterval(examInterval);
+            examInterval = setInterval(() => {
+                examTimeRemaining--;
+                if (examTimeRemaining <= 0) {
+                    clearInterval(examInterval);
+                    submitExam(true);
+                }
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(examTimeRemaining / 60);
+            const seconds = examTimeRemaining % 60;
+            document.getElementById('headerTimer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+            currentPool.forEach((q, i) => {
+                const btn = document.createElement('button');
+                btn.id = `grid-btn-${i}`;
+                btn.onclick = () => showQuestion(i);
+                
+                // Styling
+                setGridButtonState(btn, i);
+                btn.textContent = i + 1;
+                grid.appendChild(btn);
+            });
+            updateSidebarStats();
+        }
+
+        function setGridButtonState(btn, index) {
+            btn.className = "w-full aspect-square text-xs font-bold rounded-lg flex items-center justify-center transition border ";
+            
+            const isCurrent = index === currentQuestionIndex;
+            const isAnswered = userAnswers[currentPool[index].id] !== undefined;
+            const isFlagged = sessionFlags[currentPool[index].id] === true;
+
+            if (isCurrent) {
+                btn.className += " bg-indigo-600 text-white border-indigo-600 shadow-md";
+            } else if (isFlagged) {
+                btn.className += " bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200";
+            } else if (isAnswered) {
+                btn.className += " bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200";
+            } else {
+                btn.className += " bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200";
+            }
+        }
+
+        function updateSidebarStats() {
+            const total = currentPool.length;
+            const answered = Object.keys(userAnswers).length;
+            const percent = Math.round((answered / total) * 100);
+
+            document.getElementById('answeredStatusText').textContent = `${answered} of ${total} Answered`;
+            document.getElementById('sessionPercentage').textContent = `${percent}% Done`;
+            document.getElementById('sidebarProgressBar').style.width = `${percent}%`;
+        }
+
+        function showQuestion(index) {
+            // Update active grid selection highlight
+            const prevIndex = currentQuestionIndex;
+            currentQuestionIndex = index;
+            
+            const oldGridBtn = document.getElementById(`grid-btn-${prevIndex}`);
+            if (oldGridBtn) setGridButtonState(oldGridBtn, prevIndex);
+
+            const newGridBtn = document.getElementById(`grid-btn-${index}`);
+            if (newGridBtn) setGridButtonState(newGridBtn, index);
+
+            const q = currentPool[index];
+            document.getElementById('questionCounterLabel').textContent = `Question ${index + 1} of ${currentPool.length}`;
+            
+            // Build Question Text & potential diagrams
+            document.getElementById('questionText').innerHTML = q.text.replace(/\n/g, '<br>');
+
+            // Render choices
+            const container = document.getElementById('choicesContainer');
+            container.innerHTML = '';
+
+            q.choices.forEach((choice, cIdx) => {
+                const choiceWrapper = document.createElement('div');
+                choiceWrapper.onclick = () => selectChoice(cIdx);
+                choiceWrapper.id = `choice-${cIdx}`;
+                
+                const isSelected = userAnswers[q.id] === cIdx;
+                
+                let baseStyle = "flex items-start space-x-3 p-4 rounded-xl border-2 cursor-pointer transition ";
+                if (isSelected) {
+                    baseStyle += "border-indigo-600 bg-indigo-50/50";
+                } else {
+                    baseStyle += "border-slate-200 bg-white hover:border-slate-300";
+                }
+
+                choiceWrapper.className = baseStyle;
+                
+                // Get letter prefix
+                const letter = choice.substring(0, 2); // "A." or "B."
+                const choiceContent = choice.substring(2).trim();
+
+                choiceWrapper.innerHTML = `
+                    <div class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}">
+                        ${letter.replace('.', '')}
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 leading-relaxed">${choiceContent}</span>
+                `;
+                container.appendChild(choiceWrapper);
+            });
+
+            // Toggle flagged active state button ui
+            const isFlagged = sessionFlags[q.id] === true;
+            const flagBtn = document.getElementById('flagBtn');
+            const flagBtnText = document.getElementById('flagBtnText');
+            if (isFlagged) {
+                flagBtn.className = "flex items-center space-x-1 px-3 py-1 border border-amber-300 bg-amber-50 rounded-full text-xs font-semibold text-amber-700 hover:bg-amber-100 transition";
+                flagBtnText.textContent = "Flagged / Bookmarked";
+            } else {
+                flagBtn.className = "flex items-center space-x-1 px-3 py-1 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-semibold text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition";
+                flagBtnText.textContent = "Bookmark Question";
+            }
+
+            // Hide/Show practice feedback panel
+            document.getElementById('practiceFeedback').classList.add('hidden');
+            if (activeMode === 'practice' && userAnswers[q.id] !== undefined) {
+                renderPracticeFeedback(q);
+            }
+
+            // Hide/show next/previous buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === currentPool.length - 1;
+        }
+
+        function selectChoice(cIdx) {
+            const q = currentPool[currentQuestionIndex];
+            userAnswers[q.id] = cIdx;
+            
+            // Re-render Choices
+            showQuestion(currentQuestionIndex);
+            
+            // Re-render Grid for this question block
+            const gridBtn = document.getElementById(`grid-btn-${currentQuestionIndex}`);
+            if (gridBtn) setGridButtonState(gridBtn, currentQuestionIndex);
+            updateSidebarStats();
+
+            // Trigger instant feedback in practice mode
+            if (activeMode === 'practice') {
+                renderPracticeFeedback(q);
+            }
+        }
+
+        function renderPracticeFeedback(question) {
+            const selectedIdx = userAnswers[question.id];
+            const correctLetter = question.answer.trim().toUpperCase();
+            
+            // Convert index to Letter
+            const alphabet = ["A", "B", "C", "D", "E"];
+            const chosenLetter = alphabet[selectedIdx];
+
+            const isCorrect = chosenLetter === correctLetter;
+
+            const feedbackPanel = document.getElementById('practiceFeedback');
+            const badge = document.getElementById('feedbackBadge');
+            const title = document.getElementById('feedbackTitle');
+            const expl = document.getElementById('feedbackExplanation');
+
+            feedbackPanel.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackPanel.className = "bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all";
+                badge.className = "p-1.5 rounded-full bg-emerald-500 text-white";
+                badge.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                title.className = "text-base font-bold text-emerald-800";
+                title.textContent = "Correct Answer!";
+            } else {
+                feedbackPanel.className = "bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all";
+                badge.className = "p-1.5 rounded-full bg-rose-500 text-white";
+                badge.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                title.className = "text-base font-bold text-rose-800";
+                title.textContent = `Incorrect. Correct answer is Option ${correctLetter}`;
+            }
+
+            expl.textContent = question.explanation || "No explanation is available for this question.";
+        }
+
+        function toggleFlag() {
+            const q = currentPool[currentQuestionIndex];
+            sessionFlags[q.id] = !sessionFlags[q.id];
+            
+            // Refresh
+            showQuestion(currentQuestionIndex);
+        }
+
+        function navigateQuestion(dir) {
+            const nextIdx = currentQuestionIndex + dir;
+            if (nextIdx >= 0 && nextIdx < currentPool.length) {
+                showQuestion(nextIdx);
+            }
+        }
+
+        function revealAnswer() {
+            const q = currentPool[currentQuestionIndex];
+            // Simulate selecting the correct choice
+            const alphabet = ["A", "B", "C", "D", "E"];
+            const correctIdx = alphabet.indexOf(q.answer.trim().toUpperCase());
+            if (correctIdx !== -1) {
+                selectChoice(correctIdx);
+            }
+        }
+
+        function confirmSubmitExam() {
+            const unanswered = currentPool.length - Object.keys(userAnswers).length;
+            let msg = `Are you sure you want to finish the exam?\n\nYou have ${unanswered} unanswered questions remaining.`;
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam(forced = false) {
+            clearInterval(examInterval);
+            document.getElementById('simScreen').classList.add('hidden');
+            document.getElementById('reviewScreen').classList.remove('hidden');
+
+            let correctCount = 0;
+            const alphabet = ["A", "B", "C", "D", "E"];
+
+            // Render review breakdowns
+            const container = document.getElementById('detailedReviewContainer');
+            container.innerHTML = '';
+
+            currentPool.forEach((q, idx) => {
+                const userIdx = userAnswers[q.id];
+                const correctLetter = q.answer.trim().toUpperCase();
+                const chosenLetter = userIdx !== undefined ? alphabet[userIdx] : 'None';
+                const isCorrect = chosenLetter === correctLetter;
+
+                if (isCorrect) correctCount++;
+
+                // Element Creation
+                const row = document.createElement('div');
+                row.className = `border rounded-xl p-4 sm:p-6 space-y-3 bg-white shadow-sm transition ${isCorrect ? 'border-emerald-200 hover:border-emerald-300' : 'border-rose-200 hover:border-rose-300'}`;
+
+                row.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Question ${idx + 1}</span>
+                        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                            ${isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </div>
+                    <p class="text-slate-800 text-sm font-medium leading-relaxed">${q.text.replace(/\n/g, '<br>')}</p>
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2 text-xs border-t border-slate-100">
+                        <div class="flex items-center space-x-1">
+                            <span class="text-slate-400">Your choice:</span>
+                            <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${chosenLetter}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-slate-400">Correct:</span>
+                            <span class="font-bold text-emerald-700">${correctLetter}</span>
+                        </div>
+                    </div>
+                    ${!isCorrect ? `
+                        <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1">
+                            <strong class="text-slate-600 block">Explanation:</strong>
+                            <p class="text-slate-500 leading-relaxed">${q.explanation || 'No explanation available.'}</p>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(row);
+            });
+
+            // Grade Stats calculations
+            const total = currentPool.length;
+            const scorePercentage = Math.round((correctCount / total) * 100);
+            
+            // Standard Cisco Scale (score between 300 and 1000)
+            const ciscoScore = Math.round(300 + (scorePercentage * 7));
+
+            const badge = document.getElementById('scoreBadge');
+            const verdict = document.getElementById('reviewVerdict');
+            const scoreText = document.getElementById('reviewScoreText');
+
+            badge.textContent = `${scorePercentage}%`;
+            document.getElementById('statYourScore').textContent = `${ciscoScore} (${scorePercentage}%)`;
+            
+            if (ciscoScore >= 825) {
+                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg bg-emerald-500 shadow-emerald-100";
+                verdict.textContent = "Congratulations! You Passed!";
+                verdict.className = "text-2xl font-black text-emerald-600";
+            } else {
+                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg bg-rose-500 shadow-rose-100";
+                verdict.textContent = "Keep Studying, You Can Do It!";
+                verdict.className = "text-2xl font-black text-rose-600";
+            }
+
+            scoreText.textContent = `You scored ${correctCount} correct answers out of ${total} total questions. Cisco Passing Score is 825.`;
+            
+            // Duration calculations
+            const timeSpentSecs = (110 * 60) - examTimeRemaining;
+            const mins = Math.floor(timeSpentSecs / 60);
+            const secs = timeSpentSecs % 60;
+            document.getElementById('statTimeSpent').textContent = activeMode === 'exam' ? `${mins}:${secs < 10 ? '0' : ''}${secs}` : 'Self-Paced (Practice)';
+        }
+
+        function resetApp() {
+            document.getElementById('reviewScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            renderWelcomeStats();
+        }
+
+        /* TEXT / IMPORT FILE PARSING UTILITIES */
+        function showUploadModal() {
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+
+        function hideUploadModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+        }
+
+        function handleFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseText(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        function processPastedText() {
+            const text = document.getElementById('pasteArea').value;
+            if (text.trim() === '') {
+                showToast("Please paste some questions before processing.");
+                return;
+            }
+            parseText(text);
+        }
+
+        function parseText(rawText) {
+            try {
+                // Highly optimized regex VCE Parser Engine matching the exact input structure
+                // Question blocks start with: "QUESTION \d+"
+                const questions = [];
+                const blocks = rawText.split(/(?=QUESTION\s+\d+)/i);
+
+                blocks.forEach((block) => {
+                    const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
+                    if (lines.length < 3) return;
+
+                    // Header identification
+                    let qIdMatch = lines[0].match(/QUESTION\s+(\d+)/i);
+                    if (!qIdMatch) return;
+
+                    let id = parseInt(qIdMatch[1]);
+                    let questionBody = [];
+                    let choices = [];
+                    let answer = "";
+                    let explanation = "";
+                    let parsingExplanation = false;
+
+                    // Loop through rest of lines
+                    for (let i = 1; i < lines.length; i++) {
+                        let line = lines[i];
+
+                        if (line.match(/^Correct Answer:/i)) {
+                            answer = line.replace(/^Correct Answer:\s*/i, '').trim();
+                            continue;
+                        }
+
+                        if (line.match(/^Explanation/i) || line.match(/^Reference:/i)) {
+                            parsingExplanation = true;
+                            explanation += line + "\n";
+                            continue;
+                        }
+
+                        if (parsingExplanation) {
+                            explanation += line + "\n";
+                            continue;
+                        }
+
+                        // Determine if it is a choice option
+                        if (line.match(/^[A-F]\.\s/)) {
+                            choices.push(line);
+                        } else if (choices.length === 0) {
+                            questionBody.push(line);
+                        }
+                    }
+
+                    if (choices.length > 0 && answer !== "") {
+                        questions.push({
+                            id: id,
+                            text: questionBody.join('\n'),
+                            choices: choices,
+                            answer: answer,
+                            explanation: explanation.trim()
+                        });
+                    }
+                });
+
+                if (questions.length === 0) {
+                    throw new Error("Could not parse any structured questions. Please verify your VCE file formatting.");
+                }
+
+                currentPool = questions;
+                showToast(`Success! Parsed & Loaded ${questions.length} Questions.`);
+                hideUploadModal();
+                renderWelcomeStats();
+
+            } catch (err) {
+                alert(`Error Processing File: ${err.message}`);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('span').textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
