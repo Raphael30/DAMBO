@@ -74,7 +74,7 @@ const examQuestions = [
         question: "Refer to the exhibit, which shows an SD-WAN zone configuration on the FortiGate GUI. Based on the exhibit, which statement is true?",
         options: ["The Underlay zone is the zone by default.", "The Underlay zone contains no member.", "port2 and port3 are not assigned to a zone.", "The virtual-wan-link and overlay zones can be deleted."],
         answer: "B",
-        image: "images/q12.png"
+        image: "images/q11.png"
     },
     {
         id: 12,
