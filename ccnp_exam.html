@@ -6,11 +6,13 @@
     <title>CCNP Enterprise (300-410 ENARSI) Exam Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="exam_question.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -50,8 +52,6 @@
                     </svg>
                     <span id="headerTimer">110:00</span>
                 </div>
-                <button onclick="toggleTheme()" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition hidden">
-                    </button>
                 <button onclick="showUploadModal()" class="flex items-center space-x-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2 rounded-lg font-medium text-sm transition border border-indigo-100">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
@@ -74,13 +74,28 @@
 
                 <div class="border-t border-b border-slate-100 py-4 space-y-3">
                     <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-500 font-medium">Loaded Questions:</span>
-                        <span id="loadedQuestionsCount" class="font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">15 Questions (Pre-loaded)</span>
+                        <span class="text-slate-500 font-medium">Total Repository Pool:</span>
+                        <span id="loadedQuestionsCount" class="font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">0 Questions Loaded</span>
                     </div>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-slate-500 font-medium">Time Limit:</span>
-                        <span class="font-semibold text-slate-800">110 Minutes</span>
+                        <span class="font-semibold text-slate-800">110 Minutes (Scaled BGP/Routing Volume)</span>
                     </div>
+                </div>
+
+                <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <h3 class="text-sm font-semibold text-slate-700">Select Question Range</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label for="rangeStartInput" class="block text-xs font-bold text-slate-500 uppercase">Start From (#)</label>
+                            <input type="number" id="rangeStartInput" value="1" min="1" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label for="rangeEndInput" class="block text-xs font-bold text-slate-500 uppercase">End At (#)</label>
+                            <input type="number" id="rangeEndInput" value="1" min="1" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 italic">Extracts the specified range from the pool, then shuffles presentation and internal structures.</p>
                 </div>
 
                 <div class="space-y-4">
@@ -114,20 +129,16 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
                     </button>
-                    <button onclick="showUploadModal()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition duration-150 text-sm">
-                        Import complete 400-question .txt file
-                    </button>
                 </div>
             </div>
         </div>
 
         <div id="simScreen" class="hidden flex-1 flex overflow-hidden">
-            
             <aside class="w-80 bg-white border-r border-slate-200 flex flex-col h-full shrink-0">
                 <div class="p-4 border-b border-slate-200 bg-slate-50">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Navigation Console</h3>
                     <div class="mt-2 flex items-center justify-between">
-                        <span id="answeredStatusText" class="text-sm font-medium text-slate-700">0 of 15 Answered</span>
+                        <span id="answeredStatusText" class="text-sm font-medium text-slate-700">0 of 0 Answered</span>
                         <span id="sessionPercentage" class="text-xs text-slate-500">0% Done</span>
                     </div>
                     <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
@@ -136,8 +147,7 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto p-4">
-                    <div id="questionsGrid" class="grid grid-cols-5 gap-2">
-                        </div>
+                    <div id="questionsGrid" class="grid grid-cols-5 gap-2"></div>
                 </div>
 
                 <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
@@ -152,7 +162,7 @@
                         </div>
                         <div class="flex items-center space-x-2">
                             <span class="w-3 h-3 bg-amber-100 border border-amber-300 rounded"></span>
-                            <span>Flagged/Bookmarked</span>
+                            <span>Bookmarked</span>
                         </div>
                     </div>
                     <button onclick="confirmSubmitExam()" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-semibold rounded-lg transition shadow-md shadow-rose-100">
@@ -162,10 +172,9 @@
             </aside>
 
             <section class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50">
-                
                 <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
                     <div class="flex items-center space-x-3">
-                        <span id="questionCounterLabel" class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Question 1 of 15</span>
+                        <span id="questionCounterLabel" class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Question 1</span>
                         <button id="flagBtn" onclick="toggleFlag()" class="flex items-center space-x-1 px-3 py-1 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-semibold text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition">
                             <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                                 <path d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V15h2a2 2 0 011.6.8l1.6 2.4A2 2 0 0010.8 19h5.2a1 1 0 001-1V9a1 1 0 00-1-1h-3.2a2 2 0 01-1.6-.8L9.6 4.8A2 2 0 008 4H4a1 1 0 00-1-1z"></path>
@@ -173,7 +182,6 @@
                             <span id="flagBtnText">Bookmark Question</span>
                         </button>
                     </div>
-
                     <div id="activeModePill" class="px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full text-indigo-700 font-semibold text-xs uppercase tracking-widest">
                         Practice Mode
                     </div>
@@ -181,66 +189,53 @@
 
                 <div class="flex-1 overflow-y-auto p-6 sm:p-8">
                     <div class="max-w-4xl mx-auto space-y-6">
-                        
                         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8 space-y-6">
-                            
                             <div class="space-y-4">
-                                <div id="questionText" class="text-slate-800 text-lg font-medium leading-relaxed">
+                                <div id="questionText" class="text-slate-800 text-lg font-medium leading-relaxed font-mono whitespace-pre-wrap select-text">
                                     Loading Question Content...
                                 </div>
                                 <div id="questionImagesContainer" class="mt-4 flex flex-col gap-4 max-w-full"></div>
                             </div>
-
-                            <div id="choicesContainer" class="space-y-3">
-                                </div>
+                            <div id="choicesContainer" class="space-y-3"></div>
                         </div>
 
                         <div id="practiceFeedback" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all">
                             <div class="flex items-center space-x-2">
-                                <div id="feedbackBadge" class="p-1.5 rounded-full text-white">
-                                    </div>
+                                <div id="feedbackBadge" class="p-1.5 rounded-full text-white"></div>
                                 <h4 id="feedbackTitle" class="text-base font-bold">Feedback Title</h4>
                             </div>
                             <div class="text-sm text-slate-600 space-y-2">
-                                <p id="feedbackExplanation" class="leading-relaxed">Explanation content goes here.</p>
+                                <p id="feedbackExplanation" class="leading-relaxed font-mono whitespace-pre-wrap select-text">Explanation content goes here.</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
                 <footer class="bg-white border-t border-slate-200 px-6 py-4 shadow-lg flex items-center justify-between">
-                    <button id="prevBtn" onclick="navigateQuestion(-1)" class="flex items-center space-x-2 px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-sm rounded-xl transition">
+                    <button id="prevBtn" onclick="navigateQuestion(-1)" class="flex items-center space-x-2 px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-sm rounded-xl transition disabled:opacity-40">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                         <span>Previous</span>
                     </button>
-
                     <div class="flex items-center space-x-3">
-                        <button id="showAnswerBtn" onclick="revealAnswer()" class="hidden px-5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-sm font-semibold rounded-xl transition">
+                        <button id="showAnswerBtn" onclick="revealAnswer()" class="px-5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-sm font-semibold rounded-xl transition">
                             Check Answer
                         </button>
                     </div>
-
-                    <button id="nextBtn" onclick="navigateQuestion(1)" class="flex items-center space-x-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-indigo-100">
+                    <button id="nextBtn" onclick="navigateQuestion(1)" class="flex items-center space-x-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-indigo-100 disabled:opacity-40">
                         <span>Next Question</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </button>
                 </footer>
-
             </section>
-
         </div>
 
         <div id="reviewScreen" class="hidden flex-1 overflow-y-auto px-4 py-12 flex flex-col items-center">
             <div class="max-w-4xl w-full bg-white border border-slate-200 rounded-2xl shadow-xl p-8 space-y-8">
-                
                 <div class="text-center space-y-4">
-                    <div id="scoreBadge" class="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg shadow-emerald-100">
-                        85%
-                    </div>
+                    <div id="scoreBadge" class="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg shadow-emerald-100">0%</div>
                     <div class="space-y-1">
-                        <h2 id="reviewVerdict" class="text-2xl font-black text-slate-900">Congratulations, You Passed!</h2>
-                        <p id="reviewScoreText" class="text-slate-500 text-sm">You scored 13 out of 15 questions correctly (Score: 866/1000).</p>
+                        <h2 id="reviewVerdict" class="text-2xl font-black text-slate-900">Simulation Finished</h2>
+                        <p id="reviewScoreText" class="text-slate-500 text-sm">Review details are processing...</p>
                     </div>
                 </div>
 
@@ -251,18 +246,17 @@
                     </div>
                     <div class="bg-slate-50 p-4 rounded-xl text-center space-y-1">
                         <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Your Score</span>
-                        <h4 id="statYourScore" class="text-lg font-bold text-slate-800">866 (86.6%)</h4>
+                        <h4 id="statYourScore" class="text-lg font-bold text-slate-800">300 (0%)</h4>
                     </div>
                     <div class="bg-slate-50 p-4 rounded-xl text-center space-y-1">
                         <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Time Spent</span>
-                        <h4 id="statTimeSpent" class="text-lg font-bold text-slate-800">12:35</h4>
+                        <h4 id="statTimeSpent" class="text-lg font-bold text-slate-800">00:00</h4>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     <h3 class="text-lg font-bold text-slate-900">Detailed Review Breakdown</h3>
-                    <div id="detailedReviewContainer" class="space-y-4">
-                        </div>
+                    <div id="detailedReviewContainer" class="space-y-4"></div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -270,10 +264,8 @@
                         Start New Session
                     </button>
                 </div>
-
             </div>
         </div>
-
     </main>
 
     <div id="uploadModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
@@ -286,20 +278,16 @@
             </div>
             
             <div class="p-6 space-y-4">
-                <p class="text-xs text-slate-500 leading-relaxed">
-                    Upload your raw cleared exam text file (e.g. <code>CCNP_300-410_ENARSI_VCE_Ready.txt</code>). Our engine will parse your entire 400 questions instantly and allow you to study using our sleek simulator.
-                </p>
-
+                <p class="text-xs text-slate-500 leading-relaxed">Upload your raw exam text file pool here.</p>
                 <div class="border-2 border-dashed border-slate-200 hover:border-indigo-500 rounded-xl p-6 text-center space-y-2 cursor-pointer transition relative" id="dropzone">
                     <input type="file" id="fileInput" accept=".txt" onchange="handleFile(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <svg class="w-8 mx-auto text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <p class="text-sm font-semibold text-slate-700">Choose or Drag local text file here</p>
-                    <p class="text-xs text-slate-400">Supporting .txt formatted questions</p>
                 </div>
 
                 <div class="space-y-2">
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Or Paste Raw Question Text</label>
-                    <textarea id="pasteArea" placeholder="QUESTION 1&#10;Refer to the exhibit...&#10;A. ...&#10;Correct Answer: B" class="w-full h-32 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none font-mono"></textarea>
+                    <textarea id="pasteArea" placeholder="QUESTION 1..." class="w-full h-32 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none font-mono"></textarea>
                 </div>
 
                 <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
@@ -315,206 +303,48 @@
     </div>
 
     <script>
-        const PRELOADED_POOL = [
-            {
-                id: 1,
-                text: "Refer to the exhibit. Users in the branch network of 2001:db8:0:4::/64 report that they cannot access the Internet. Which command is issued in IPv6 router EIGRP 100 configuration mode to solve this issue?",
-                choices: [
-                    "A. Issue the eigrp stub command on R1.",
-                    "B. Issue the no eigrp stub command on R1.",
-                    "C. Issue the eigrp stub command on R2.",
-                    "D. Issue the no eigrp stub command on R2."
-                ],
-                answer: "B",
-                explanation: "The command 'no eigrp stub' must be issued on R1. R1 is likely configured as an EIGRP stub, restricting route propagation. Removing this stub configuration on R1 will allow it to advertise the necessary default routes or dynamic routes back to the branch networks."
-            },
-            {
-                id: 2,
-                text: "Which configuration configures a policy on R1 to forward any traffic that is sourced from the 192.168.130.0/24 network to R2?",
-                choices: [
-                    "A. Option A",
-                    "B. Option B",
-                    "C. Option C",
-                    "D. Option D"
-                ],
-                answer: "D",
-                explanation: "Option D is correct. To route traffic sourced from 192.168.130.0/24 to R2, we need an Access Control List matching the source subnet, and a route-map matching that IP address list and setting the IP next-hop to R2's interface IP (172.20.40.1). This policy is then applied in the inbound direction on the incoming interface."
-            },
-            {
-                id: 3,
-                text: "R2 has a locally originated prefix 192.168.130.0/24 and has these configurations:\n\nWhat is the result when the route-map OUT command is applied toward an eBGP neighbor R1 (1.1.1.1) by using the neighbor 1.1.1.1 route-map OUT out command?",
-                choices: [
-                    "A. R1 sees 192.168.130.0/24 as two AS hops away instead of one AS hop away.",
-                    "B. R1 does not accept any routes other than 192.168.130.0/24.",
-                    "C. R1 does not forward traffic that is destined for 192.168.30.0/24.",
-                    "D. Network 192.168.130.0/24 is not allowed in the R1 table."
-                ],
-                answer: "A",
-                explanation: "Using 'set as-path prepend 65000' adds one additional AS number to the path list when advertised to neighbor R1. Therefore, R1 will see the prefix as two AS hops away instead of just one."
-            },
-            {
-                id: 4,
-                text: "Which method changes the forwarding decision that a router makes without first changing the routing table or influencing the IP data plane?",
-                choices: [
-                    "A. nonbroadcast multiaccess",
-                    "B. packet switching",
-                    "C. policy-based routing",
-                    "D. forwarding information base"
-                ],
-                answer: "C",
-                explanation: "Policy-Based Routing (PBR) allows administrators to bypass traditional routing lookups by forwarding traffic based on criteria other than the destination IP address (such as source IP address, protocol, port, or packet size)."
-            },
-            {
-                id: 5,
-                text: "Refer to the exhibit. The output of the trace route from R5 shows a loop in the network. Which configuration prevents this loop?",
-                choices: [
-                    "A. Option A",
-                    "B. Option B",
-                    "C. Option C",
-                    "D. Option D"
-                ],
-                answer: "A",
-                explanation: "Option A is the correct configuration. To prevent mutual redistribution routing loops between EIGRP and OSPF, route tags should be set when redistributing on one protocol (R3 setting tag 1), and then filtered out / denied when redistributing back into the other protocol (R4 denying tag 1)."
-            },
-            {
-                id: 6,
-                text: "Refer to the exhibit. An engineer configures a static route on a router, but when the engineer checks the route to the destination, a different next hop is chosen. What is the reason for this?",
-                choices: [
-                    "A. Dynamic routing protocols always have priority over static routes.",
-                    "B. The metric of the OSPF route is lower than the metric of the static route.",
-                    "C. The configured AD for the static route is higher than the AD of OSPF.",
-                    "D. The syntax of the static route is not valid, so the route is not considered."
-                ],
-                answer: "C",
-                explanation: "Static routes have a default Administrative Distance of 1. However, if a static route is configured with a higher Administrative Distance (e.g. 130) than the running dynamic routing protocol (OSPF default AD is 110), the dynamic path will be preferred and installed in the RIB instead."
-            },
-            {
-                id: 7,
-                text: "Refer to the exhibit. An engineer is trying to generate a summary route in OSPF for network 10.0.0.0/8, but the summary route does not show up in the routing table. Why is the summary route missing?",
-                choices: [
-                    "A. The summary-address command is used only for summarizing prefixes between areas.",
-                    "B. The summary route is visible only in the OSPF database, not in the routing table.",
-                    "C. There is no route for a subnet inside 10.0.0.0/8, so the summary route is not generated.",
-                    "D. The summary route is not visible on this router, but it is visible on other OSPF routers in the same area."
-                ],
-                answer: "C",
-                explanation: "OSPF does not generate a summary route unless there is at least one active subordinate subnet (a route for a subnet inside the 10.0.0.0/8 scope) present in the OSPF routing process table."
-            },
-            {
-                id: 8,
-                text: "Refer to the exhibit. An engineer is trying to block the route to 192.168.2.2 from the routing table by using the configuration that is shown. The route is still present in the routing table as an OSPF route. Which action blocks the route?",
-                choices: [
-                    "A. Use an extended access list instead of a standard access list.",
-                    "B. Change sequence 10 in the route-map command from permit to deny.",
-                    "C. Use a prefix list instead of an access list in the route map.",
-                    "D. Add this statement to the route map: route-map RM-OSPF-DL deny 20."
-                ],
-                answer: "B",
-                explanation: "To block the route using a distribute-list with a route-map, you must change the route-map sequence 10 from permit to 'deny'. Under a distribute-list, 'deny' blocks the route, while 'permit' permits the route to be installed."
-            },
-            {
-                id: 9,
-                text: "What is a prerequisite for configuring BFD?",
-                choices: [
-                    "A. Jumbo frame support must be configured on the router that is using BFD.",
-                    "B. All routers in the path between two BFD endpoints must have BFD enabled.",
-                    "C. Cisco Express Forwarding must be enabled on all participating BFD endpoints.",
-                    "D. To use BFD with BGP, the timers 3 9 command must first be configured in the BGP routing process."
-                ],
-                answer: "C",
-                explanation: "Cisco Express Forwarding (CEF) is a strict prerequisite for configuring Bidirectional Forwarding Detection (BFD) on Cisco devices to allow fast hardware-driven keepalives."
-            },
-            {
-                id: 10,
-                text: "Refer to the exhibit. R2 is a route reflector, and R1 and R3 are route reflector clients. The route reflector learns the route to 172.16.25.0/24 from R1, but it does not advertise to R3. What is the reason the route is not advertised?",
-                choices: [
-                    "A. R2 does not have a route to the next hop, so R2 does not advertise the prefix to other clients.",
-                    "B. Route reflector setup requires full IBGP mesh between the routers.",
-                    "C. In route reflector setup, only classful prefixes are advertised to other clients.",
-                    "D. In route reflector setups, prefixes are not advertised from one client to another."
-                ],
-                answer: "A",
-                explanation: "For a Route Reflector (or any BGP router) to advertise a path to any neighbor, the path must be deemed valid and active, which strictly requires resolving the Next Hop IP address in the local routing table."
-            },
-            {
-                id: 11,
-                text: "Refer to the exhibit. An engineer is trying to redistribute OSPF to BGP, but not all of the routes are redistributed. What is the reason for this issue?",
-                choices: [
-                    "A. By default, only internal routes and external type 1 routes are redistributed into BGP.",
-                    "B. Only classful networks are redistributed from OSPF to BGP.",
-                    "C. BGP convergence is slow, so the route will eventually be present in the BGP table.",
-                    "D. By default, only internal OSPF routes are redistributed into BGP."
-                ],
-                answer: "D",
-                explanation: "By default, when redistributing OSPF into BGP using standard configurations, only internal OSPF routes (Intra-area and Inter-area) are redistributed. If you wish to redistribute external routes (type-1 and type-2), they must be explicitly permitted using match parameters."
-            },
-            {
-                id: 12,
-                text: "Refer to the exhibit. In which circumstance does the BGP neighbor remain in the idle condition?",
-                choices: [
-                    "A. if prefixes are not received from the BGP peer",
-                    "B. if prefixes reach the maximum limit",
-                    "C. if a prefix list is applied on the inbound direction",
-                    "D. if prefixes exceed the maximum limit"
-                ],
-                answer: "D",
-                explanation: "If you configure BGP maximum prefix limit on a neighbor, exceeding this configured maximum threshold shuts down the session and puts the neighbor into an 'Idle' (or Idle (PfxCt)) state."
-            },
-            {
-                id: 13,
-                text: "Which attribute eliminates LFAs that belong to protected paths in situations where links in a network are connected through a common fiber?",
-                choices: [
-                    "A. shared risk link group-disjoint",
-                    "B. linecard-disjoint",
-                    "C. lowest-repair-path-metric",
-                    "D. interface-disjoint"
-                ],
-                answer: "A",
-                explanation: "The Shared Risk Link Group (SRLG) disjointness attribute ensures that Loop-Free Alternates (LFAs) are chosen from paths that do not share the same physical risk factors (like running inside the same optical fiber cable bundles)."
-            },
-            {
-                id: 14,
-                text: "Refer to the exhibit. An engineer is troubleshooting BGP on a device but discovers that the clock on the device does not correspond to the time stamp of the log entries. Which action ensures consistency between the two times?",
-                choices: [
-                    "A. Configure the service timestamps log uptime command in global configuration mode.",
-                    "B. Configure the logging clock synchronize command in global configuration mode.",
-                    "C. Configure the service timestamps log datetime localtime command in global configuration mode.",
-                    "D. Make sure that the clock on the device is synchronized with an NTP server."
-                ],
-                answer: "C",
-                explanation: "Using the 'service timestamps log datetime localtime' command ensures that log file timestamp entries show local clock time instead of universal Coordinated Universal Time (UTC) or device system uptime."
-            },
-            {
-                id: 15,
-                text: "Refer to the exhibit. What is the result of applying this configuration?",
-                choices: [
-                    "A. The router can form BGP neighborships with any other device.",
-                    "B. The router cannot form BGP neighborships with any other device.",
-                    "C. The router cannot form BGP neighborships with any device that is matched by the access list named “BGP”.",
-                    "D. The router can form BGP neighborships with any device that is matched by the access list named “BGP”."
-                ],
-                answer: "C",
-                explanation: "The CoPP policy matches access-group 'BGP' and directs it to 'drop'. Therefore, any BGP connection from devices matched in the BGP access-list is blocked."
-            }
-        ];
-    </script>
-
-    <script>
-        let currentPool = [...PRELOADED_POOL];
-        let userAnswers = {}; // { questionId: chosenIndex }
-        let sessionFlags = {}; // { questionId: boolean }
+        let globalMasterPool = []; 
+        let currentActiveExamPool = []; 
+        let userAnswers = {}; 
+        let sessionFlags = {}; 
         let currentQuestionIndex = 0;
-        let activeMode = 'practice'; // 'practice' or 'exam'
-        let examTimeRemaining = 110 * 60; // 110 minutes in seconds
+        let activeMode = 'practice'; 
+        let examTimeRemaining = 110 * 60;
         let examInterval = null;
 
         window.onload = function() {
-            renderWelcomeStats();
+            // Check for pre-loaded array variable generated from exam_question.js
+            if (typeof PRELOADED_POOL !== 'undefined' && Array.isArray(PRELOADED_POOL) && PRELOADED_POOL.length > 0) {
+                globalMasterPool = PRELOADED_POOL;
+                renderWelcomeStats();
+                showToast(`Auto-Loaded ${globalMasterPool.length} Questions cleanly!`);
+                return;
+            }
+
+            // Fallback backward compatibility layer for old structural styles
+            if (window.RAW_EXAM_TEXT && window.RAW_EXAM_TEXT.trim() !== "") {
+                parseText(window.RAW_EXAM_TEXT);
+            } else {
+                renderWelcomeStats();
+            }
         };
 
         function renderWelcomeStats() {
             const countLabel = document.getElementById('loadedQuestionsCount');
-            countLabel.textContent = `${currentPool.length} Questions Loaded`;
+            countLabel.textContent = `${globalMasterPool.length} Questions Loaded`;
+            
+            if (globalMasterPool.length > 0) {
+                const startInput = document.getElementById('rangeStartInput');
+                const endInput = document.getElementById('rangeEndInput');
+                
+                startInput.value = 1;
+                startInput.min = 1;
+                startInput.max = globalMasterPool.length;
+                
+                endInput.value = globalMasterPool.length;
+                endInput.min = 1;
+                endInput.max = globalMasterPool.length;
+            }
         }
 
         function setMode(mode) {
@@ -536,6 +366,51 @@
         }
 
         function startExam() {
+            if (globalMasterPool.length === 0) {
+                alert("The repository pool is empty! Please import a valid exam resource file.");
+                return;
+            }
+
+            let startRange = parseInt(document.getElementById('rangeStartInput').value) || 1;
+            let endRange = parseInt(document.getElementById('rangeEndInput').value) || globalMasterPool.length;
+
+            if (startRange < 1) startRange = 1;
+            if (endRange > globalMasterPool.length) endRange = globalMasterPool.length;
+            if (startRange > endRange) {
+                alert("Start question cannot be greater than the end question!");
+                return;
+            }
+
+            let startIdx = startRange - 1;
+            let endIdx = endRange; 
+
+            let slicedSegment = JSON.parse(JSON.stringify(globalMasterPool.slice(startIdx, endIdx)));
+            let totalSelectedQuestions = slicedSegment.length;
+
+            for (let i = slicedSegment.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [slicedSegment[i], slicedSegment[j]] = [slicedSegment[j], slicedSegment[i]];
+            }
+
+            slicedSegment.forEach(question => {
+                const correctTextValue = question.choices.find(c => c.trim().startsWith(question.answer.trim() + "."));
+                
+                for (let k = question.choices.length - 1; k > 0; k--) {
+                    const m = Math.floor(Math.random() * (k + 1));
+                    [question.choices[k], question.choices[m]] = [question.choices[m], question.choices[k]];
+                }
+
+                if (correctTextValue) {
+                    const newCorrectIndex = question.choices.findIndex(c => c === correctTextValue);
+                    const alphabetLookup = ["A", "B", "C", "D", "E", "F"];
+                    question.computedDynamicAnswerLetter = alphabetLookup[newCorrectIndex] || "A";
+                } else {
+                    question.computedDynamicAnswerLetter = question.answer;
+                }
+            });
+
+            currentActiveExamPool = slicedSegment;
+
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('simScreen').classList.remove('hidden');
             
@@ -544,7 +419,8 @@
             sessionFlags = {};
 
             if (activeMode === 'exam') {
-                examTimeRemaining = 110 * 60;
+                const calculatedMinutes = Math.max(5, Math.ceil((totalSelectedQuestions / globalMasterPool.length) * 110));
+                examTimeRemaining = calculatedMinutes * 60;
                 document.getElementById('headerTimerContainer').classList.remove('hidden');
                 startTimer();
             } else {
@@ -576,12 +452,10 @@
         function renderGrid() {
             const grid = document.getElementById('questionsGrid');
             grid.innerHTML = '';
-            currentPool.forEach((q, i) => {
+            currentActiveExamPool.forEach((q, i) => {
                 const btn = document.createElement('button');
                 btn.id = `grid-btn-${i}`;
                 btn.onclick = () => showQuestion(i);
-                
-                // Styling
                 setGridButtonState(btn, i);
                 btn.textContent = i + 1;
                 grid.appendChild(btn);
@@ -591,10 +465,9 @@
 
         function setGridButtonState(btn, index) {
             btn.className = "w-full aspect-square text-xs font-bold rounded-lg flex items-center justify-center transition border ";
-            
             const isCurrent = index === currentQuestionIndex;
-            const isAnswered = userAnswers[currentPool[index].id] !== undefined;
-            const isFlagged = sessionFlags[currentPool[index].id] === true;
+            const isAnswered = userAnswers[currentActiveExamPool[index].id] !== undefined;
+            const isFlagged = sessionFlags[currentActiveExamPool[index].id] === true;
 
             if (isCurrent) {
                 btn.className += " bg-indigo-600 text-white border-indigo-600 shadow-md";
@@ -608,9 +481,9 @@
         }
 
         function updateSidebarStats() {
-            const total = currentPool.length;
+            const total = currentActiveExamPool.length;
             const answered = Object.keys(userAnswers).length;
-            const percent = Math.round((answered / total) * 100);
+            const percent = total > 0 ? Math.round((answered / total) * 100) : 0;
 
             document.getElementById('answeredStatusText').textContent = `${answered} of ${total} Answered`;
             document.getElementById('sessionPercentage').textContent = `${percent}% Done`;
@@ -621,124 +494,97 @@
             const prevIndex = currentQuestionIndex;
             currentQuestionIndex = index;
             
-            // Update active grid selection highlight
             const oldGridBtn = document.getElementById(`grid-btn-${prevIndex}`);
             if (oldGridBtn) setGridButtonState(oldGridBtn, prevIndex);
 
             const newGridBtn = document.getElementById(`grid-btn-${index}`);
             if (newGridBtn) setGridButtonState(newGridBtn, index);
 
-            const q = currentPool[index];
-            document.getElementById('questionCounterLabel').textContent = `Question ${index + 1} of ${currentPool.length}`;
-            
-            // Setup base text replacement
-            document.getElementById('questionText').innerHTML = q.text.replace(/\n/g, '<br>');
+            const q = currentActiveExamPool[index];
+            document.getElementById('questionCounterLabel').textContent = `Question ${index + 1} of ${currentActiveExamPool.length} (ID: #${q.id})`;
+            document.getElementById('questionText').textContent = q.text;
 
-            // Dynamic Image Preloader Engine
             const imgContainer = document.getElementById('questionImagesContainer');
-            imgContainer.innerHTML = ''; // Wipe older inputs clean
+            imgContainer.innerHTML = ''; 
 
             let checkIndex = 1;
-            
-            // Sequential recursive logic ensures flawless tracking of images
             function loadImagesSequentially() {
                 let img = new Image();
                 img.src = `images/q${q.id}_${checkIndex}.png`;
-                img.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block";
-                img.alt = `Exhibit Part ${checkIndex} for Question ${q.id}`;
+                img.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block select-none";
                 
                 img.onload = function() {
                     imgContainer.appendChild(img);
                     checkIndex++;
-                    loadImagesSequentially(); // Move to the next index part (_2, _3, etc.)
+                    loadImagesSequentially(); 
                 };
-                
                 img.onerror = function() {
-                    // If part _1 fails, try standard single layout mapping fallback format
-                    if (checkIndex === 1) {
-                        loadSingleFallbackImage();
-                    }
+                    if (checkIndex === 1) loadSingleFallbackImage();
                 };
             }
 
             function loadSingleFallbackImage() {
                 let fallbackImg = new Image();
                 fallbackImg.src = `images/q${q.id}.png`;
-                fallbackImg.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block";
-                fallbackImg.alt = `Exhibit for Question ${q.id}`;
-                
-                fallbackImg.onload = function() {
-                    imgContainer.appendChild(fallbackImg);
-                };
-                fallbackImg.onerror = function() {
-                    // Fail silently if there are no images at all for this question
-                };
+                fallbackImg.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block select-none";
+                fallbackImg.onload = function() { imgContainer.appendChild(fallbackImg); };
+                fallbackImg.onerror = function() {};
             }
 
-            // Fire asset tracking validation loader
             loadImagesSequentially();
 
-            // Render choices
             const container = document.getElementById('choicesContainer');
             container.innerHTML = '';
+            const alphabetLookup = ["A", "B", "C", "D", "E", "F"];
 
-            q.choices.forEach((choice, cIdx) => {
+            q.choices.forEach((choiceRawText, cIdx) => {
                 const choiceWrapper = document.createElement('div');
                 choiceWrapper.onclick = () => selectChoice(cIdx);
                 
                 const isSelected = userAnswers[q.id] === cIdx;
                 let baseStyle = "flex items-start space-x-3 p-4 rounded-xl border-2 cursor-pointer transition ";
                 baseStyle += isSelected ? "border-indigo-600 bg-indigo-50/50" : "border-slate-200 bg-white hover:border-slate-300";
-
                 choiceWrapper.className = baseStyle;
-                const letter = choice.substring(0, 2);
-                const choiceContent = choice.substring(2).trim();
+
+                let cleanChoiceText = choiceRawText.replace(/^[A-F]\.\s*/i, '');
+                let dynamicLetterLabel = alphabetLookup[cIdx];
 
                 choiceWrapper.innerHTML = `
                     <div class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}">
-                        ${letter.replace('.', '')}
+                        ${dynamicLetterLabel}
                     </div>
-                    <span class="text-sm font-medium text-slate-700 leading-relaxed">${choiceContent}</span>
+                    <span class="text-sm font-medium text-slate-700 leading-relaxed">${cleanChoiceText}</span>
                 `;
                 container.appendChild(choiceWrapper);
             });
 
-            // Toggle flagged active state button ui
             const isFlagged = sessionFlags[q.id] === true;
             const flagBtn = document.getElementById('flagBtn');
             const flagBtnText = document.getElementById('flagBtnText');
             if (isFlagged) {
                 flagBtn.className = "flex items-center space-x-1 px-3 py-1 border border-amber-300 bg-amber-50 rounded-full text-xs font-semibold text-amber-700 hover:bg-amber-100 transition";
-                flagBtnText.textContent = "Flagged / Bookmarked";
+                flagBtnText.textContent = "Bookmarked";
             } else {
                 flagBtn.className = "flex items-center space-x-1 px-3 py-1 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-semibold text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition";
                 flagBtnText.textContent = "Bookmark Question";
             }
 
-            // Hide/Show practice feedback panel
             document.getElementById('practiceFeedback').classList.add('hidden');
             if (activeMode === 'practice' && userAnswers[q.id] !== undefined) {
                 renderPracticeFeedback(q);
             }
 
-            // Hide/show next/previous buttons
             document.getElementById('prevBtn').disabled = index === 0;
-            document.getElementById('nextBtn').disabled = index === currentPool.length - 1;
+            document.getElementById('nextBtn').disabled = index === currentActiveExamPool.length - 1;
         }
 
         function selectChoice(cIdx) {
-            const q = currentPool[currentQuestionIndex];
+            const q = currentActiveExamPool[currentQuestionIndex];
             userAnswers[q.id] = cIdx;
             
-            // Re-render Choices
             showQuestion(currentQuestionIndex);
-            
-            // Re-render Grid for this question block
-            const gridBtn = document.getElementById(`grid-btn-${currentQuestionIndex}`);
-            if (gridBtn) setGridButtonState(gridBtn, currentQuestionIndex);
             updateSidebarStats();
 
-            // Trigger instant feedback in practice mode
             if (activeMode === 'practice') {
                 renderPracticeFeedback(q);
             }
@@ -746,12 +592,9 @@
 
         function renderPracticeFeedback(question) {
             const selectedIdx = userAnswers[question.id];
-            const correctLetter = question.answer.trim().toUpperCase();
-            
-            // Convert index to Letter
-            const alphabet = ["A", "B", "C", "D", "E"];
+            const correctLetter = question.computedDynamicAnswerLetter.trim().toUpperCase();
+            const alphabet = ["A", "B", "C", "D", "E", "F"];
             const chosenLetter = alphabet[selectedIdx];
-
             const isCorrect = chosenLetter === correctLetter;
 
             const feedbackPanel = document.getElementById('practiceFeedback');
@@ -762,51 +605,44 @@
             feedbackPanel.classList.remove('hidden');
 
             if (isCorrect) {
-                feedbackPanel.className = "bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all";
+                feedbackPanel.className = "bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm space-y-4";
                 badge.className = "p-1.5 rounded-full bg-emerald-500 text-white";
                 badge.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
                 title.className = "text-base font-bold text-emerald-800";
                 title.textContent = "Correct Answer!";
             } else {
-                feedbackPanel.className = "bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm space-y-4 transition-all";
+                feedbackPanel.className = "bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm space-y-4";
                 badge.className = "p-1.5 rounded-full bg-rose-500 text-white";
                 badge.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
                 title.className = "text-base font-bold text-rose-800";
-                title.textContent = `Incorrect. Correct answer is Option ${correctLetter}`;
+                title.textContent = `Incorrect. Correct choice is Option ${correctLetter}`;
             }
-
-            expl.textContent = question.explanation || "No explanation is available for this question.";
+            expl.textContent = question.explanation || "No explanation is available.";
         }
 
         function toggleFlag() {
-            const q = currentPool[currentQuestionIndex];
+            const q = currentActiveExamPool[currentQuestionIndex];
             sessionFlags[q.id] = !sessionFlags[q.id];
-            
-            // Refresh
             showQuestion(currentQuestionIndex);
         }
 
         function navigateQuestion(dir) {
             const nextIdx = currentQuestionIndex + dir;
-            if (nextIdx >= 0 && nextIdx < currentPool.length) {
+            if (nextIdx >= 0 && nextIdx < currentActiveExamPool.length) {
                 showQuestion(nextIdx);
             }
         }
 
         function revealAnswer() {
-            const q = currentPool[currentQuestionIndex];
-            // Simulate selecting the correct choice
-            const alphabet = ["A", "B", "C", "D", "E"];
-            const correctIdx = alphabet.indexOf(q.answer.trim().toUpperCase());
-            if (correctIdx !== -1) {
-                selectChoice(correctIdx);
-            }
+            const q = currentActiveExamPool[currentQuestionIndex];
+            const alphabet = ["A", "B", "C", "D", "E", "F"];
+            const correctIdx = alphabet.indexOf(q.computedDynamicAnswerLetter.trim().toUpperCase());
+            if (correctIdx !== -1) selectChoice(correctIdx);
         }
 
         function confirmSubmitExam() {
-            const unanswered = currentPool.length - Object.keys(userAnswers).length;
-            let msg = `Are you sure you want to finish the exam?\n\nYou have ${unanswered} unanswered questions remaining.`;
-            if (confirm(msg)) {
+            const unanswered = currentActiveExamPool.length - Object.keys(userAnswers).length;
+            if (confirm(`Are you sure? You have ${unanswered} unanswered questions.`)) {
                 submitExam();
             }
         }
@@ -817,83 +653,55 @@
             document.getElementById('reviewScreen').classList.remove('hidden');
 
             let correctCount = 0;
-            const alphabet = ["A", "B", "C", "D", "E"];
-
-            // Render review breakdowns
+            const alphabet = ["A", "B", "C", "D", "E", "F"];
             const container = document.getElementById('detailedReviewContainer');
             container.innerHTML = '';
 
-            currentPool.forEach((q, idx) => {
+            currentActiveExamPool.forEach((q, idx) => {
                 const userIdx = userAnswers[q.id];
-                const correctLetter = q.answer.trim().toUpperCase();
+                const correctLetter = q.computedDynamicAnswerLetter.trim().toUpperCase();
                 const chosenLetter = userIdx !== undefined ? alphabet[userIdx] : 'None';
                 const isCorrect = chosenLetter === correctLetter;
 
                 if (isCorrect) correctCount++;
 
-                // Element Creation
                 const row = document.createElement('div');
-                row.className = `border rounded-xl p-4 sm:p-6 space-y-3 bg-white shadow-sm transition ${isCorrect ? 'border-emerald-200 hover:border-emerald-300' : 'border-rose-200 hover:border-rose-300'}`;
-
+                row.className = `border rounded-xl p-4 sm:p-6 space-y-3 bg-white shadow-sm ${isCorrect ? 'border-emerald-200' : 'border-rose-200'}`;
                 row.innerHTML = `
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Question ${idx + 1}</span>
-                        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                            ${isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Question ${idx + 1} (Pool ID: #${q.id})</span>
+                        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${isCorrect ? 'Correct' : 'Incorrect'}</span>
                     </div>
-                    <p class="text-slate-800 text-sm font-medium leading-relaxed">${q.text.replace(/\n/g, '<br>')}</p>
-                    <div class="flex flex-col sm:flex-row gap-3 pt-2 text-xs border-t border-slate-100">
-                        <div class="flex items-center space-x-1">
-                            <span class="text-slate-400">Your choice:</span>
-                            <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${chosenLetter}</span>
-                        </div>
-                        <div class="flex items-center space-x-1">
-                            <span class="text-slate-400">Correct:</span>
-                            <span class="font-bold text-emerald-700">${correctLetter}</span>
-                        </div>
+                    <p class="text-slate-800 text-sm font-medium leading-relaxed font-mono whitespace-pre-wrap select-text">${q.text}</p>
+                    <div class="flex gap-3 pt-2 text-xs border-t border-slate-100">
+                        <div><span class="text-slate-400">Your choice:</span> <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${chosenLetter}</span></div>
+                        <div><span class="text-slate-400">Correct:</span> <span class="font-bold text-emerald-700">${correctLetter}</span></div>
                     </div>
-                    ${!isCorrect ? `
-                        <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1">
-                            <strong class="text-slate-600 block">Explanation:</strong>
-                            <p class="text-slate-500 leading-relaxed">${q.explanation || 'No explanation available.'}</p>
-                        </div>
-                    ` : ''}
                 `;
                 container.appendChild(row);
             });
 
-            // Grade Stats calculations
-            const total = currentPool.length;
-            const scorePercentage = Math.round((correctCount / total) * 100);
-            
-            // Standard Cisco Scale (score between 300 and 1000)
+            const total = currentActiveExamPool.length;
+            const scorePercentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
             const ciscoScore = Math.round(300 + (scorePercentage * 7));
 
             const badge = document.getElementById('scoreBadge');
             const verdict = document.getElementById('reviewVerdict');
-            const scoreText = document.getElementById('reviewScoreText');
-
+            
             badge.textContent = `${scorePercentage}%`;
             document.getElementById('statYourScore').textContent = `${ciscoScore} (${scorePercentage}%)`;
             
             if (ciscoScore >= 825) {
-                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg bg-emerald-500 shadow-emerald-100";
+                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white bg-emerald-500 shadow-lg";
                 verdict.textContent = "Congratulations! You Passed!";
                 verdict.className = "text-2xl font-black text-emerald-600";
             } else {
-                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white shadow-lg bg-rose-500 shadow-rose-100";
+                badge.className = "mx-auto w-24 h-24 rounded-full flex items-center justify-center text-3xl font-extrabold text-white bg-rose-500 shadow-lg";
                 verdict.textContent = "Keep Studying, You Can Do It!";
                 verdict.className = "text-2xl font-black text-rose-600";
             }
-
-            scoreText.textContent = `You scored ${correctCount} correct answers out of ${total} total questions. Cisco Passing Score is 825.`;
-            
-            // Duration calculations
-            const timeSpentSecs = (110 * 60) - examTimeRemaining;
-            const mins = Math.floor(timeSpentSecs / 60);
-            const secs = timeSpentSecs % 60;
-            document.getElementById('statTimeSpent').textContent = activeMode === 'exam' ? `${mins}:${secs < 10 ? '0' : ''}${secs}` : 'Self-Paced (Practice)';
+            document.getElementById('reviewScoreText').textContent = `You scored ${correctCount} out of ${total}.`;
+            document.getElementById('statTimeSpent').textContent = activeMode === 'exam' ? 'Timed' : 'Self-Paced';
         }
 
         function resetApp() {
@@ -902,45 +710,38 @@
             renderWelcomeStats();
         }
 
-        /* TEXT / IMPORT FILE PARSING UTILITIES */
-        function showUploadModal() {
-            document.getElementById('uploadModal').classList.remove('hidden');
-        }
-
-        function hideUploadModal() {
-            document.getElementById('uploadModal').classList.add('hidden');
-        }
+        function showUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+        function hideUploadModal() { document.getElementById('uploadModal').classList.add('hidden'); }
 
         function handleFile(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(e) {
-                parseText(e.target.result);
-            };
+            reader.onload = function(e) { parseText(e.target.result); };
             reader.readAsText(file);
         }
 
         function processPastedText() {
             const text = document.getElementById('pasteArea').value;
-            if (text.trim() === '') {
-                showToast("Please paste some questions before processing.");
-                return;
-            }
+            if (!text.trim()) { alert("Paste text first."); return; }
             parseText(text);
         }
 
         function parseText(rawText) {
             try {
+                const normalizedText = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                
                 const questions = [];
-                const blocks = rawText.split(/(?=QUESTION\s+\d+)/i);
+                const blocks = normalizedText.split(/------------------------------------------------------------/);
 
                 blocks.forEach((block) => {
                     const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
                     if (lines.length < 3) return;
 
-                    let qIdMatch = lines[0].match(/QUESTION\s+(\d+)/i);
+                    let headerIdx = lines.findIndex(l => l.toUpperCase().startsWith('QUESTION'));
+                    if (headerIdx === -1) return;
+
+                    let qIdMatch = lines[headerIdx].match(/QUESTION\s+(\d+)/i);
                     if (!qIdMatch) return;
 
                     let id = parseInt(qIdMatch[1]);
@@ -950,28 +751,23 @@
                     let explanation = "";
                     let parsingExplanation = false;
 
-                    for (let i = 1; i < lines.length; i++) {
+                    for (let i = headerIdx + 1; i < lines.length; i++) {
                         let line = lines[i];
-
                         if (line.match(/^Correct Answer:/i)) {
                             answer = line.replace(/^Correct Answer:\s*/i, '').trim();
                             continue;
                         }
-
                         if (line.match(/^Explanation/i) || line.match(/^Reference:/i)) {
                             parsingExplanation = true;
-                            explanation += line + "\n";
                             continue;
                         }
-
                         if (parsingExplanation) {
-                            explanation += line + "\n";
+                            explanation += line + " ";
                             continue;
                         }
-
-                        if (line.match(/^[A-F]\.\s/)) {
+                        if (line.match(/^[A-F]\./) || line.startsWith('[Answer choices')) {
                             choices.push(line);
-                        } else if (choices.length === 0) {
+                        } else {
                             questionBody.push(line);
                         }
                     }
@@ -980,18 +776,13 @@
                         if (choices.length === 0) {
                             let maxOption = 'D';
                             for (let char of answer.toUpperCase()) {
-                                if (char >= 'A' && char <= 'F' && char > maxOption) {
-                                    maxOption = char;
-                                }
+                                if (char >= 'A' && char <= 'F' && char > maxOption) maxOption = char;
                             }
-                            const maxCode = maxOption.charCodeAt(0);
-                            const startCode = 'A'.charCodeAt(0);
-                            for (let code = startCode; code <= maxCode; code++) {
+                            for (let code = 'A'.charCodeAt(0); code <= maxOption.charCodeAt(0); code++) {
                                 const letter = String.fromCharCode(code);
                                 choices.push(`${letter}. Option ${letter}`);
                             }
                         }
-
                         questions.push({
                             id: id,
                             text: questionBody.join('\n'),
@@ -1002,17 +793,14 @@
                     }
                 });
 
-                if (questions.length === 0) {
-                    throw new Error("Could not parse any structured questions. Please verify your VCE file formatting.");
-                }
+                if (questions.length === 0) throw new Error("No questions parsed. Check file content structure layout.");
 
-                currentPool = questions;
-                showToast(`Success! Parsed & Loaded ${questions.length} Questions.`);
+                globalMasterPool = questions;
+                showToast(`Success! Loaded ${questions.length} Questions.`);
                 hideUploadModal();
                 renderWelcomeStats();
-
             } catch (err) {
-                alert(`Error Processing File: ${err.message}`);
+                alert(`Error: ${err.message}`);
             }
         }
 
@@ -1020,9 +808,7 @@
             const toast = document.getElementById('toast');
             toast.querySelector('span').textContent = message;
             toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 4000);
+            setTimeout(() => { toast.classList.add('hidden'); }, 4000);
         }
     </script>
 </body>
