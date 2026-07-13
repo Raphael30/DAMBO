@@ -137,7 +137,7 @@ const examQuestions = [
         question: "A new administrator is configuring FSSO authentication on FortiGate using DC Agent Mode. Which step is NOT part of the expected process?",
         options: ["The DC agent sends login event data directly to FortiGate.", "The user logs into the windows domain.", "The collector agent forwards login event data to FortiGate.", "FortiGate determines user identity based on the IP address in the FSSO list."],
         answer: "A",
-        image: null
+        image: "images/q20.png"
     },
     {
         id: 21,
@@ -165,7 +165,7 @@ const examQuestions = [
         question: "FortiGate is operating in NAT mode and has two physical interfaces connected to the LAN and DMZ networks respectively. Which two statements about the requirements of connected physical interfaces on FortiGate are true? (Choose two.)",
         options: ["Both interfaces must have the interface role assigned.", "Both interfaces must have directly connected routes on the routing table.", "Both interfaces must have DHCP enabled and interfaces set to LAN and DMZ roles assigned.", "Both interfaces must have IP addresses assigned."],
         answer: "BD",
-        image: null
+        image: "images/q24.png"
     },
     {
         id: 25,
@@ -193,7 +193,7 @@ const examQuestions = [
         question: "You have configured an application control profile, set peer-to-peer traffic to Block under the Categories tab, and applied it to the firewall policy. However, your peer-to-peer traffic on known ports is passing through the FortiGate without being blocked. What FortiGate settings should you check to resolve this issue?",
         options: ["FortiGuard category ratings", "Application and Filter Overrides", "Network Protocol Enforcement", "Replacement Messages for UDP-based Applications"],
         answer: "C",
-        image: null
+        image: "images/q28.png"
     },
     {
         id: 29,
@@ -249,7 +249,7 @@ const examQuestions = [
         question: "Which statement correctly describes NetAPI polling mode for the FSSO collector agent?",
         options: ["The collector agent uses a Windows API to query DCs for user logins.", "NetAPI polling can increase bandwidth usage in large networks.", "The NetSessionEnum function is used to track user logouts.", "The collector agent must search Windows application event logs."],
         answer: "C",
-        image: null
+        image: "images/q36.png"
     },
     {
         id: 37,
@@ -312,7 +312,7 @@ const examQuestions = [
         question: "Which three strategies are valid SD-WAN rule strategies for member selection? (Choose three.)",
         options: ["Lowest Cost (SLA) without load balancing", "Manual with load balancing", "Lowest Quality (SLA) with load balancing", "Lowest Cost (SLA) with load balancing", "Best Quality with load balancing"],
         answer: "ABD",
-        image: null
+        image: "images/q45.png"
     },
     {
         id: 46,
@@ -347,7 +347,7 @@ const examQuestions = [
         question: "When FortiGate performs SSL/SSH full inspection, you can decide how it should react when it detects an invalid certificate. Which three actions are valid actions that FortiGate can perform when it detects an invalid certificate? (Choose three.)",
         options: ["Allow", "Trust & Allow", "Allow & Warning", "Block", "Block & Warning"],
         answer: "ABE",
-        image: null
+        image: "images/q50.png"
     },
     {
         id: 51,
@@ -389,7 +389,7 @@ const examQuestions = [
         question: "An administrator has configured a dialup IPsec VPN on FortiGate with add-route enabled. However, the static route is not showing in the routing table. Which two statements about this scenario are correct? (Choose two.)",
         options: ["The administrator must enable a dynamic routing protocol on the dialup interface.", "The administrator must use a policy route instead of a static route for add-route to work properly.", "The administrator must ensure phase 2 is successfully established.", "The administrator must define the remote network correctly in the phase 2 selectors."],
         answer: "CD",
-        image: null
+        image: "images/q56.png"
     },
     {
         id: 57,
@@ -445,7 +445,7 @@ const examQuestions = [
         question: "Which two statements describe the function of NTurbo in flow-based inspection? (Choose two.)",
         options: ["NTurbo offloads firewall policy processing to the content processor.", "For flow-based inspection, NTurbo establishes a dedicated data path to redirect traffic between the IPS engine and FortiGate ingress and egress interfaces.", "For proxy-based inspection, NTurbo buffers the whole file and then sends it to the antivirus engine.", "For flow-based inspection, NTurbo bypasses the antivirus engine to increase speed."],
         answer: "B",
-        image: null
+        image: "images/q64.png"
     },
     {
         id: 65,
@@ -473,14 +473,14 @@ const examQuestions = [
         question: "What is the purpose of the set service-port command in the explicit web proxy configuration?",
         options: ["To define the port used for administrative HTTPS access.", "To specify the port numbers that the explicit proxy will listen on for client requests.", "To restrict proxy access to specific source IP subnets.", "To bind the explicit proxy to a specific hardware interface."],
         answer: "B",
-        image: null
+        image: ["images/q68_1.png", "images/q68_2.png", "images/q68_3.png", "images/q68_4.png"]
     },
     {
         id: 69,
         question: "An administrator has enabled the access-log option on an explicit web proxy policy. What type of information will be included in the logs generated by this policy?",
         options: ["Detailed system performance data, such as CPU and memory usage.", "Detailed information about HTTP and HTTPS requests, including URLs, status codes, and user agents.", "Information about IPsec VPN phase 1 and phase 2 negotiations.", "Logs related to HA cluster heartbeat synchronization events."],
         answer: "B",
-        image: null
+        image: "images/q69.png"
     },
     {
         id: 70,
@@ -501,7 +501,7 @@ const examQuestions = [
         question: "Which statement is true regarding the use of user groups in a firewall policy configured with active authentication?",
         options: ["The user group must be added to the Source field of the firewall policy.", "The user group must be added to the Destination field of the firewall policy.", "The user group must be mapped directly to a physical interface configuration.", "Active authentication policies do not require user groups if guest access is enabled."],
         answer: "A",
-        image: null
+        image: ["images/q72_1.png", "images/q72_2.png"]
     },
     {
         id: 73,
