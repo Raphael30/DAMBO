@@ -185,9 +185,10 @@
                         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8 space-y-6">
                             
                             <div class="space-y-4">
-                                <p id="questionText" class="text-slate-800 text-lg font-medium leading-relaxed">
+                                <div id="questionText" class="text-slate-800 text-lg font-medium leading-relaxed">
                                     Loading Question Content...
-                                </p>
+                                </div>
+                                <div id="questionImagesContainer" class="mt-4 flex flex-col gap-4 max-w-full"></div>
                             </div>
 
                             <div id="choicesContainer" class="space-y-3">
@@ -617,10 +618,10 @@
         }
 
         function showQuestion(index) {
-            // Update active grid selection highlight
             const prevIndex = currentQuestionIndex;
             currentQuestionIndex = index;
             
+            // Update active grid selection highlight
             const oldGridBtn = document.getElementById(`grid-btn-${prevIndex}`);
             if (oldGridBtn) setGridButtonState(oldGridBtn, prevIndex);
 
@@ -630,8 +631,52 @@
             const q = currentPool[index];
             document.getElementById('questionCounterLabel').textContent = `Question ${index + 1} of ${currentPool.length}`;
             
-            // Build Question Text & potential diagrams
+            // Setup base text replacement
             document.getElementById('questionText').innerHTML = q.text.replace(/\n/g, '<br>');
+
+            // Dynamic Image Preloader Engine
+            const imgContainer = document.getElementById('questionImagesContainer');
+            imgContainer.innerHTML = ''; // Wipe older inputs clean
+
+            let checkIndex = 1;
+            
+            // Sequential recursive logic ensures flawless tracking of images
+            function loadImagesSequentially() {
+                let img = new Image();
+                img.src = `images/q${q.id}_${checkIndex}.png`;
+                img.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block";
+                img.alt = `Exhibit Part ${checkIndex} for Question ${q.id}`;
+                
+                img.onload = function() {
+                    imgContainer.appendChild(img);
+                    checkIndex++;
+                    loadImagesSequentially(); // Move to the next index part (_2, _3, etc.)
+                };
+                
+                img.onerror = function() {
+                    // If part _1 fails, try standard single layout mapping fallback format
+                    if (checkIndex === 1) {
+                        loadSingleFallbackImage();
+                    }
+                };
+            }
+
+            function loadSingleFallbackImage() {
+                let fallbackImg = new Image();
+                fallbackImg.src = `images/q${q.id}.png`;
+                fallbackImg.className = "max-w-full h-auto rounded-lg border border-slate-200 shadow-sm block";
+                fallbackImg.alt = `Exhibit for Question ${q.id}`;
+                
+                fallbackImg.onload = function() {
+                    imgContainer.appendChild(fallbackImg);
+                };
+                fallbackImg.onerror = function() {
+                    // Fail silently if there are no images at all for this question
+                };
+            }
+
+            // Fire asset tracking validation loader
+            loadImagesSequentially();
 
             // Render choices
             const container = document.getElementById('choicesContainer');
@@ -640,21 +685,13 @@
             q.choices.forEach((choice, cIdx) => {
                 const choiceWrapper = document.createElement('div');
                 choiceWrapper.onclick = () => selectChoice(cIdx);
-                choiceWrapper.id = `choice-${cIdx}`;
                 
                 const isSelected = userAnswers[q.id] === cIdx;
-                
                 let baseStyle = "flex items-start space-x-3 p-4 rounded-xl border-2 cursor-pointer transition ";
-                if (isSelected) {
-                    baseStyle += "border-indigo-600 bg-indigo-50/50";
-                } else {
-                    baseStyle += "border-slate-200 bg-white hover:border-slate-300";
-                }
+                baseStyle += isSelected ? "border-indigo-600 bg-indigo-50/50" : "border-slate-200 bg-white hover:border-slate-300";
 
                 choiceWrapper.className = baseStyle;
-                
-                // Get letter prefix
-                const letter = choice.substring(0, 2); // "A." or "B."
+                const letter = choice.substring(0, 2);
                 const choiceContent = choice.substring(2).trim();
 
                 choiceWrapper.innerHTML = `
@@ -896,8 +933,6 @@
 
         function parseText(rawText) {
             try {
-                // Highly optimized regex VCE Parser Engine matching the exact input structure
-                // Question blocks start with: "QUESTION \d+"
                 const questions = [];
                 const blocks = rawText.split(/(?=QUESTION\s+\d+)/i);
 
@@ -905,7 +940,6 @@
                     const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
                     if (lines.length < 3) return;
 
-                    // Header identification
                     let qIdMatch = lines[0].match(/QUESTION\s+(\d+)/i);
                     if (!qIdMatch) return;
 
@@ -916,7 +950,6 @@
                     let explanation = "";
                     let parsingExplanation = false;
 
-                    // Loop through rest of lines
                     for (let i = 1; i < lines.length; i++) {
                         let line = lines[i];
 
@@ -936,7 +969,6 @@
                             continue;
                         }
 
-                        // Determine if it is a choice option
                         if (line.match(/^[A-F]\.\s/)) {
                             choices.push(line);
                         } else if (choices.length === 0) {
@@ -944,10 +976,8 @@
                         }
                     }
 
-                    // FIXED: Allow questions with zero standard choices (e.g. Exhibits & Drag-and-drops) to pass through
                     if (answer !== "") {
                         if (choices.length === 0) {
-                            // Automatically fill in options up to the correct letter bounds (minimum up to D)
                             let maxOption = 'D';
                             for (let char of answer.toUpperCase()) {
                                 if (char >= 'A' && char <= 'F' && char > maxOption) {
