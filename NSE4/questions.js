@@ -340,7 +340,7 @@ const examQuestions = [
         question: "Refer to the exhibits. An administrator creates a new address object on the root FortiGate (HQ-NGFW-1) in the Security Fabric. After synchronization, this object is not available on the downstream FortiGate (HQ-ISFW). What must the administrator do to synchronize the address object?[cite: 2]",
         options: ["Change the csfsetting on HQ-ISFW (downstream) to set configuration-sync local.", "Change the csfsetting on HQ-ISFW (downstream) to setsaml-configuration-sync default.", "Change the csfsetting on HQ-NGFW-1 (root) to set fabric-object-unification default.", "Change the csfsetting on both devices to set downstream-access enable."],
         answer: "C",
-        image: "images/q49.png"
+        image: ["images/q49_1.png", "images/q49_2.png", "images/q49_3.png", "images/q49_4.png"]
     },
     {
         id: 50,
@@ -466,14 +466,14 @@ const examQuestions = [
         question: "Refer to the exhibits. A diagram of a FortiGate device connected to the network VIP object and firewall policyconfiguration ise shown. The WAN (port2) interfacehas thee IP address 100.65.0.101/24. The LAN (port4) interface has the IP address 10.0.11.254/24. If the host 100.65.1.111 sends a TCP SYN packet on port 443 to 100.65.0.200, what will the source address, destination address, and destination port of the packet be at the time FortiGate forwards the packet to the destination?[cite: 2]",
         options: ["10.0.11.254, 10.0.15.50, and 4443, respectively", "100.65.1.111, 10.0.11.50 and 443, respectively", "10.0.11.254, 100.65.0.200, and 443, respectively", "100.65.1.111, 10.0.11.50, and 4443, respectively"],
         answer: "D",
-        image: "images/q67.png"
+        image: ["images/q67_1.png", "images/q67_2.png", "images/q67_3.png"]
     },
     {
         id: 68,
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, and the firewall policies, VIP, and IP pool configurations on the FortiGate device. The WAN (port2) interface has the IP address 100.65.0.101/24. The LAN (port4) interface has the IP address 10.0.11.254/24. The first firewall policy has NAT enabled using the IP pool. The second firewall policy is configured with a VIP as the destination address. Which IP address will be used to source NAT (SNAT) the internet traffic coming from a workstation with the IP address 10.0.11.50?[cite: 2]",
         options: ["100.65.0.101", "100.65.0.200", "100.65.0.102", "10.0.11.254"],
         answer: "C",
-        image: "images/q68.png"
+        image: ["images/q68_1.png", "images/q68_2.png", "images/q68_3.png", "images/q68_4.png"]
     },
     {
         id: 69,
@@ -501,7 +501,7 @@ const examQuestions = [
         question: "Refer to the exhibits. An administrator configured both members of an HA cluster at the same time. After one week of monitoring, the administrator wants to verify the HA failover performance. How can the administrator force a failover?[cite: 2]",
         options: ["The administrator must reset the HA uptime on HQ-NGFW-1.", "The administrator must set the parameter override to enable on HQ-NGFW-2.", "The administrator must increase the HA priority on HQ-NGFW-2.", "The administrator must set the monitored port to down on HQ-NGFW-1."],
         answer: "A",
-        image: "images/q72.png"
+        image: ["images/q72_1.png", "images/q72_2.png"]
     },
     {
         id: 73,
@@ -522,14 +522,14 @@ const examQuestions = [
         question: "Refer to the exhibits. You have implemented the application sensor and the corresponding firewall policy as shown in the exhibits. You cannot access any of the Google applications, but you are able to access www.fortinet.com. What would you do to resolve this issue?[cite: 2]",
         options: ["Change the Inspection mode to Proxy-based.", "Set SSL inspection to deep-content-inspection.", "Move up Google in the Application and Filter Overrides section to set its priority to 1.", "Add *Google*.com to the URL category in the security profile."],
         answer: "C",
-        image: "images/q75.png"
+        image: ["images/q75_1.png", "images/q75_2.png"]
     },
     {
         id: 76,
         question: "Refer to the exhibits. A web filter profile configuration and firewall policy configuration are shown. You are trying to access www.facebook.com, but you are redirected to a FortiGuard web filtering block page. Based on the exhibits, what is the possible cause of the issue?[cite: 2]",
         options: ["The web filter profile feature set is configured incorrectly.", "The web rating override configuration is incorrect.", "The firewall policy inspection modeis incorrectt.", "For www.facebook.com, the URL filter actiois incorrectct."],
         answer: "B",
-        image: "images/q76.png"
+        image: ["images/q76_1.png", "images/q76_2.png", "images/q76_3.png"]
     },
     {
         id: 77,
@@ -557,7 +557,7 @@ const examQuestions = [
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, as well as the firewall policy and IP pool configuration on the FortiGate device. Two PCs, PC1 and PC2, are connected behind FortiGate and can access the internet successfully. However, when the administrator adds a third PC to the network (PC3), the PC cannot connect to the internet. Based on the information shown in the exhibit, which two configuration options can the administrator use to fix the connectivity issue for PC3? (Choose two.)[cite: 2]",
         options: ["In the IP pool configuration, set type to overload.", "In the system settings, set Multiple InterfacePolicies to enable.", "In the firewall policy,s et match-vip to enable using CLI.", "In the IP pool configuration, set endip to 100.65.0.112."],
         answer: "AD",
-        image: "images/q80.png"
+        image: ["images/q80_1.png", "images/q80_2.png", "images/q80_3.png"]
     },
     {
         id: 81,
@@ -571,7 +571,7 @@ const examQuestions = [
         question: "Refer to the exhibits. An administrator configured the Web Filter Profile to block access to all social networking sites except Facebook. However, when users try to access Facebook.com, they are redirected to a FortiGuard web filtering block page. Based on the exhibits, which configuration change must the administrator make to allow Facebook while blocking all othersocial networking sites?[cite: 2]",
         options: ["Change the type as Simple in the Static URL Filtersection.", "Set the Social Networking action as warning in the FortiGuard Category Based Filter.", "Change the Feature set of Web Filter Profile as Proxy-based.", "Set the Action as Exempt for www.facebook.com in the Static URL Filter."],
         answer: "A",
-        image: "images/q82.png"
+        image: ["images/q82_1.png", "images/q82_2.png"]
     },
     {
         id: 83,
@@ -585,28 +585,28 @@ const examQuestions = [
         question: "Refer to the exhibits. The exhibits show the application sensor configuration and the Excessive-Bandwidth and Apple filter details. Based on the configuration, what will happen to Apple FaceTime if there are only a few calls originating or incoming?[cite: 2]",
         options: ["Apple Face Time will be allowed, based on the Video/Audio category configuration.", "Apple Face Time will be blocked, based on the Excessive-Bandwidth filter configuration.", "Apple Face Time will be allowed, based on the Apple filter configuration.", "Apple Face Time will be allowed only if the Apple filter in Application and Filter Overrides is set to Allow."],
         answer: "B",
-        image: "images/q84.png"
+        image: ["images/q84_1.png", "images/q84_2.png", "images/q84_3.png"]
     },
     {
         id: 85,
         question: "Refer to the exhibits. You have implemented the application sensor and the corresponding firewall policy as shown in the exhibits. You cannot access any of the Google applications, but you are able to access www.fortinet.com. Which two actions would you take to resolve the issue? (Choose two.)[cite: 2]",
         options: ["Move up Google in the Application and Filter Overrides section to set its priority to 1.", "Set the action for Google in the Application and Filter Overrides section to Allow.", "Add *Google*.com to the URL category in the security profile.", "Change the Inspection mode to Flow-based.", "Set SSL inspection to deep-content inspection."],
         answer: "AE",
-        image: "images/q85.png"
+        image: ["images/q85_1.png", "images/q85_2.png"]
     },
     {
         id: 86,
         question: "Refer to the exhibits. You have implemented the application sensor and the corresponding firewall policy as shown in the exhibits. Which two factors can you observe from these configurations? (Choose two.)[cite: 2]",
         options: ["Facebook access is allowed but you cannot play Facebook videos based on Video/Audio category filter settings.", "Facebook accessis blocked based on the category filtersettings.", "YouTube search is allowed based on the Google Application and Filter override settings.", "YouTube access is blocked based on Excessive-Bandwidth Application and Filter override settings."],
         answer: "BD",
-        image: "images/q86.png"
+        image: ["images/q86_1.png", "images/q86_2.png"]
     },
     {
         id: 87,
         question: "Refer to the exhibits. You are asked to implement an antivirus profile for files downloaded through FTP, HTTP, and HTTPS. While testing, you are successful with HTTP and FTP protocols, but FortiGate does not block the file download over HTTPS. What could be the cause?[cite: 2]",
         options: ["The feature set in the antivirus profile is not set to Flow-based.", "Web filter is not enabled on the firewall policy to complement the antivirus profile.", "The action on the firewall policy is not set to deny.", "The SSL inspection mode in the firewall policy is not deep content inspection."],
         answer: "D",
-        image: "images/q87.png"
+        image: ["images/q87_1.png", "images/q87_2.png", "images/q87_3.png"]
     },
     {
         id: 88,
@@ -711,21 +711,21 @@ const examQuestions = [
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, as well as the firewall policy and IP pool configuration on the FortiGate device. Two PCs, PC1 and PC2, are connected behind FortiGate and can access the internet successfully. However, when the administrator adds a third PC to the network (PC3), the PC cannot connect to the internet. Based on the information shown in the exhibit, which two configuration options can the administrator use to fix the connectivity issue for PC3? (Choose two.)[cite: 2]",
         options: ["In the IP pool configuration, set type to overload.", "In the firewall policy configuration, add 10.0.1.3 as an address object in the source field.", "Configure another firewall policy that matches only the address of PC3 as source, and then place the policy on top of the list.", "In the IP pool configuration,set endip to 192.2.0.12."],
         answer: "AD",
-        image: "images/q102.png"
+        image: ["images/q102_1.png", "images/q102_2.png", "images/q102_3.png"]
     },
     {
         id: 103,
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, as well as the IP pool configuration and firewall policy objects. The WAN (port1) interface hasthe IP address 10.200.1.1/24. The LAN (port3) interface has the IP address 10.0.1.254/24. Which IP address will be used to source NAT (SNAT) the traffic, if the user on Local-Client (10.0.1.10) pings the IP address of Remote-FortiGate (10.200.3.1)?[cite: 2]",
         options: ["10.200.1.1", "10.200.1.99", "10.200.1.49", "10.200.1.149"],
         answer: "B",
-        image: "images/q103.png"
+        image: ["images/q103_1.png", "images/q103_2.png", "images/q103_3.png"]
     },
     {
         id: 104,
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, VIP configuration, firewall policy, and the sniffer CLI output on the FortiGate device. The WAN (port1) interface hasthe IP address 10.200.1.1/24. The LAN (port3) interface has the IP address 10.0.1.254/24. The webserver host (10.0.1.10) must use its VIP external IP address as the source NAT (SNAT) when it pings remote server (10.200.3.1). Which two statements are valid to achieve this goal? (Choose two.)[cite: 2]",
         options: ["Enable NAT on the Allow_accessfirewall policy.", "Disable NAT on the Internet_Accessfirewall policy.", "Disable port forwarding on the VIP object.", "Create a new firewall policy before Internet_Access for the webserver and apply the IP pool."],
         answer: "CD",
-        image: "images/q104.png"
+        image: ["images/q104_1.png", "images/q104_2.png", "images/q104_3.png", "images/q104_4.png"]
     },
     {
         id: 105,
@@ -767,14 +767,14 @@ const examQuestions = [
         question: "FortiGate isintegrated with FortiAnalyzer and FortiManager. When a firewall policy is created, which attribute is added to the policy to improve functionality and to support recording logsto FortiAnalyzer or FortiManager?[cite: 2]",
         options: ["Sequence ID", "Log ID", "Policy ID", "Universally Unique Identifier"],
         answer: "D",
-        image: "images/q110.png"
+        image: ["images/q110_1.png", "images/q110_2.png"]
     },
     {
         id: 111,
         question: "Refer to the exhibits, which show the system performance output and the default configuration of high memory usage thresholds in a FortiGate. Based on the system performance output, what can be the two possible outcomes? (Choose two.)[cite: 2]",
         options: ["FortiGate will start sending all files to FortiSandbox for inspection.", "Administrators can access FortiGate only through the console port.", "FortiGate has access to conserve mode.", "Administrators cannot change the configuration."],
         answer: "CD",
-        image: "images/q111.png"
+        image: ["images/q111_1.png", "images/q111_2.png"]
     },
     {
         id: 112,
@@ -788,7 +788,7 @@ const examQuestions = [
         question: "Refer to the exhibits. FGT-1 and FGT-2 are updated with HA configuration commands shown in the exhibit. What would be the expected outcome in the HA cluster? [cite: 2]",
         options: ["FGT-2 will take over as the primary because it has the override enable setting and higher priority than FGT-1.", "FGT-1 will synchronize the override disable setting with FGT-2.", "The HA cluster will become out of sync because the override setting must match on all HA members.", "FGT-1 will remain the primary because FGT-2 has lower priority."],
         answer: "A",
-        image: "images/q113.png"
+        image: ["images/q113_1.png", "images/q113_2.png", "images/q113_3.png"]
     },
     {
         id: 114,
@@ -872,7 +872,7 @@ const examQuestions = [
         question: "Refer to the exhibits. An administrator creates a new address object on the root FortiGate (Local-FortiGate) in the security fabric. After synchronization, this object is not available on the downstream FortiGate (ISFW). What must the administrator do to synchronize the address object?[cite: 2]",
         options: ["Change the csfsetting on both devices to set downstream-access enable.", "Change the csf setting on Local-FortiGate (root) to set fabric object-unification default.", "Change the csfsetting on ISFW (downstream) to set authorization-request-type certificate.", "Change the csfsetting on ISFW (downstream) to set configuration-sync local."],
         answer: "B",
-        image: "images/q125.png"
+        image: ["images/q125_1.png", "images/q125_2.png", "images/q125_3.png"]
     },
     {
         id: 126,
@@ -886,7 +886,7 @@ const examQuestions = [
         question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, and the firewall configuration. An administrator created a Deny policy with default settings to deny Webserver access for Remote-User2. The policy should work such that Remote-User1 must be able to access the Webserver while preventing Remote-User2 from accessing the Webserver. Which two configuration changes can the administrator make to the policy to deny Webserver access fRemote-User2er2? (Choose two.)[cite: 2]",
         options: ["Set the Destination address as Webserver in the Deny policy.", "Disable match-vip in the Deny policy.", "Set the Destination address as Deny_IP in the Allow_access policy.", "Enable match-vip in the Deny policy."],
         answer: "AD",
-        image: "images/q127.png"
+        image: ["images/q127_1.png", "images/q127_2.png", "images/q127_3.png"]
     },
     {
         id: 128,
