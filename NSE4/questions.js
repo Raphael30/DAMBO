@@ -841,28 +841,28 @@ const examQuestions = [
     },
     {
         id: 121,
-        question: "An administrator manages a FortiGate model thatsupports NTurbo. How does NTurbo enhance performance for flow-based inspection?[cite: 2]",
-        options: ["NTurbo buffersthe whole file and then sendsit to the antivirus engine.", "NTurbo creates a special data path to redirect traffic between the IPS engine its ingress and egress interfaces.", "NTurbo createstwo inspection sessions on the FortiGate device.", "NTurbo offloadstraffic to the content processor."],
+        question: "An administrator manages a FortiGate model that supports NTurbo. How does NTurbo enhance performance for flow-based inspection?[cite: 2]",
+        options: ["NTurbo buffers the whole file and then sends it to the antivirus engine.", "NTurbo creates a special data path to redirect traffic between the IPS engine's ingress and egress interfaces.", "NTurbo creates two inspection sessions on the FortiGate device.", "NTurbo offloadstraffic to the content processor."],
         answer: "B",
         image: "images/q121.png"
     },
     {
         id: 122,
         question: "The HTTP inspection process in web filtering follows a specific order when multiple features are enabled in the web filter profile. Which order must FortiGate use when the web filter profile has features such as safe search enabled?[cite: 2]",
-        options: ["DNS-based web filter and proxy-based web filter", "Static URL filter, FortiGuard category filter, and advanced filters", "FortiGuard category filter and rating filter", "Static domain filter, SSL inspection filter, and external connectorsfilters"],
+        options: ["DNS-based web filter and proxy-based web filter", "Static URL filter, FortiGuard category filter, and advanced filters", "FortiGuard category filter and rating filter", "Static domain filter, SSL inspection filter, and external connectors filters"],
         answer: "B",
         image: "images/q122.png"
     },
     {
         id: 123,
-        question: "Refer to the exhibit. Which algorithm does SD-WAN use to distribute traffic that does not match any of the SD-WAN rules ? [cite: 2]",
+        question: "Refer to the exhibit. Which algorithm does SD-WAN use to distribute traffic that does not match any of the SD-WAN rules? [cite: 2]",
         options: ["Traffic is sent to the link with the lowest latency.", "All traffic from a source IP is sent to the same interface.", "All traffic from a source IP to a destination IP is sent to the same interface.", "Traffic is distributed based on the number of sessions through each interface."],
         answer: "C",
         image: "images/q123.png"
     },
     {
         id: 124,
-        question: "Refer to the exhibit. Review the intrusion prevention system (IPS) profile signature settings shown in the exhibit. What do you conclude when adding the FTP.Login.Failed signature to the IPS sensor profile?[cite: 2]",
+        question: "Refer to the exhibit. Review the intrusion prevention system (IPS) profile signature settings shown in the exhibit. What do you conclude when adding the FTP? Login.Failed signature to the IPS sensor profile?[cite: 2]",
         options: ["Traffic matching the signature will be allowed and logged.", "The signature setting uses a custom rating threshold.", "The signature setting includes a group of other signatures.", "Traffic matching the signature will be silently dropped and logged."],
         answer: "D",
         image: "images/q124.png"
@@ -870,20 +870,20 @@ const examQuestions = [
     {
         id: 125,
         question: "Refer to the exhibits. An administrator creates a new address object on the root FortiGate (Local-FortiGate) in the security fabric. After synchronization, this object is not available on the downstream FortiGate (ISFW). What must the administrator do to synchronize the address object?[cite: 2]",
-        options: ["Change the csfsetting on both devices to set downstream-access enable.", "Change the csf setting on Local-FortiGate (root) to set fabric object-unification default.", "Change the csfsetting on ISFW (downstream) to set authorization-request-type certificate.", "Change the csfsetting on ISFW (downstream) to set configuration-sync local."],
+        options: ["Change the csfsetting on both devices to set downstream-access to enable.", "Change the csf setting on Local-FortiGate (root) to set fabric object-unification default.", "Change the csfsetting on ISFW (downstream) to set authorization-request-type certificate.", "Change the csfsetting on ISFW (downstream) to set configuration-sync local."],
         answer: "B",
         image: ["images/q125_1.png", "images/q125_2.png", "images/q125_3.png"]
     },
     {
         id: 126,
-        question: "Refer to the exhibit. In the network shown in the exhibit, the web client cannot connect to the HTTP web server. The administrator runs the FortiGate built-in sniffer and gets the output shown in the exhibit.What should the administrator do netnext troubleshoot the problem?[cite: 2]",
+        question: "Refer to the exhibit. In the network shown in the exhibit, the web client cannot connect to the HTTP web server. The administrator runs the FortiGate built-in sniffer and gets the output shown in the exhibit. What should the administrator do netnext troubleshoot the problem?[cite: 2]",
         options: ["Execute a debug flow.", "Run a sniffer on the web server.", "Execanother snifferffer on FortiGate, this time with the filter \"host 10.0.1.10\".", "Capture the traffic usingexternal snifferffer connected to port1."],
         answer: "A",
         image: "images/q126.png"
     },
     {
         id: 127,
-        question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, and the firewall configuration. An administrator created a Deny policy with default settings to deny Webserver access for Remote-User2. The policy should work such that Remote-User1 must be able to access the Webserver while preventing Remote-User2 from accessing the Webserver. Which two configuration changes can the administrator make to the policy to deny Webserver access fRemote-User2er2? (Choose two.)[cite: 2]",
+        question: "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network and the firewall configuration. An administrator created a Deny policy with default settings to deny Webserver access for Remote-User2. The policy should work such that Remote-User1 must be able to access the Webserver while preventing Remote-User2 from accessing the Webserver. Which two configuration changes can the administrator make to the policy to deny Webserver access fRemote-User2er2? (Choose two.)[cite: 2]",
         options: ["Set the Destination address as Webserver in the Deny policy.", "Disable match-vip in the Deny policy.", "Set the Destination address as Deny_IP in the Allow_access policy.", "Enable match-vip in the Deny policy."],
         answer: "AD",
         image: ["images/q127_1.png", "images/q127_2.png", "images/q127_3.png"]
@@ -891,7 +891,7 @@ const examQuestions = [
     {
         id: 128,
         question: "An administrator configured a FortiGate to act as a collector for agentless polling mode. What must the administrator add to the FortiGate device to retrieve AD user group information?[cite: 2]",
-        options: ["DHCP server", "RADIUS server", "LDAP serverWindows serverrver"],
+        options: ["DHCP server", "RADIUS server", "LDAP server", "Windows server"],
         answer: "C",
         image: "images/q128.png"
     },
