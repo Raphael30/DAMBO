@@ -225,7 +225,7 @@ const examQuestions = [
     },
     {
         id: 33,
-        Question: "An administrator wants to analyze and manage digital certificates to prevent browser warnings when users connect to the SSL VPN portal. Which two statements describe how to correctly do this? (Choose two.)[cite: 2]",
+        question: "An administrator wants to analyze and manage digital certificates to prevent browser warnings when users connect to the SSL VPN portal. Which two statements describe how to correctly do this? (Choose two.)[cite: 2]",
         options: ["The administrator can rely on the default FortiGate self-signed certificate to prevent all security warnings in the browser.", "The administrator must disable HTTPS administrative access entirely to avoid certificate warnings.", "The administrator can use a publicly trusted certificate from a known certificate authority (CA) to stop browser warnings.", "The administrator can import the FortiGate self-signed certificate into each user’s browser as a trusted certificate."],
         answer: "CD",
         image: "images/q33.png"
